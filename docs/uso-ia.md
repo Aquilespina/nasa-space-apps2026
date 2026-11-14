@@ -12,3 +12,4 @@ Antes del evento: se preparó la configuración del agente (CLAUDE.md, hooks de 
 | 14 nov 14:20 | Claude Code (Claude Opus 5.5): `pipeline/probar_salida_aquiles.py` y `docs/prueba-salida-aquiles.md` (prueba local de la salida de Aquiles, sin ejecutar el modelo) | Pendiente: Ángel revisa y manda las preguntas a Aquiles |
 | 14 nov 14:30 | Claude Code (Claude Opus 5.5): `docs/guia-milpa-clara.pdf` (guía de uso para alguien que no conoce el proyecto, con capturas de la página; hecha con reportlab) | Pendiente: Ángel revisa |
 | 14 nov 14:40 | Claude Code (Claude Opus 5.5): borrador del campo *Summary* en inglés (`docs/envio-summary.md`) | Pendiente: Ángel revisa |
+| 14 nov 14:50 | Claude Code (Claude Opus 5.5): borrador del campo *Project Details* en inglés (`docs/envio-project-details.md`) | Pendiente: Ángel revisa |
