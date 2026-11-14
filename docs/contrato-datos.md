@@ -41,5 +41,7 @@ Un registro por zona, cultivo y actividad.
 ## `cultivos.json` — lo arma Ángel desde `referencia/amealco-datos-reales.md`
 Por cultivo: ciclo en días, agua por ciclo (mm), etapas y qué necesita (suelo, agua, fertilización). Es lo único que el chat puede afirmar de un cultivo. Si el cultivo no está aquí, el chat responde "no tengo ese dato".
 
-## `modelo-metricas.json` — lo produce Aquiles
+## `modelos_comparacion.json` (antes `modelo-metricas.json`) — lo produce Aquiles
 Error del baseline y error de la red en años de prueba (partición por años, no aleatoria), con la variable pronosticada y el periodo. El sitio muestra estos números en una sección "Cómo se calculó".
+
+Nota (14 nov): Aquiles entregó `modelos_comparacion.json` en `main` (carpeta `salida-.../salida/`). Se copia tal cual a `data/processed/` y el sitio lee `datos[]` (val/test RMSE y skill), `mejor_modelo`, `red_del_sitio` y `skill_por_anio_prueba`.

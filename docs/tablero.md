@@ -15,7 +15,7 @@ Formato: `- [ ] Tarea · cómo se comprueba`. Al terminar: `- [x]` + commit.
 - [ ] Integrar la salida de la red de Aquiles en `calendario.json` · `generado_por` = `red_neuronal` y el sitio lo indica
 - [ ] Backend del chat con la llave en variable de entorno · `grep -r "sk-" .` no devuelve nada
 - [ ] Despliegue con enlace público · `curl -s -o /dev/null -w "%{http_code}" <url>` da 200
-- [ ] Sección "Cómo se calculó" con `modelo-metricas.json` · muestra baseline contra red
+- [x] Sección "Cómo se calculó" con `modelos_comparacion.json` · muestra baseline contra red
 
 ## Fase 3–4 (domingo 15)
 - [ ] Compuerta 09:00: ¿la red supera al baseline? · decisión anotada en `docs/decisiones.md`

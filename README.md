@@ -48,7 +48,7 @@ Aquiles (Colab) / pipeline ──► data/processed/*.json ──► pipeline/co
 | `data/processed/zonas.json` | Zonas: nombre, coordenadas, cultivos | Acordado entre los dos |
 | `data/processed/calendario.json` | Fecha, ventana, confianza y razón por zona, cultivo y actividad | Aquiles |
 | `data/processed/cultivos.json` | Ciclo, agua (FAO-56), suelo y rendimientos de maíz, frijol y avena | Ángel, desde `referencia/amealco-datos-reales.md` |
-| `data/processed/modelo-metricas.json` | Error del baseline contra la red | Aquiles (pendiente) |
+| `data/processed/modelos_comparacion.json` | Error de cada modelo (climatología, Ridge, Random Forest, LSTM, GRU) por años | Aquiles (copiado de su `main`) |
 
 - `data/processed/` es la **fuente de verdad**. `site/data/` es una copia: no se edita a mano.
 - Todos los JSON llevan `fuente`, `fecha_consulta` y `ejemplo`. El formato completo está en [`docs/contrato-datos.md`](docs/contrato-datos.md).
@@ -82,7 +82,7 @@ Enlace público: `[pendiente: poner aquí la URL de GitHub Pages]`
 
 | Carpeta | Para qué |
 |---|---|
-| `site/` | La página estática: `index.html` (sale de la maqueta v6) y `recorrido.js` |
+| `site/` | La página estática: `index.html` (sale de la maqueta v6), `recorrido.js` y `calculo.js` |
 | `data/processed/` | Los JSON del contrato |
 | `pipeline/` | Scripts de apoyo (`copiar_datos.py`) |
 | `docs/` | Plan, contrato de datos, tablero de tareas, decisiones, uso de IA |
