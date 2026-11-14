@@ -7,7 +7,7 @@ Proyecto para **NASA Space Apps Challenge 2026, sede CDMX**, reto *Field Shift: 
 - **Ángel:** página e integración (este repo).
 - **Aquiles:** red neuronal en Google Colab. Aquí solo llegan sus resultados como JSON.
 
-> **Estado:** las zonas y fechas actuales son **datos de prueba** (`"ejemplo": true`) derivados de la referencia, en espera del baseline de Aquiles. La página lo indica con un aviso.
+> **Estado:** el calendario usa el **baseline sin red neuronal** (inicio de lluvias de NASA POWER 2003–2025 y ciclos FAO-56) para una sola zona, El Llano. Faltan las zonas adicionales y la integración de la salida de Aquiles.
 
 ---
 

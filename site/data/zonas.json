@@ -1,37 +1,19 @@
 {
-  "fuente": "Zonas de ejemplo propuestas por Ángel dentro del recuadro HLS de la maqueta (referencia/amealco-datos-reales.md). Solo El Llano tiene coordenadas de la referencia; las otras dos son posiciones de prueba hasta que Aquiles defina las zonas.",
+  "fuente": "referencia/amealco-datos-reales.md: punto El Llano (20.209 N, 100.146 O) usado para SoilGrids y la imagen HLS. Una sola zona hasta que Aquiles defina más.",
   "fecha_consulta": "2026-11-14",
-  "ejemplo": true,
-  "generado_por": "propuesta_angel",
+  "ejemplo": false,
+  "generado_por": "acordado_angel",
   "datos": [
     {
       "zona_id": "z1",
-      "nombre": "El Llano",
+      "nombre": "El Llano, norte de Amealco",
       "lat": 20.209,
       "lon": -100.146,
       "cultivos": [
         "maiz",
         "frijol"
-      ]
-    },
-    {
-      "zona_id": "z2",
-      "nombre": "Zona de prueba norte",
-      "lat": 20.23,
-      "lon": -100.1,
-      "cultivos": [
-        "maiz"
-      ]
-    },
-    {
-      "zona_id": "z3",
-      "nombre": "Zona de prueba oriente",
-      "lat": 20.17,
-      "lon": -100.07,
-      "cultivos": [
-        "maiz",
-        "avena"
-      ]
+      ],
+      "nota": "Punto de la referencia (SoilGrids e imagen HLS). La lluvia y la temperatura son de la celda NASA POWER de ~55 km que cubre todo el municipio."
     }
   ]
 }
