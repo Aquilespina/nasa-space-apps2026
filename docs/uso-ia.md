@@ -9,3 +9,4 @@ Antes del evento: se preparó la configuración del agente (CLAUDE.md, hooks de 
 | 14 nov 12:45 | Claude Code (Claude Opus 5.5): README, .gitignore y flujo de GitHub Pages (`.github/workflows/pages.yml`) | Pendiente: Ángel revisa |
 | 14 nov 13:40 | Claude Code (Claude Opus 5.5): pasó `zonas.json` y `calendario.json` a baseline real (`ejemplo: false`) con una sola zona, El Llano; quitó las 2 zonas con coordenadas de prueba | Ángel eligió la opción (baseline con lo existente) |
 | 14 nov 14:00 | Claude Code (Claude Opus 5.5): sección "Cómo se calculó" (`site/calculo.js` + HTML/CSS) que lee `modelos_comparacion.json` de Aquiles y dice que la LSTM no superó a la climatología | Pendiente: Ángel revisa |
+| 14 nov 14:20 | Claude Code (Claude Opus 5.5): `pipeline/probar_salida_aquiles.py` y `docs/prueba-salida-aquiles.md` (prueba local de la salida de Aquiles, sin ejecutar el modelo) | Pendiente: Ángel revisa y manda las preguntas a Aquiles |
