@@ -37,6 +37,20 @@ Abre **http://localhost:8000**. Para detenerla: `Ctrl+C`.
 3. **La app (maqueta v6).** Pestañas *Mi zona*, *Mi plan*, *Historia* y *Avisos* con 23 temporadas (2003–2025) de datos reales de Amealco.
 4. **Página del proyecto y estudio por año.** Explicación del método y de las fuentes para el jurado.
 
+## Front-end simple (rama `frontend-simple`)
+
+La página principal (`site/index.html`) es un asistente de 5 preguntas, una por pantalla:
+
+1. ¿Qué cultivas? (opciones de `cultivos.json`; "Otro cultivo" responde que no hay datos)
+2. ¿Dónde cultivas? (zonas de `zonas.json`, o la zona más cercana con la ubicación del teléfono, que no se guarda ni se envía)
+3. ¿Es este lugar donde cultivas? (imagen HLS de la NASA con la zona marcada; georreferencia en `imagen_zona.json`)
+4. ¿Cuánto tiempo tienes cultivando? (marca los años malos del cultivo que le tocaron, de `cultivos.json`)
+5. ¿En qué te gustaría que te acompañe? (mejorar la cosecha, no gastar tanta agua, aumentar las cosechas)
+
+Al final muestra **Tu plan**: fechas del cultivo en su zona (`calendario.json`) y una tarjeta por cada prioridad (`cultivos.json`). Debajo, sin cambios, están el recorrido por zonas (`recorrido.js`) y "¿Puedes confiar en estas fechas?" (`calculo.js` y `evidencia.js`). Las respuestas se recuerdan solo en ese teléfono.
+
+La página anterior completa sigue en `site/estudio.html` (enlace "Ver el estudio completo").
+
 ## De dónde salen los datos
 
 ```
@@ -82,7 +96,7 @@ Enlace público: `[pendiente: poner aquí la URL de GitHub Pages]`
 
 | Carpeta | Para qué |
 |---|---|
-| `site/` | La página estática: `index.html` (sale de la maqueta v6), `recorrido.js` y `calculo.js` |
+| `site/` | La página: `index.html` + `asistente.js` + `estilos.css` (asistente), `recorrido.js`, `calculo.js`, `evidencia.js` (módulos de datos) y `estudio.html` (maqueta v6 completa) |
 | `data/processed/` | Los JSON del contrato |
 | `pipeline/` | Scripts de apoyo (`copiar_datos.py`) |
 | `docs/` | Plan, contrato de datos, tablero de tareas, decisiones, uso de IA |
