@@ -18,6 +18,20 @@
     return r.json();
   });
 
+  // Nombres técnicos de la fuente de cada fecha, traducidos a algo que se entienda sin saber de
+  // satélites ni de IA. El texto técnico completo no se borra: queda en el atributo "title" (al
+  // pasar el cursor) para quien lo quiera revisar.
+  const FUENTE_AMIGABLE = {
+    'NASA POWER PRECTOTCORR 2003–2025': 'Lluvia medida por satélites de la NASA, de 2003 a 2025',
+    'FAO-56 tablas 11 y 12': 'Tablas internacionales de necesidades de cada cultivo',
+    'FAO-56 con clima NASA POWER 2003–2025': 'Necesidad de agua del cultivo y lluvia medida por satélites de la NASA (2003–2025)',
+  };
+  const fuenteAmigable = f => FUENTE_AMIGABLE[f] || f;
+  const sinJerga = s => (s || '')
+    .replace(/NASA POWER PRECTOTCORR/g, 'satélites de la NASA que miden la lluvia')
+    .replace(/\s*\(?FAO-56\)?/g, '');
+  const razonAmigable = r => sinJerga(r).replace(/\+\s*ciclo de (\d+) días/, 'más $1 días de ciclo').replace(/\s{2,}/g, ' ').trim();
+
   Promise.all([cargar('zonas'), cargar('calendario'), cargar('cultivos')])
     .then(([zonas, cal, cult]) => iniciar(zonas, cal, cult))
     .catch(err => {
@@ -33,17 +47,26 @@
     $r('#rzEjemplo').hidden = !ejemplo;
     const gen = cal.generado_por;
     $r('#rzMetodo').innerHTML = gen === 'red_neuronal'
-      ? '<span class="lab est">Pronóstico de la red neuronal</span>'
+      ? '<span class="lab est">Calculado por la inteligencia artificial</span>'
       : gen === 'baseline'
-        ? '<span class="lab real">Baseline: reglas de inicio de lluvias y FAO-56, sin red neuronal</span>'
+        ? '<span class="lab real">Cálculo con lluvias de años pasados, sin inteligencia artificial</span>'
         : `Método: ${gen ? esc(gen) : SIN}`;
-    $r('#rzFuente').textContent = `Fuente: ${cal.fuente || 'sin dato'} · consultado ${cal.fecha_consulta || 'sin dato'}`;
+    // El texto de la fuente trae de fábrica jerga técnica (nombre de archivo, siglas de variables);
+    // se limpia para el resumen visible y se deja completo en el detalle, para quien lo quiera.
+    let fuenteCorta = (cal.fuente || '').replace(/^(baseline sin red neuronal|red neuronal)\s*/i, '');
+    const citaArchivo = fuenteCorta.match(/^\(([^)]+)\):\s*/);
+    if (citaArchivo) fuenteCorta = fuenteCorta.slice(citaArchivo[0].length);
+    $r('#rzFuente').innerHTML = cal.fuente
+      ? `<details class="cc-detalle" title="${esc(cal.fuente)}"><summary>¿De dónde salen estas fechas? · consultado ${esc(cal.fecha_consulta || 'sin dato')}</summary><span class="fine">${esc(sinJerga(fuenteCorta))}</span></details>`
+      : `Fuente: sin dato · consultado ${esc(cal.fecha_consulta || 'sin dato')}`;
 
     if (!Z.length) { $r('#rzCuerpo').innerHTML = `<p>${SIN}: no hay zonas en zonas.json.</p>`; return; }
 
+    // Con una sola zona, las flechas y los chips no llevan a nada: se ocultan para no confundir.
+    $r('.rz-nav').hidden = Z.length <= 1;
     const chips = $r('#rzChips');
     chips.innerHTML = Z.map((z, i) =>
-      `<button type="button" role="tab" data-i="${i}" aria-selected="false">${esc(z.nombre)}</button>`).join('');
+      `<button type="button" data-i="${i}" aria-pressed="false">${esc(z.nombre)}</button>`).join('');
     chips.addEventListener('click', ev => { const b = ev.target.closest('button'); if (b) ver(+b.dataset.i); });
     $r('#rzAnt').addEventListener('click', () => ver((actual + Z.length - 1) % Z.length));
     $r('#rzSig').addEventListener('click', () => ver((actual + 1) % Z.length));
@@ -53,7 +76,7 @@
       actual = i;
       const z = Z[i];
       try { const u = new URL(location.href); u.searchParams.set('zona', z.zona_id); history.replaceState(null, '', u); } catch (e) { /* sin historial */ }
-      chips.querySelectorAll('button').forEach((b, k) => b.setAttribute('aria-selected', k === i));
+      chips.querySelectorAll('button').forEach((b, k) => b.setAttribute('aria-pressed', k === i));
       $r('#rzPaso').textContent = `Zona ${i + 1} de ${Z.length}`;
       const coord = (z.lat != null && z.lon != null)
         ? `${Math.abs(z.lat).toFixed(3)}° ${z.lat >= 0 ? 'N' : 'S'}, ${Math.abs(z.lon).toFixed(3)}° ${z.lon >= 0 ? 'E' : 'O'}`
@@ -71,8 +94,8 @@
               <div><dt>Ventana</dt><dd class="tn">${v || SIN}</dd></div>
               <div><dt>Confianza</dt><dd class="tn">${conf || SIN}</dd></div>
             </dl>
-            <p class="rz-razon">${r && r.razon ? esc(r.razon) : `¿Por qué? ${SIN}`}</p>
-            ${r && r.fuente ? `<p class="src">${esc(r.fuente)}</p>` : ''}
+            <p class="rz-razon">${r && r.razon ? esc(razonAmigable(r.razon)) : `¿Por qué? ${SIN}`}</p>
+            ${r && r.fuente ? `<p class="src" title="${esc(r.fuente)}">${esc(fuenteAmigable(r.fuente))}</p>` : ''}
           </li>`;
         }).join('');
         return `<article class="rz-cult"><h4 style="--cc:var(--c-${esc(c)},var(--dot))">${esc(nombreCultivo[c] || c)}</h4><ol>${filas}</ol></article>`;

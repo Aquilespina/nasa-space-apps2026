@@ -9,7 +9,7 @@
 /* Un solo tema claro a propósito: la maqueta reproduce la interfaz de la app tal como la verá el jurado. */
 :root{
   color-scheme:light;
-  --bg:#eef0eb; --panel:#ffffff; --soft:#f5f6f2; --ink:#1b2420; --ink2:#53605a; --ink3:#78837d; --line:#dce1d9; --line2:#c4cbc1;
+  --bg:#eef0eb; --panel:#ffffff; --soft:#f5f6f2; --ink:#1b2420; --ink2:#53605a; --ink3:#5f6a64; --line:#dce1d9; --line2:#c4cbc1;
   --green:#1f7a4d; --green-d:#155f3a; --green-soft:#e2efe7;
   --blue:#2466a8; --blue-soft:#e1ecf7; --blue-l:#a9bfd6;
   --red:#b8412c; --red-soft:#f7e4df; --amber:#8f5c0c; --amber-soft:#faeed3;
@@ -27,6 +27,7 @@ p,ul,ol,figure{margin:0}
 button{font:inherit;color:inherit}
 a{color:var(--green-d)}
 :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
 [hidden]{display:none!important}
 .wrap{max-width:1200px;margin-inline:auto;padding-inline:16px}
 main.wrap{display:flex;flex-direction:column;gap:30px;padding-block:6px 56px}
@@ -39,31 +40,20 @@ main.wrap{display:flex;flex-direction:column;gap:30px;padding-block:6px 56px}
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--panel);border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;padding-block:8px}
 .brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px;white-space:nowrap;text-decoration:none;color:var(--ink)}
-.tag{font:600 10.5px var(--mono);color:var(--ink2);border:1px solid var(--line2);padding:1px 5px;border-radius:3px;letter-spacing:.03em}
 .nav{display:flex;gap:2px;flex:1 1 auto;overflow-x:auto;scrollbar-width:none;min-width:0}
 .nav::-webkit-scrollbar{display:none}
 .nav a{padding:6px 10px;border-radius:5px;text-decoration:none;color:var(--ink2);font-weight:600;font-size:14px;white-space:nowrap}
 .nav a:hover{background:var(--soft);color:var(--ink)}
-.notes-btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line2);background:var(--panel);border-radius:5px;padding:6px 10px;font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap}
-.notes-btn .box{width:14px;height:14px;border:1.5px solid var(--ink3);border-radius:3px;display:grid;place-items:center;flex:none}
-.notes-btn[aria-pressed="true"] .box{background:var(--green);border-color:var(--green)}
-.notes-btn[aria-pressed="true"] .box::after{content:"";width:7px;height:4px;border:2px solid #fff;border-top:0;border-right:0;transform:translateY(-1px) rotate(-45deg)}
 @media (max-width:680px){.nav{order:3;flex-basis:100%}}
 
 /* etiquetas de confianza */
-.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--ink2);padding-top:12px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--ink2);padding-top:12px;margin:0;list-style:none}
+.legend li{display:inline-flex;align-items:baseline;gap:5px}
 .lab{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;white-space:nowrap;vertical-align:1px}
 .lab::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
 .lab.real{color:var(--green)}.lab.est{color:var(--blue)}.lab.ej{color:#7c847f}
 .lab.est::before{background:transparent;box-shadow:inset 0 0 0 1.5px currentColor}
 .falta{background:var(--amber-soft);color:var(--amber);border-radius:3px;padding:0 4px;font:500 .84em var(--mono);white-space:nowrap}
-
-/* notas del estudio */
-.note{display:none;background:var(--amber-soft);border:1px dashed #d4ae62;border-radius:4px;padding:9px 12px;font-size:13.5px;line-height:1.45}
-body.notes .note{display:block}
-.note .n{display:block;font:600 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--amber);margin-bottom:2px}
-.notes-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
-body:not(.notes) .notes-row{display:none}
 
 /* encabezados de sección */
 .sec-h{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:6px 24px}
@@ -117,7 +107,7 @@ body:not(.notes) .notes-row{display:none}
 .tabs button{border:0;background:none;padding:11px 4px 9px;font-weight:600;font-size:13.5px;color:var(--ink2);cursor:pointer;border-bottom:2px solid transparent}
 .tabs button[aria-selected="true"]{color:var(--green-d);border-bottom-color:var(--green)}
 .pane{overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px;min-height:0}
-.pane h2{font-size:19px;font-weight:700}
+.pane h3{font-size:19px;font-weight:700}
 .row{display:flex;align-items:center;gap:10px}
 .between{justify-content:space-between}
 .place{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
@@ -191,7 +181,7 @@ body:not(.notes) .notes-row{display:none}
 .cal span{padding:5px 0;border-radius:4px;position:relative;line-height:1.2}
 .cal .dn{color:var(--ink2);font-weight:600}
 .cal .w{background:var(--green-soft);color:var(--green-d);font-weight:600}
-.cal .med{background:var(--green);color:#fff;font-weight:700}
+.cal .med{background:var(--green);color:#fff;font-weight:700;box-shadow:inset 0 0 0 2px var(--ink)}
 .cal em{position:absolute;top:-1px;left:2px;font:600 8.5px var(--mono);font-style:normal;text-transform:uppercase;color:var(--ink3)}
 .cal .w em,.cal .med em{color:inherit;opacity:.8}
 
@@ -205,7 +195,7 @@ body:not(.notes) .notes-row{display:none}
 .layers button{border:0;background:none;border-radius:4px;padding:5px 9px;font-weight:600;font-size:12.5px;cursor:pointer;color:var(--ink2);white-space:nowrap}
 .layers button[aria-pressed="true"]{background:var(--ink);color:#fff}
 .zoom{top:12px;right:12px;display:flex;flex-direction:column;padding:0;overflow:hidden}
-.zoom button{border:0;background:var(--panel);width:34px;height:34px;font-size:18px;cursor:pointer;color:var(--ink)}
+.zoom button{border:0;background:var(--panel);width:44px;height:44px;font-size:18px;cursor:pointer;color:var(--ink)}
 .zoom button+button{border-top:1px solid var(--line)}
 .zoom button:disabled{color:var(--line2);cursor:default}
 .gridnote{top:56px;left:12px;font:500 11.5px var(--mono)}
@@ -276,8 +266,6 @@ svg.chart .ax text{fill:var(--ink3);font-size:10.5px;font-family:var(--mono)}
 svg.chart .strong{fill:var(--ink);font-weight:700}
 .fails{display:grid;grid-template-columns:1fr 1fr;gap:8px 28px}
 .fails li{font-size:14px}
-.ai3 .box{border-top:2px solid var(--ink);padding-top:10px}
-.ai3 ul{padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:14px}
 .story{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .frame{border:1px solid var(--line);border-radius:6px;overflow:hidden;font-size:13px;display:flex;flex-direction:column}
 .frame .shot{aspect-ratio:16/9;background:#3f5238 center/cover no-repeat;position:relative;display:flex;align-items:flex-end;justify-content:center;padding:8px}
@@ -291,46 +279,8 @@ svg.chart .strong{fill:var(--ink);font-weight:700}
 @media (max-width:900px){.grid3{grid-template-columns:1fr 1fr}.figs{grid-template-columns:1fr}.valnums{grid-template-columns:1fr 1fr}.valnums>div:nth-child(3){border-left:0}.valnums>div:nth-child(n+3){border-top:1px solid var(--line)}.steps{grid-template-columns:1fr 1fr}.story{grid-template-columns:1fr 1fr}}
 @media (max-width:640px){.project{padding:20px 16px}.grid2,.grid3,.fails{grid-template-columns:1fr}.valnums{grid-template-columns:1fr}.valnums>div+div{border-left:0;border-top:1px solid var(--line)}.story{grid-template-columns:1fr}.steps{grid-template-columns:1fr}}
 
-/* ---------- ESTUDIO ---------- */
-.study{display:flex;flex-direction:column;gap:22px}
-.study-h{border-top:3px solid var(--ink);padding-top:18px;display:flex;flex-direction:column;gap:8px}
-.study-h h2{font-size:30px;font-weight:700;letter-spacing:-.02em}
-.study-h p{color:var(--ink2);max-width:74ch}
-.years4{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--panel);border:1px solid var(--line);border-radius:6px}
-.yc{padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
-.yc+.yc{border-left:1px solid var(--line)}
-.yc .yn{font:600 30px/1 var(--mono);letter-spacing:-.02em}
-.yc .ys{font-size:13px;color:var(--ink2);margin-top:-4px}
-.yc dl{margin:0;display:flex;flex-direction:column;gap:8px}
-.yc dt{font:600 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
-.yc dd{margin:0;font-size:13.5px;line-height:1.45}
-.yc .todo{border-top:1px solid var(--line);padding-top:8px;font-size:13px}
-.yc .todo b{display:block;font:600 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);margin-bottom:2px}
-.yc.now{background:#f7faf7}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
-.panel h3{font-size:17px;font-weight:700}
-.panel .intro{color:var(--ink2);font-size:13.5px;max-width:78ch}
-.two{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
-.bar{display:flex;align-items:center;gap:6px}
-.bar i{display:block;height:8px;border-radius:0 2px 2px 0;background:var(--blue);min-width:1px}
-.bar.dry i{background:var(--red)}
-.bar.mz i{background:var(--c-maiz)}
-.bar span{font-variant-numeric:tabular-nums;font-size:12.5px;white-space:nowrap}
 .flag{font:600 10px var(--mono);color:var(--red);letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
 .flag.gray{color:var(--ink3)}
-table.dense td,table.dense th{padding:5px 9px}
-table.dense td{font-size:12.5px}
-.ladder{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
-.ladder>div{padding:14px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
-.ladder>div+div{border-left:1px solid var(--line)}
-.ladder .lv{font:600 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
-.ladder h4{font-size:15px}
-.ladder .us{background:var(--green-soft)}
-.ladder .us .lv{color:var(--green-d)}
-.chg{columns:2;column-gap:32px;padding-left:18px;font-size:14px}
-.chg li{break-inside:avoid;margin-bottom:6px}
-@media (max-width:980px){.years4,.ladder{grid-template-columns:1fr 1fr}.yc:nth-child(3),.ladder>div:nth-child(3){border-left:0}.yc:nth-child(n+3),.ladder>div:nth-child(n+3){border-top:1px solid var(--line)}.two{grid-template-columns:1fr}}
-@media (max-width:620px){.years4,.ladder{grid-template-columns:1fr}.yc+.yc,.ladder>div+div{border-left:0;border-top:1px solid var(--line)}.chg{columns:1}.study-h h2{font-size:25px}}
 
 .foot{padding-block:0 40px;color:var(--ink2);font-size:12.5px;display:flex;flex-direction:column;gap:6px}
 .foot ul{padding-left:18px;display:flex;flex-direction:column;gap:3px}
@@ -347,8 +297,8 @@ table.dense td{font-size:12.5px}
 .rz{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:14px}
 .rz-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .rz-nav .chips{display:flex;gap:6px;flex-wrap:wrap;flex:1 1 100%;order:-1}
-.rz-nav button{border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:6px 12px;font-weight:600;font-size:13.5px;cursor:pointer;min-height:36px}
-.rz-nav .chips button[aria-selected="true"]{background:var(--green);border-color:var(--green);color:#fff}
+.rz-nav button{border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:6px 12px;font-weight:600;font-size:13.5px;cursor:pointer;min-height:44px}
+.rz-nav .chips button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
 .rz-zona{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
 .rz-zona h3{font-size:20px}
 .rz-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
@@ -384,19 +334,46 @@ table.dense td{font-size:12.5px}
 .cc dl{display:grid;gap:6px;margin:0;font-size:13px}
 .cc dl div{display:grid;grid-template-columns:minmax(110px,160px) 1fr;gap:8px}
 .cc dt{color:var(--ink2)}.cc dd{margin:0}
+.cc-evid{display:flex;flex-direction:column;gap:16px;border-top:1px solid var(--line);padding-top:14px}
+.cc-bloque{display:flex;flex-direction:column;gap:8px}
+.cc-leyenda{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--ink2)}
+.cc-leyenda span{display:inline-flex;align-items:center;gap:6px}
+.cc-fila-malo{background:var(--red-soft)}
+.cc-fila-malo th[scope="row"],.cc-fila-malo td{color:var(--red);font-weight:600}
+.cc-fila-demo{background:var(--blue-soft)}
+.cc-fila-demo th[scope="row"],.cc-fila-demo td{color:var(--blue);font-weight:600}
+.cc-barra{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.cc-barra-pista{position:relative;width:120px;height:10px;background:var(--soft);border:1px solid var(--line);border-radius:3px;overflow:hidden;flex:none}
+.cc-barra-cero{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--ink3)}
+.cc-barra-fill{position:absolute;top:1px;bottom:1px;border-radius:1px}
+.cc-anios-grid{display:flex;flex-wrap:wrap;gap:6px}
+.cc-anio{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:40px;padding:4px 8px;border-radius:6px;font:600 13.5px var(--mono);background:var(--soft);color:var(--ink2);border:1px solid var(--line);cursor:default}
+.cc-anio.bueno{background:var(--green-soft);color:var(--green-d);border-color:var(--green-soft)}
+.cc-anio.malo{background:var(--red);color:#fff;border-color:var(--red)}
+.cc-anio.demo{background:var(--blue);color:#fff;border-color:var(--blue)}
+.cc-anio.sin{opacity:.55}
+.cc-estres-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:10px}
+.cc-kpi{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:var(--soft);display:flex;flex-direction:column;gap:2px}
+.cc-kpi .k{font-size:12px;color:var(--ink2)}
+.cc-kpi .v{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.cc-kpi .s{font-size:11.5px;color:var(--ink3)}
 @media (max-width:520px){.cc dl div{grid-template-columns:1fr;gap:0}}
 </style>
 
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="#portada"><svg width="24" height="24" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="6" fill="#1f7a4d"/><path d="M13 20V9M13 13c-3 0-5-2-5-5 3 0 5 2 5 5zm0 2c3 0 5-2 5-5-3 0-5 2-5 5z" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>Milpa Clara <span class="tag">MAQUETA v6</span></a>
-    <nav class="nav" aria-label="Secciones"><a href="#portada">Portada</a><a href="#recorrido">Zonas</a><a href="#calculo">Cómo se calculó</a><a href="#app">La app</a><a href="#proyecto">Página del proyecto</a><a href="#estudio">El estudio por año</a></nav>
-    <button class="notes-btn" id="notesBtn" aria-pressed="false" type="button"><span class="box"></span>Notas del estudio</button>
+    <a class="brand" href="#portada"><svg width="24" height="24" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="6" fill="#1f7a4d"/><path d="M13 20V9M13 13c-3 0-5-2-5-5 3 0 5 2 5 5zm0 2c3 0 5-2 5-5-3 0-5 2-5 5z" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>Milpa Clara</a>
+    <nav class="nav" aria-label="Secciones"><a href="#portada">Portada</a><a href="#recorrido">Zonas</a><a href="#calculo">Cómo se calculó</a><a href="#app">La app</a><a href="#proyecto">Página del proyecto</a></nav>
   </div>
 </header>
 
 <main class="wrap">
-  <p class="legend"><span class="lab real">Dato real</span> con fuente oficial <span class="lab est">Estimación</span> cálculo con datos reales y supuestos que se dicen <span class="lab ej">Ejemplo</span> inventado para mostrar cómo funciona <span class="falta">[falta]</span> lo consigue el equipo</p>
+  <ul class="legend">
+    <li><span class="lab real">Dato real</span> con fuente oficial</li>
+    <li><span class="lab est">Estimación</span> cálculo con datos reales y supuestos que se dicen</li>
+    <li><span class="lab ej">Ejemplo</span> inventado para mostrar cómo funciona</li>
+    <li><span class="falta">[falta]</span> lo consigue el equipo</li>
+  </ul>
 
   <!-- ============ PORTADA ============ -->
   <section class="hero" id="portada" aria-label="Portada">
@@ -409,7 +386,7 @@ table.dense td{font-size:12.5px}
       <span class="eyebrow">Amealco de Bonfil, Querétaro · maíz de temporal</span>
       <h1>Antes de sembrar, mira lo que pasó en tu tierra.</h1>
       <p class="lead">Milpa Clara junta 23 años de lluvia medida por la NASA, la sequía de CONAGUA y las cosechas reales del SIAP para decirte qué arriesgas si siembras maíz otra vez y qué cambia si rotas.</p>
-      <div class="btns"><a class="primary" href="#recorrido">Ver mi zona</a><a class="ghost" href="#video">Ver demo (30 s)</a></div>
+      <div class="btns"><a class="primary" href="#recorrido">Ver cuándo sembrar</a><a class="ghost" href="#video">Ver demo (30 s)</a></div>
       <div class="hero-stat">
         <span class="big">33 % y 39 %</span>
         <p>del maíz sembrado en Amealco se perdió en 2019 y en 2020. La NASA midió esas temporadas 17 y 18 % más secas que el promedio.</p>
@@ -418,23 +395,22 @@ table.dense td{font-size:12.5px}
       <p class="traction"><span class="falta">[N]</span> productores de Amealco ya la probaron <span class="falta">[falta]</span></p>
     </div>
   </section>
-  <aside class="note"><span class="n">Nota 1 · ganadores 2024–2025</span>Portada con imagen real del lugar, una sola promesa y dos botones: el patrón de SkySense (Twisters, ganador 2025), Queñaris (Local Impact 2025) y TerraTales (2024). La cifra es verificable (SIAP): en 2025 la cifra del problema ya casi no separaba a los nominados (+2 puntos), así que tiene que ser real y comprobable.</aside>
 
   <!-- ============ RECORRIDO POR ZONAS ============ -->
   <section class="block" id="recorrido" aria-label="Recorrido por zonas">
     <div class="sec-h">
       <div><span class="eyebrow">Recorrido por zonas</span><h2>¿Cuándo sembrar, fertilizar y cosechar en cada zona?</h2></div>
-      <p>Una zona a la vez. Cada fecha dice por qué y qué tan segura es. Los datos son de la zona, no de tu parcela: la decisión final es tuya.</p>
+      <p>Por ahora mostramos una zona de ejemplo, El Llano, al norte de Amealco. Más zonas se van a ir agregando. Cada fecha dice por qué y qué tan segura es: los datos son de la zona, no de tu parcela exacta, así que la decisión final es tuya.</p>
     </div>
     <div class="rz">
       <p class="card-msg warn" id="rzEjemplo" hidden><b>Datos de prueba</b><span>Estas zonas y fechas son un archivo de prueba (<code>"ejemplo": true</code>) mientras llega el cálculo final.</span></p>
       <div class="rz-nav">
         <button type="button" id="rzAnt" aria-label="Zona anterior">←</button>
-        <div class="chips" id="rzChips" role="tablist" aria-label="Zonas"></div>
+        <div class="chips" id="rzChips" role="group" aria-label="Zonas"></div>
         <button type="button" id="rzSig" aria-label="Zona siguiente">→</button>
         <span class="muted" id="rzPaso" aria-live="polite"></span>
       </div>
-      <div id="rzCuerpo" aria-live="polite"><p class="muted">Cargando datos…</p></div>
+      <div id="rzCuerpo"><p class="muted">Cargando datos…</p></div>
       <p class="fine"><span id="rzMetodo"></span><br><span id="rzFuente"></span></p>
     </div>
   </section>
@@ -442,21 +418,46 @@ table.dense td{font-size:12.5px}
   <!-- ============ CÓMO SE CALCULÓ ============ -->
   <section class="block" id="calculo" aria-label="Cómo se calculó">
     <div class="sec-h">
-      <div><span class="eyebrow">Cómo se calculó</span><h2>De dónde salen las fechas y qué tan bien predice la red</h2></div>
-      <p>Probamos una red neuronal contra modelos más simples, con años que el modelo nunca vio. Aquí está el resultado, aunque no nos favorezca.</p>
+      <div><span class="eyebrow">Cómo se calculó</span><h2>¿Puedes confiar en estas fechas?</h2></div>
+      <p>Probamos si una inteligencia artificial adivinaba mejor que un cálculo simple con lluvias de años pasados. Te decimos el resultado tal cual, aunque no nos convenga.</p>
     </div>
     <div class="cc">
       <div id="ccVeredicto" class="card-msg" aria-live="polite"><span class="muted">Cargando evaluación…</span></div>
       <div class="cc-pasos">
-        <div class="cc-paso"><h3>1. Las fechas del calendario</h3><p id="ccFechas" class="muted">Cargando…</p></div>
-        <div class="cc-paso"><h3>2. La red neuronal</h3><dl id="ccDetalle"></dl></div>
+        <div class="cc-paso"><h3>¿De dónde salen tus fechas?</h3><div id="ccFechas" class="muted">Cargando…</div></div>
+        <div class="cc-paso"><h3>¿Qué probamos?</h3><p id="ccResumenIA" class="muted">Cargando…</p></div>
       </div>
-      <div id="ccRed">
-        <h3>Error de cada modelo (menos es mejor)</h3>
-        <p class="fine">RMSE del NDVI pronosticado. "Mejora sobre el promedio" compara contra el promedio histórico de cada píxel: arriba de 0 es mejor que el promedio; abajo de 0, peor.</p>
-        <div class="cc-scroll"><table id="ccTabla"></table></div>
-        <h3 style="margin-top:14px">Mejora sobre el promedio, año por año (prueba)</h3>
-        <div class="cc-scroll"><table id="ccAnios"></table></div>
+      <details class="cc-detalle">
+        <summary>Ver la comparación completa, con números (para quien quiera revisar el detalle)</summary>
+        <div id="ccRed">
+          <h3>Error de cada forma de calcular (menos es mejor)</h3>
+          <p class="fine">Qué tan lejos quedó cada cálculo de lo que realmente pasó en el campo. "Mejora sobre el promedio" compara contra solo usar el promedio de años pasados: arriba de 0 es mejor; abajo de 0, peor.</p>
+          <div class="cc-scroll"><table id="ccTabla"></table></div>
+          <h3 style="margin-top:14px">Mejora sobre el promedio, año por año</h3>
+          <div class="cc-scroll"><table id="ccAnios"></table></div>
+          <dl id="ccDetalle"></dl>
+        </div>
+      </details>
+      <div class="cc-evid" id="ccEvidencia">
+        <div class="cc-bloque" id="ccSerieBloque">
+          <h3>Los años buenos y malos del maíz, comparados con lo que vio el satélite</h3>
+          <p class="fine">Cada barra es un año. Comparamos qué tan verde se vio el campo desde el satélite contra si ese año le fue mal al maíz de verdad.</p>
+          <div class="cc-leyenda" aria-label="Leyenda">
+            <span><i class="sq" style="background:var(--red)"></i>Año malo para el maíz</span>
+            <span><i class="sq" style="background:var(--green)"></i>Año sin pérdida grave</span>
+            <span><i class="sq" style="background:var(--blue)"></i>2026: la IA nunca había visto esta temporada</span>
+          </div>
+          <div id="ccSerieGraf" aria-live="polite"><p class="muted">Cargando…</p></div>
+          <details class="cc-detalle"><summary>Ver la tabla, año por año</summary><div class="cc-scroll"><table id="ccSerieTabla"></table></div></details>
+          <p class="fine" id="ccSeriePie">fuente: serie_regional.json</p>
+        </div>
+        <div class="cc-bloque" id="ccEstresBloque">
+          <h3>¿Qué tan bien le fue a la IA en la temporada que nunca vio?</h3>
+          <div id="ccEstresKpis" class="cc-estres-kpis"></div>
+          <p id="ccEstresResumen" class="fine"><span class="muted">Cargando…</span></p>
+          <p class="card-msg warn" id="ccEstresFrase">En 2026 (una temporada que la IA nunca había visto) acertó un poco más que solo usar el promedio de años pasados. Pero en la sequía de 2023 se equivocó (mira la gráfica de arriba). Por eso esta herramienta no promete nada con certeza: te muestra el riesgo que hubo en el pasado y la decisión final es tuya.</p>
+          <p class="fine" id="ccEstresPie">fuente: estres_mapa.json</p>
+        </div>
       </div>
       <p class="fine" id="ccFuente"></p>
     </div>
@@ -473,7 +474,7 @@ table.dense td{font-size:12.5px}
         <div class="logo"><svg width="24" height="24" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="6" fill="#1f7a4d"/><path d="M13 20V9M13 13c-3 0-5-2-5-5 3 0 5 2 5 5zm0 2c3 0 5-2 5-5-3 0-5 2-5 5z" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>Milpa Clara <small>nombre provisional</small></div>
         <div class="search"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="6" cy="6" r="4.5" stroke="#53605a" fill="none" stroke-width="1.5"/><path d="M9.5 9.5L13 13" stroke="#53605a" stroke-width="1.5"/></svg><span>Amealco de Bonfil, Querétaro</span></div>
         <span class="sp"></span>
-        <span class="avatar" title="Productor de ejemplo">DE</span>
+        <span class="avatar" title="Productor de ejemplo" aria-label="Productor de ejemplo: DE">DE</span>
       </div>
       <div class="abody">
         <aside class="side">
@@ -486,7 +487,8 @@ table.dense td{font-size:12.5px}
 
           <!-- Mi parcela -->
           <div class="pane" id="t-parcela" role="tabpanel" aria-labelledby="tb-parcela">
-            <div class="place"><div><h2>Parcela El Llano</h2><div class="sub">3.2 ha · maíz de temporal · <span class="lab ej">Ejemplo</span></div></div><button class="ghost sm" type="button">Editar</button></div>
+            <div class="place"><div><h3>Parcela El Llano</h3><div class="sub">3.2 ha · maíz de temporal · <span class="lab ej">Ejemplo</span></div></div><button class="ghost sm" type="button" id="btnEditarParcela">Editar</button></div>
+            <span class="muted" id="editarMsg" style="font-size:12px" aria-live="polite"></span>
             <div class="live">
               <div class="live-h">Esta temporada, 2026 <span class="mono">al 20 sep</span></div>
               <div class="live-g">
@@ -499,14 +501,15 @@ table.dense td{font-size:12.5px}
             <div class="row between"><span class="field-label">Temporada <b id="pyY" class="tn">2025</b></span><span class="muted" style="font-size:12px">cámbiala en la barra del mapa</span></div>
             <div class="stats" id="pyStats"></div>
             <p class="ysum" id="pySum"></p>
-            <div><div class="field-label">Lo que siembras hoy</div><div class="row between" style="margin-top:4px"><b>Maíz cada año</b><button class="ghost sm" type="button">Cambiar</button></div></div>
+            <div><div class="field-label">Lo que siembras hoy</div><div class="row between" style="margin-top:4px"><b>Maíz cada año</b><button class="ghost sm" type="button" id="btnCambiarCultivo">Cambiar</button></div>
+              <span class="muted" id="cambiarMsg" style="font-size:12px" aria-live="polite"></span></div>
             <button class="primary" data-go="plan" type="button">Ver mi plan de rotación</button>
             <p class="trust"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="6" width="9" height="6.5" rx="1.5" fill="none" stroke="#53605a" stroke-width="1.3"/><path d="M4.5 6V4.5a2.5 2.5 0 015 0V6" fill="none" stroke="#53605a" stroke-width="1.3"/></svg><span>Tu ubicación solo sirve para encontrar tu zona. No se guarda con tu nombre.</span></p>
           </div>
 
           <!-- Mi plan -->
           <div class="pane" id="t-plan" role="tabpanel" aria-labelledby="tb-plan" hidden>
-            <h2>¿Qué te importa más?</h2>
+            <h3>¿Qué te importa más?</h3>
             <p class="muted">Los controles solo cambian el orden. Los números de cada rotación no cambian.</p>
             <div class="slider"><label for="wA">Ahorrar agua</label><input id="wA" type="range" min="0" max="5" value="3"><output id="oA" for="wA">3</output></div>
             <div class="slider"><label for="wD">Ganar más</label><input id="wD" type="range" min="0" max="5" value="3"><output id="oD" for="wD">3</output></div>
@@ -520,19 +523,20 @@ table.dense td{font-size:12.5px}
 
           <!-- Historia -->
           <div class="pane" id="t-hist" role="tabpanel" aria-labelledby="tb-hist" hidden>
-            <h2>¿Qué habría pasado?</h2>
+            <h3>¿Qué habría pasado?</h3>
             <div class="quiz"><b id="quizQ">2020: la NASA midió 18 % menos lluvia que el promedio. ¿Qué habrías sembrado?</b><div class="opts" id="opts"><button data-c="mz" aria-pressed="false" type="button">Maíz</button><button data-c="av" aria-pressed="false" type="button">Avena</button><button data-c="fr" aria-pressed="false" type="button">Frijol</button></div><div id="quizAns" aria-live="polite"></div></div>
             <div class="pick"><label for="rA">Lo que sembré<select id="rA"></select></label><label for="rB">Lo que pude sembrar<select id="rB"></select></label></div>
             <button class="primary" id="play" type="button">Reproducir 2003–2025</button>
             <div class="keys" id="simKeys"></div>
             <svg class="chart" id="sim" viewBox="0 0 360 262" role="img" aria-label="Lluvia de cada temporada y dinero acumulado por hectárea, 2003 a 2025" tabindex="0"></svg>
+            <div id="simTipA11y" class="sr-only" aria-live="polite"></div>
             <div class="tally" id="simres" aria-live="polite"></div>
             <p class="fine">Municipio, no tu parcela: rendimiento real por hectárea sembrada en Amealco (SIAP) × precio medio de Querétaro 2021–2025, sin restar costos. Lluvia de junio a septiembre de NASA POWER; en rojo, las temporadas por debajo de la mediana. Frijol 2018 y 2019: el SIAP no lo registra en Amealco y se usa Huimilpan. <span class="lab real">Dato real</span> <span class="lab est">Estimación</span></p>
           </div>
 
           <!-- Avisos -->
           <div class="pane" id="t-aviso" role="tabpanel" aria-labelledby="tb-aviso" hidden>
-            <h2>Avisos de siembra</h2>
+            <h3>Avisos de siembra</h3>
             <div class="card-msg"><b>Tu ventana de siembra</b><span id="avWin"></span><span class="src">NASA POWER 2003–2025 · regla: 20 mm en 5 días y sin 10 días secos después · <span class="lab est">Estimación</span></span></div>
             <div class="card-msg warn"><b>Si la lluvia se atrasa</b><span id="avLate"></span><span class="src">NASA POWER y SIAP · <span class="lab real">Dato real</span></span></div>
             <div class="card-msg"><b>Helada temprana</b><span>En 6 de 23 años hubo una noche de 2 °C o menos antes del 31 de octubre (2007, 2008, 2010, 2011, 2012 y 2020). A 2,600 m, en tu parcela puede hacer más frío.</span><span class="src">NASA POWER, temperatura mínima a 2 m, celda de unos 55 km · <span class="lab real">Dato real</span></span></div>
@@ -558,12 +562,6 @@ table.dense td{font-size:12.5px}
           <div class="chip timebar"><label for="yr">Temporada</label><input id="yr" type="range" min="0" max="13" step="1" value="13" aria-valuetext="2025"><output id="yrOut" for="yr">2025</output><div class="ticks" id="ticks" aria-hidden="true"></div></div>
         </div>
       </div>
-    </div>
-    <div class="notes-row">
-      <aside class="note"><span class="n">Nota 2 · ganador 2024</span>La herramienta arranca en el mapa, como GaamaRamma (Best Use of Data 2024, agricultura). Cada dato dice con qué detalle ve (30 m, 250 m, ~55 km, municipio): la crítica del 27 de septiembre marcó que "tu parcela" con datos de 9 km no tenía sentido.</aside>
-      <aside class="note"><span class="n">Nota 3 · CDMX 2025 y documental DW</span>El plan da m³ de agua y pesos por hectárea, no puntos: así lo dijo Click Crop ("ahorra agua", nominado de CDMX 2025) y así mide el productor en el documental. Salió el haba: el SIAP no la registra en Amealco. Entraron avena y frijol, que sí se siembran.</aside>
-      <aside class="note"><span class="n">Nota 4 · 1,180 proyectos de agricultura</span>Validar con la historia real lo hizo 1 de 1,180 proyectos de agricultura en 2024–2025. La pregunta antes de mostrar la respuesta viene de Zumorroda-X (Art &amp; Technology 2025). 2024 ya no es el año malo del ejemplo: esa temporada llovió 141 % del promedio.</aside>
-      <aside class="note"><span class="n">Nota 5 · ganador 2025 (México)</span>La fecha al calendario y el aviso por mensaje vienen de SkySense (Twisters, Monterrey, Best Use of Technology 2025), igual que la nota de por qué pedimos permiso.</aside>
     </div>
   </section>
 
@@ -601,75 +599,6 @@ table.dense td{font-size:12.5px}
       </ol>
     </div>
 
-    <div class="psec">
-      <h3>Datos y método</h3>
-      <div class="tbl-wrap">
-        <table>
-          <thead><tr><th>Dato</th><th>Qué mide</th><th>Detalle</th><th>En esta maqueta</th></tr></thead>
-          <tbody>
-            <tr><td>NASA POWER <code>PRECTOTCORR</code> <code>T2M_MAX</code> <code>T2M_MIN</code> <code>RH2M</code> <code>WS2M</code> <code>ALLSKY_SFC_SW_DWN</code> <code>GWETROOT</code></td><td>Lluvia diaria, clima para calcular la evaporación (ET₀) y humedad en la raíz</td><td>Celda de 0.5° (unos 55 km), diario, 2000–2026</td><td><span class="lab real">Usado</span></td></tr>
-            <tr><td>HLS <code>HLSS30</code> <code>HLSL30</code> v2.0</td><td>Imagen de la parcela en color real, una por temporada</td><td>30 m, 2015–2025</td><td><span class="lab real">Usado</span></td></tr>
-            <tr><td>Landsat WELD</td><td>La zona en 1985, 1990 y 2000</td><td>30 m, compuesto anual</td><td><span class="lab real">Usado</span></td></tr>
-            <tr><td>MODIS <code>MOD13Q1</code> v061</td><td>Verdor (NDVI) de la zona</td><td>250 m, cada 16 días</td><td><span class="lab real">Usado</span></td></tr>
-            <tr><td>SMAP L4 <code>SPL4SMGP</code> v008</td><td>Humedad en la raíz para la ventana de siembra</td><td>9 km, cada 3 horas, desde 2015</td><td>App final</td></tr>
-            <tr><td>GPM IMERG <code>GPM_3IMERGDF</code> v07</td><td>Lluvia diaria con más detalle</td><td>Unos 10 km</td><td>App final</td></tr>
-            <tr><td>SIAP, cierre agrícola municipal</td><td>Superficie sembrada y perdida, rendimiento y precio por cultivo</td><td>Municipio, 2003–2025</td><td><span class="lab real">Usado</span></td></tr>
-            <tr><td>CONAGUA, Monitor de Sequía de México</td><td>Categoría de sequía (D0 a D4)</td><td>Municipio, cada 15 días, 2003–2026</td><td><span class="lab real">Usado</span></td></tr>
-            <tr><td>FAO-56 (tablas 11 y 12)</td><td>Agua que pide cada cultivo: coeficiente Kc por etapa</td><td>Tabla genérica</td><td><span class="lab est">Usado, falta ajustarlo</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <ul class="list">
-        <li><b>Agua de cada cultivo:</b> ET₀ diaria con Penman-Monteith (FAO-56) y el clima de NASA POWER; agua del cultivo = Kc × ET₀ en su ciclo. Maíz: 180 días desde el 6 de junio; avena forrajera: 100 días desde el 1 de julio; frijol: 110 días desde el 15 de junio.</li>
-        <li><b>Temporada seca:</b> lluvia de junio a septiembre por debajo de la mediana de 2003–2025 (540 mm). <b>Año malo:</b> el cultivo rindió menos de la mitad de su mediana por hectárea sembrada.</li>
-        <li><b>Inicio de lluvias:</b> primer día desde el 1 de mayo con 20 mm en 5 días y sin 10 días secos en el mes siguiente.</li>
-        <li><b>Dinero:</b> producción por hectárea sembrada (incluye lo que se perdió) × precio medio rural de Querétaro 2021–2025. Es ingreso bruto: faltan los costos.</li>
-      </ul>
-    </div>
-
-    <div class="psec" id="validacion">
-      <h3>¿Cómo sabemos que funciona?</h3>
-      <p class="intro">Comparamos lo que midió la NASA con lo que reportó el SIAP, una fuente que no usamos para calcular la lluvia. Si la NASA sirve para avisar riesgo, los años malos del maíz tienen que caer en temporadas secas.</p>
-      <div class="valnums">
-        <div><span class="v tn" id="vAll">6 de 6</span><span>años malos del maíz (2005, 2009, 2011, 2014, 2019 y 2020) cayeron en temporadas que la NASA midió secas.</span><span class="lab real">NASA POWER y SIAP</span></div>
-        <div><span class="v tn" id="vDry">6 de 11</span><span id="vDryT">temporadas secas fueron malas para el maíz. De las 12 normales o lluviosas, ninguna.</span><span class="lab real">NASA POWER y SIAP</span></div>
-        <div><span class="v tn"><span class="falta">[N de 30]</span></span><span>respuestas correctas del asistente en 30 preguntas con respuesta conocida.</span><span class="falta">[falta]</span></div>
-        <div><span class="v tn"><span class="falta">[N]</span></span><span>productores de Amealco o Aculco la probaron. Su testimonio va en el video.</span><span class="falta">[falta]</span></div>
-      </div>
-      <div class="figs">
-        <figure class="fig">
-          <figcaption><b>Lluvia de la temporada contra cosecha de maíz, Amealco 2003–2025</b><span>Cada punto es un año. En rojo, los años malos del maíz. Pasa el cursor para ver el detalle.</span></figcaption>
-          <svg class="chart" id="valScatter" viewBox="0 0 640 380" role="img" aria-label="Diagrama de dispersión: lluvia de junio a septiembre contra toneladas de maíz por hectárea sembrada, 23 años"></svg>
-        </figure>
-        <figure class="fig">
-          <figcaption><b>En los 6 años malos del maíz, ¿cómo le fue a cada cultivo?</b><span>Rendimiento de cada año como porcentaje de su año normal (mediana 2003–2025), Amealco.</span></figcaption>
-          <div class="keys"><span><i class="dt" style="background:var(--c-maiz)"></i>Maíz</span><span><i class="dt" style="background:var(--c-avena)"></i>Avena forrajera</span><span><i class="dt" style="background:var(--c-frijol)"></i>Frijol</span><span><i class="dt" style="background:#fff;box-shadow:inset 0 0 0 2px var(--c-frijol)"></i>Frijol de Huimilpan (2019)</span></div>
-          <svg class="chart" id="valCrops" viewBox="0 0 520 300" role="img" aria-label="Rendimiento de maíz, avena y frijol en los 6 años malos del maíz"></svg>
-        </figure>
-      </div>
-      <div>
-        <h4 style="font-size:15px;margin-bottom:6px">Dónde falla y qué vamos a hacer</h4>
-        <ul class="list fails">
-          <li>La lluvia y la humedad ven la zona, no la parcela: celda de unos 55 km. La app final usará IMERG (10 km) y SMAP L4 (9 km).</li>
-          <li>Las cosechas son del municipio, no de tu parcela. El productor puede corregir con lo que sacó él.</li>
-          <li>2022 y 2023 fueron secas y el SIAP no reporta pérdidas en Amealco, aunque en todo Querétaro se perdió 31 % y 42 % del maíz. Lo vamos a preguntar en campo.</li>
-          <li>Es ingreso bruto. Sin los costos de cada cultivo no podemos hablar de ganancia <span class="falta">[falta: FIRA]</span>.</li>
-        </ul>
-      </div>
-      <aside class="note"><span class="n">Nota 6 · 2024 → 2025</span>Los ganadores globales mencionan validación o una métrica en 60 % de los casos, contra 43 % de los finalistas. En México, la página completa pasó de +14 a +25 puntos de diferencia entre nominados y no nominados.</aside>
-    </div>
-
-    <div class="psec ai3">
-      <h3>Uso de inteligencia artificial</h3>
-      <p class="intro">Borrador para el campo obligatorio "Use of Artificial Intelligence (AI)" de 2026. Decimos qué hizo la IA, qué hizo el equipo y cómo revisamos lo que hizo la IA.</p>
-      <div class="grid3">
-        <div class="box"><h4>Qué hizo la IA</h4><ul><li>Escribió gran parte del código del procesamiento y de la app (Claude Code).</li><li>Borradores de textos y de los subtítulos en inglés, que revisamos.</li><li>El asistente de la app contesta solo con la tabla de cultivos y la ventana de tu zona, cita fuente y fecha, y si no tiene el dato lo dice.</li></ul></div>
-        <div class="box"><h4>Qué hizo el equipo</h4><ul><li>Eligió Amealco y habló con productores <span class="falta">[falta]</span>.</li><li>Consiguió y limpió los datos del SIAP y de CONAGUA.</li><li>Definió la validación: temporadas secas de la NASA contra pérdidas del SIAP.</li></ul></div>
-        <div class="box"><h4>Cómo lo revisamos</h4><ul><li>Recalculamos a mano 3 temporadas de lluvia y ET₀ contra NASA POWER <span class="falta">[falta]</span>.</li><li>30 preguntas con respuesta conocida para el asistente <span class="falta">[N de 30]</span>.</li><li>Cada cifra de esta página dice su fuente y si es dato real, estimación o ejemplo.</li></ul></div>
-      </div>
-      <aside class="note"><span class="n">Nota 7 · factor IA</span>En 2025, 47 % de los proyectos de México usó IA para escribir código y ya no separaba a los nominados (43 % contra 47 %). Lo que suma es decir cómo se verificó lo que hizo la IA; los 6 nominados de CDMX 2025 solo escribieron "usamos ChatGPT".</aside>
-    </div>
-
     <div class="psec" id="video">
       <h3>Video de 30 segundos</h3>
       <p class="intro">Regla oficial: máximo 30 segundos con subtítulos en inglés. Guion en 4 tomas.</p>
@@ -679,7 +608,6 @@ table.dense td{font-size:12.5px}
         <div class="frame"><div class="shot" data-bg="n2020"><span class="tc">0:20–0:26</span><span class="sub">"Every bad maize year since 2003 was a season NASA measured as dry."</span></div><div class="d"><b>Validación</b> · NASA POWER contra SIAP, 6 de 6</div></div>
         <div class="frame"><div class="shot"><span class="tc">0:26–0:30</span><span class="sub">"[N] farmers in Amealco already use it."</span></div><div class="d"><b>Cierre</b> · productor real <span class="falta">[grabar]</span></div></div>
       </div>
-      <aside class="note"><span class="n">Nota 8 · videos de ganadores</span>Los 9 videos de ganadores 2024–2025 que revisamos duran 30–44 s y siguen el mismo orden: problema con cifra, app en uso, dato de la NASA con nombre y una frase de cierre.</aside>
     </div>
 
     <div class="psec">
@@ -703,133 +631,6 @@ table.dense td{font-size:12.5px}
     </div>
   </section>
 
-  <!-- ============ ESTUDIO ============ -->
-  <section class="study" id="estudio" aria-label="El estudio por año">
-    <div class="study-h">
-      <span class="eyebrow">Para el equipo · no va en el envío</span>
-      <h2>El estudio: qué nos dijo cada año y qué hace la página con eso</h2>
-      <p>Resultados de la API de Space Apps (1,522 equipos de México en 2023–2026, 707 proyectos enviados en 2024–2025, 20 ganadores y 85 finalistas globales), más los datos de Amealco: NASA, SIAP y CONAGUA. Consultado el 27 de septiembre de 2026.</p>
-    </div>
-
-    <div class="years4">
-      <div class="yc">
-        <span class="yn">2023</span><span class="ys">El comienzo del registro de CDMX</span>
-        <dl>
-          <div><dt>CDMX</dt><dd>22 equipos · 12 envíos · 2 nominados: AstroFire (incendios) y Exonautas (exoplanetas).</dd></div>
-          <div><dt>México</dt><dd>Incendios dio 5 nominados; observación de la Tierra se nominó 17 % contra 7–8 % del resto.</dd></div>
-          <div><dt>Nuestro equipo</dt><dd>Planetary Tourism Office: pygame de escritorio. El jurado no podía abrirla.</dd></div>
-        </dl>
-        <p class="todo"><b>En la página</b>Todo corre en el navegador con una liga pública.</p>
-      </div>
-      <div class="yc">
-        <span class="yn">2024</span><span class="ys">Agricultura gana dos premios</span>
-        <dl>
-          <div><dt>CDMX</dt><dd>44 equipos · 28 envíos · <b>0 nominados</b>. Texcaliacenses (chat para agricultores) y Deméter no pasaron.</dd></div>
-          <div><dt>Mundo</dt><dd>9,996 envíos. Agricultura (681) ganó 2: GaamaRamma, calendario de riego con OpenET, y NVS-knot, riesgo de siembra con humedad del suelo.</dd></div>
-          <div><dt>Lo que separó en México</dt><dd>Video +28, cifra +20, GitHub +15, página completa +14.</dd></div>
-          <div><dt>Nuestro equipo</dt><dd>SpaceBioScope: pygame con MongoDB local.</dd></div>
-        </dl>
-        <p class="todo"><b>En la página</b>Un producto de la NASA con nombre que termina en una acción con fecha: la ventana de siembra. El chat no va solo.</p>
-      </div>
-      <div class="yc">
-        <span class="yn">2025</span><span class="ys">CDMX nomina solo observación de la Tierra</span>
-        <dl>
-          <div><dt>CDMX</dt><dd>84 equipos · 59 envíos · 6 nominados, todos de observación de la Tierra (6 de 32; espaciales 0 de 27). Click Crop nominado en agricultura; TerraView (maíz), mención honorífica.</dd></div>
-          <div><dt>Mundo</dt><dd>Más de 11,500 envíos. Twisters (Monterrey) ganó Best Use of Technology; Zumorroda-X, Art &amp; Technology con agricultura; Queñaris, Local Impact.</dd></div>
-          <div><dt>Lo que separó en México</dt><dd>Página completa +25, video +18, GitHub +13, IA en el producto +9, usuario +8, cifra +2.</dd></div>
-          <div><dt>Nuestro equipo</dt><dd>ExoplanetsHunters: Streamlit local y fuga de datos (99.4 % inflado).</dd></div>
-        </dl>
-        <p class="todo"><b>En la página</b>Validación contra un dato independiente y una página del proyecto completa.</p>
-      </div>
-      <div class="yc now">
-        <span class="yn">2026</span><span class="ys">13 al 15 de noviembre · 53 horas</span>
-        <dl>
-          <div><dt>Competencia</dt><dd>Field Shift: <b>441 equipos</b> en el mundo (321 el 24 de septiembre). En CDMX, 2 de 13 equipos.</dd></div>
-          <div><dt>Reglas nuevas</dt><dd>Campo obligatorio "Use of AI". Video de 30 s como máximo, con subtítulos en inglés.</dd></div>
-          <div><dt>Meta</dt><dd>Ganar el evento local de CDMX. Con video, GitHub y página completa, México nominó 17–23 % de las veces.</dd></div>
-          <div><dt>Tesis</dt><dd>Con IA todos tendrán app, repo y video. Lo que no se fabrica en 53 h: validación real, usuario real, dato local e IA evaluada.</dd></div>
-        </dl>
-        <p class="todo"><b>En la página</b>Las cuatro palancas a la vista: validación con SIAP, productores <span class="falta">[falta]</span>, datos locales y asistente evaluado <span class="falta">[falta]</span>.</p>
-      </div>
-    </div>
-
-    <div class="two">
-      <div class="panel">
-        <h3>Lo que separó a nominados de no nominados, 2024 contra 2025</h3>
-        <p class="intro">Diferencia en puntos porcentuales dentro del mismo reto y la misma sede en México. Lo que la IA abarata (código, video, cifras) dejó de separar; creció la página completa.</p>
-        <div class="keys"><span><i class="dt" style="background:#fff;box-shadow:inset 0 0 0 2px var(--blue-l)"></i>2024 · 16 grupos</span><span><i class="dt" style="background:var(--blue)"></i>2025 · 34 grupos</span></div>
-        <svg class="chart" id="gapChart" viewBox="0 0 560 262" role="img" aria-label="Diferencia entre nominados y no nominados por rasgo, 2024 y 2025"></svg>
-        <p class="fine">707 proyectos enviados en México. Rasgos detectados por palabras en la página de cada proyecto: es correlación, no causa.</p>
-      </div>
-      <div class="panel">
-        <h3>CDMX año por año</h3>
-        <p class="intro">Equipos, envíos y nominados de la sede. 2024 no nominó a nadie: la sede también es un riesgo.</p>
-        <div class="tbl-wrap"><table id="cdmxTbl"><thead><tr><th>Año</th><th>Equipos</th><th>Envíos</th><th class="r">Nominados</th></tr></thead><tbody></tbody></table></div>
-        <p class="fine">2026: equipos registrados al 27 de septiembre; el evento todavía no empieza. En 2025 la sede pasó de ~12 equipos en septiembre a 84.</p>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h3>Amealco año por año, 2003–2025</h3>
-      <p class="intro">El estudio de cada temporada con datos reales. Los 6 años malos del maíz fueron temporadas secas. 2024 tuvo sequía excepcional (D4) hasta mediados de agosto, pero la temporada llovió 141 % del promedio y el maíz perdió 4 %: la sequía venía de 2023, la temporada más seca de la serie.</p>
-      <div class="tbl-wrap"><table class="dense" id="amTbl"><thead><tr><th>Año</th><th>Lluvia jun–sep</th><th>Inicio</th><th class="r">Sequía</th><th>Maíz t/ha</th><th class="r">Perdido</th><th class="r">Avena t/ha</th><th class="r">Frijol t/ha</th><th></th></tr></thead><tbody></tbody></table></div>
-      <p class="fine">Lluvia: NASA POWER (en rojo, debajo de la mediana de 540 mm). Inicio de lluvias: regla de 20 mm en 5 días. Sequía: porcentaje de quincenas de junio a octubre en D1 o peor (Monitor de Sequía; antes de 2014 el dato es mensual). Toneladas por hectárea sembrada, incluida la superficie perdida (SIAP, temporal, primavera-verano). Frijol 2018–2019 de Huimilpan.</p>
-    </div>
-
-    <div class="panel">
-      <h3>Por qué Field Shift: las propuestas del 24 de septiembre, revisadas</h3>
-      <p class="intro">Las 5 propuestas de <code>propuestas-2026.md</code> se reordenaron con los nominados de CDMX 2023–2025 y la competencia de hoy.</p>
-      <div class="tbl-wrap"><table>
-        <thead><tr><th>#</th><th>Reto</th><th class="r">Equipos en el mundo</th><th class="r">En CDMX</th><th>Evidencia</th><th>Por qué</th></tr></thead>
-        <tbody>
-          <tr><td>1</td><td><b>Field Shift</b></td><td class="r">441</td><td class="r">2</td><td><b class="good">Alta</b></td><td>Agricultura ganó 3 premios globales en 2024–2025; es el tema más nominado en México; en CDMX 2025, Click Crop nominado y TerraView (maíz) con mención.</td></tr>
-          <tr><td>2</td><td>Harmonization of MODIS and VIIRS Hot Spots</td><td class="r">184</td><td class="r">1</td><td>Media</td><td>Poca competencia y FIRMS ya ganó 2 premios, pero la armonización cuesta explicarla en 30 s.</td></tr>
-          <tr><td>3</td><td>Dancing with the SARs</td><td class="r">172</td><td class="r">0</td><td>Baja</td><td>El único SAR de CDMX 2025 fue nominado (AnalySAR), pero SAR 2025 no ganó premios globales y NISAR es nuevo.</td></tr>
-          <tr><td>–</td><td>Be An Earth System Trend Detective!</td><td class="r">320</td><td class="r">0</td><td class="neu">Bajó</td><td>Sin un usuario concreto que decida algo.</td></tr>
-          <tr><td>–</td><td>Identify Earth Analogs</td><td class="r">255</td><td class="r">1</td><td class="neu">Bajó</td><td>Retos espaciales: 0 nominados en CDMX 2024–2025.</td></tr>
-          <tr><td>–</td><td>CLPS Lunar Mission Browser</td><td class="r">229</td><td class="r">1</td><td class="neu">Bajó</td><td>Espacial y el más lejano a la experiencia del equipo (geometría 3D).</td></tr>
-        </tbody>
-      </table></div>
-    </div>
-
-    <div class="panel">
-      <h3>Qué hicieron los anteriores y dónde queda Milpa Clara</h3>
-      <p class="intro">La escalera que separa a un nominado de un ganador en agricultura (2024–2025).</p>
-      <div class="ladder">
-        <div><span class="lv">Nominado</span><h4>Click Crop · CDMX 2025</h4><p>Planes de riego y una sola promesa: "ahorra agua". App y video. BetterSeed (Tijuana 2024) ponderó capas por cultivo.</p></div>
-        <div><span class="lv">Finalista</span><h4>OptiCrop · Egipto 2024</h4><p>Recomendó qué cultivo sembrar, con riego. Se quedó en "qué cultivo" y no ganó.</p></div>
-        <div><span class="lv">Ganador</span><h4>GaamaRamma y NVS-knot · 2024</h4><p>Un producto de la NASA con nombre convertido en una acción con fecha: riego de 7 días con OpenET; riesgo de siembra con humedad del suelo.</p></div>
-        <div class="us"><span class="lv">Milpa Clara</span><h4>Plan de rotación validado</h4><p>Rotación con agua, dinero, riesgo y suelo, ventana de siembra con fecha y 23 años de historia real contra el SIAP. Validar con la historia: 1 de 1,180. Hablar con productores: 6 de 1,180 <span class="falta">[falta]</span>.</p></div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h3>Qué cambió de la versión 5 a la 6</h3>
-      <ul class="chg">
-        <li>Datos reales en lugar de ejemplos: lluvia, clima, humedad (NASA POWER), sequía (CONAGUA), siembra, pérdidas, rendimientos y precios (SIAP 2003–2025).</li>
-        <li>El mapa es una imagen real de Amealco: 14 temporadas, de Landsat 1985 a HLS 2025, más la capa de verdor MODIS.</li>
-        <li>2024 dejó de ser el ejemplo de año malo: la temporada llovió 141 % del promedio y el maíz perdió 4 %. El simulador pregunta por 2020.</li>
-        <li>Salió el haba (sin registro en Amealco). Entraron avena forrajera y frijol, que sí se siembran.</li>
-        <li>El plan muestra números (m³, pesos, años malos) y los controles solo ordenan. Se quitó el porcentaje de "ajuste".</li>
-        <li>El simulador cubre 23 años y dice cuándo pierde la rotación: en dinero bruto, sembrar maíz cada año gana en total.</li>
-        <li>Portada con imagen real, una promesa y dos botones; los avisos traen la ventana de siembra, la lluvia tardía y la helada temprana.</li>
-        <li>Página del proyecto con validación real, uso de IA y guion de 30 s con cifras reales.</li>
-      </ul>
-    </div>
-
-    <div class="panel">
-      <h3>Lo que falta</h3>
-      <ul class="list">
-        <li>1 a 3 productores de Amealco o Aculco que la prueben, y su testimonio para el video <span class="falta">[falta]</span>.</li>
-        <li>Costos por hectárea de cada cultivo (FIRA) para pasar de ingreso bruto a ganancia <span class="falta">[falta]</span>.</li>
-        <li>Preguntar en campo por 2022 y 2023: temporadas secas sin pérdida reportada en Amealco.</li>
-        <li>Un asesor agrónomo que ajuste el calendario y los Kc de cada cultivo para Amealco.</li>
-        <li>En la app final, cambiar NASA POWER (unos 55 km) por IMERG (10 km) y SMAP L4 (9 km).</li>
-        <li>Nombre definitivo, equipo, correo y las 30 preguntas del asistente.</li>
-      </ul>
-      <aside class="note"><span class="n">Nota 9 · CDMX agricultura</span>El maíz conecta con el jurado local: la mención de TerraView (2025) fue sobre maíz. La fuente principal tiene que ser la NASA: Chicatanas (IPN, 2025) usó Meteomatics y no pasó.</aside>
-    </div>
-  </section>
 </main>
 
 <footer class="wrap foot">
@@ -899,9 +700,6 @@ function showTip(x,y,head,rows){
 const hideTip=()=>{tip.hidden=true;};
 function svgPt(svg,ev){const p=svg.createSVGPoint();p.x=ev.clientX;p.y=ev.clientY;return p.matrixTransform(svg.getScreenCTM().inverse());}
 
-/* ---------- notas ---------- */
-$('#notesBtn').addEventListener('click',e=>{const on=e.currentTarget.getAttribute('aria-pressed')!=='true';e.currentTarget.setAttribute('aria-pressed',on);document.body.classList.toggle('notes',on);});
-
 /* ---------- portada ---------- */
 function placeHero(){const m=$('#heroMedia'),mk=$('#heroMark');const W=m.clientWidth,H=m.clientHeight;if(!W||!H)return;const s=Math.max(W/1280,H/640);const ox=(W-1280*s)*.54,oy=(H-640*s)*.5;mk.style.left=(ox+695*s)+'px';mk.style.top=(oy+331*s)+'px';}
 
@@ -941,6 +739,7 @@ function drawMap(){
   $('#sbar').style.width=len(m).toFixed(0)+'px';$('#stext').textContent=m>=1000?(m/1000)+' km':m+' m';
   const meta=IM.meta[y];$('#attr').textContent=layer==='t'?`${meta.src} · ${dfull(meta.fecha)} · NASA`:`${meta.nsrc} · NASA`;
   $('#zin').disabled=zi===ZL.length-1;$('#zout').disabled=zi===0;
+  cv.setAttribute('aria-label',`Imagen satelital de la zona, temporada ${y}, capa ${layer==='t'?'color real':'verdor'}, acercamiento ${zoom}×`);
 }
 function setLayer(l){layer=l;$('#L-sat').setAttribute('aria-pressed',l==='t');$('#L-ndvi').setAttribute('aria-pressed',l==='n');$('#ndviKey').hidden=l!=='n';
   $('#L-ndvi').textContent=curYear()<2015?'Verdor · 30 m':'Verdor · 250 m';drawMap();}
@@ -1041,9 +840,11 @@ function drawSim(){
   $('#simres').innerHTML=`<div><div class="k">Lo que sembré, ${YR[0].y}–${YR[k].y}</div><div class="v">${money(da)}</div></div><div><div class="k">Lo que pude sembrar</div><div class="v">${money(db)}</div></div><div><div class="k">Diferencia por ha</div><div class="v ${diff>=0?'good':'bad'}">${sgnMoney(diff)}</div><div class="k">en años secos: ${sgnMoney(dd)} al año</div></div>`;
 }
 function simTip(i,x,y){const ra=ROTS[+$('#rA').value],rb=ROTS[+$('#rB').value],a=series(ra),b=series(rb),r=YR[i];
-  showTip(x,y,`${r.y} · ${fmt(r.lluvia)} mm, ${r.seca?'temporada seca':'temporada normal'}`,[
+  const titulo=`${r.y} · ${fmt(r.lluvia)} mm, ${r.seca?'temporada seca':'temporada normal'}`;
+  showTip(x,y,titulo,[
     {c:'var(--ink2)',v:money(a[i].v),l:`${CROP[a[i].c]} · acumulado ${money(a[i].acc)}`},
-    {c:'var(--green)',v:money(b[i].v),l:`${CROP[b[i].c]} · acumulado ${money(b[i].acc)}`}]);}
+    {c:'var(--green)',v:money(b[i].v),l:`${CROP[b[i].c]} · acumulado ${money(b[i].acc)}`}]);
+  $('#simTipA11y').textContent=`${titulo}. ${CROP[a[i].c]}: ${money(a[i].v)}, acumulado ${money(a[i].acc)}. ${CROP[b[i].c]}: ${money(b[i].v)}, acumulado ${money(b[i].acc)}.`;}
 $('#sim').addEventListener('keydown',ev=>{if(ev.key!=='ArrowLeft'&&ev.key!=='ArrowRight')return;ev.preventDefault();simHover=simHover<0?simN-1:Math.max(0,Math.min(simN-1,simHover+(ev.key==='ArrowRight'?1:-1)));drawSim();const r=$('#sim').getBoundingClientRect();simTip(simHover,r.left+r.width*simX(simHover)/SIM.W,r.top+20);});
 $('#sim').addEventListener('blur',()=>{simHover=-1;hideTip();drawSim();});
 function play(){clearInterval(timer);simHover=-1;if(reduce){simN=YR.length;drawSim();return;}simN=1;drawSim();timer=setInterval(()=>{simN++;drawSim();if(simN>=YR.length)clearInterval(timer);},220);}
@@ -1064,9 +865,13 @@ $$('#opts button').forEach(bt=>bt.addEventListener('click',()=>{
   $('#avLate').textContent=`Cuando llegó después del ${dsmTxt(W1)} (${late.map(r=>r.y).join(', ')}), ${lateBad.length} de esos ${late.length} años fueron malos para el maíz. Cambiar de cultivo por un inicio tardío no dejó más dinero en 2003–2025, así que la app no lo recomienda: el aviso sirve para estar pendiente.`;
   const start=Date.UTC(2027,4,17);let h=['L','M','M','J','V','S','D'].map(d=>`<span class="dn">${d}</span>`).join('');
   for(let i=0;i<35;i++){const t=new Date(start+i*864e5),d=t.getUTCDate(),m=t.getUTCMonth(),dm=Math.round((t-Date.UTC(2027,4,1))/864e5);
-    const cls=dm===WM?'med':(dm>=W0&&dm<=W1?'w':'');h+=`<span class="${cls}" title="${d} de ${MES[m]}">${(i===0||d===1)?`<em>${MES[m]}</em>`:''}${d}</span>`;}
+    const cls=dm===WM?'med':(dm>=W0&&dm<=W1?'w':'');
+    const desc=dm===WM?`${d} de ${MES[m]}, la fecha más común para que empiecen las lluvias`:(dm>=W0&&dm<=W1?`${d} de ${MES[m]}, dentro de la ventana en que suelen llegar las lluvias`:`${d} de ${MES[m]}`);
+    h+=`<span class="${cls}" title="${d} de ${MES[m]}" aria-label="${desc}">${(i===0||d===1)?`<em>${MES[m]}</em>`:''}${d}</span>`;}
   $('#cal').innerHTML=h;
 })();
+$('#btnEditarParcela').addEventListener('click',()=>{$('#editarMsg').textContent='En la app real aquí podrías ajustar el tamaño y el cultivo de tu parcela. En esta maqueta no se puede editar.';});
+$('#btnCambiarCultivo').addEventListener('click',()=>{$('#cambiarMsg').textContent='En la app real aquí podrías elegir qué siembras hoy, para comparar contra otras rotaciones. En esta maqueta siempre es maíz.';});
 $('#addCal').addEventListener('click',()=>{$('#calMsg').textContent=`En la app real se anota "Ventana de siembra: ${dsmTxt(W0)} al ${dsmTxt(W1)}". En esta maqueta no se envía nada.`;});
 $('#addWa').addEventListener('click',()=>{$('#calMsg').textContent='En la app real llega un mensaje 3 días antes. En esta maqueta no se envía nada.';});
 
@@ -1076,101 +881,11 @@ function tab(t,focus){$$('.tabs button').forEach(b=>{const on=b.dataset.t===t;b.
 $$('.tabs button').forEach(b=>{b.addEventListener('click',()=>tab(b.dataset.t));b.addEventListener('keydown',ev=>{const i=TABS.indexOf(b.dataset.t);if(ev.key==='ArrowRight'){ev.preventDefault();tab(TABS[(i+1)%4],true);}if(ev.key==='ArrowLeft'){ev.preventDefault();tab(TABS[(i+3)%4],true);}});});
 $$('[data-go]').forEach(b=>b.addEventListener('click',()=>tab(b.dataset.go)));
 
-/* ---------- validación: dispersión ---------- */
-function drawScatter(){
-  const svg=$('#valScatter');svg.replaceChildren();
-  const W=640,H=380,L=56,R=18,T=36,B=46,x0=280,x1=820,y0=0,y1=2.8;
-  const X=v=>L+(v-x0)/(x1-x0)*(W-L-R),Y=v=>T+(1-(v-y0)/(y1-y0))*(H-T-B);
-  el('rect',{x:L,y:T,width:X(D.med)-L,height:H-T-B,fill:'var(--red-soft)',opacity:.55},svg);
-  const ax=el('g',{class:'ax'},svg);
-  for(let v=300;v<=800;v+=100){el('line',{x1:X(v),x2:X(v),y1:T,y2:H-B,stroke:'var(--line)'},ax);tx(ax,X(v),H-B+16,v+' mm',{'text-anchor':'middle'});}
-  for(let v=0;v<=2.5;v+=.5){el('line',{x1:L,x2:W-R,y1:Y(v),y2:Y(v),stroke:'var(--line)'},ax);tx(ax,L-8,Y(v)+3.5,v.toFixed(1),{'text-anchor':'end'});}
-  tx(svg,L+(W-L-R)/2,H-6,'Lluvia de junio a septiembre (NASA POWER)',{'text-anchor':'middle'});
-  const yl=tx(svg,14,T+(H-T-B)/2,'Maíz, t por ha sembrada (SIAP)',{'text-anchor':'middle',transform:`rotate(-90 14 ${T+(H-T-B)/2})`});
-  const half=MED.mz/2;
-  el('line',{x1:X(D.med),x2:X(D.med),y1:T-6,y2:H-B,stroke:'var(--ink2)','stroke-width':1.2,'stroke-dasharray':'4 3'},svg);
-  tx(svg,X(D.med),T-12,`mediana ${fmt(D.med)} mm`,{'font-size':'10.5','text-anchor':'middle'});
-  el('line',{x1:L,x2:W-R,y1:Y(half),y2:Y(half),stroke:'var(--ink2)','stroke-width':1.2,'stroke-dasharray':'4 3'},svg);
-  tx(svg,W-R-4,Y(half)-5,'mitad de lo normal',{'text-anchor':'end','font-size':'10.5'});
-  tx(svg,L+6,T+14,'Temporadas secas',{class:'strong','font-size':'11.5'});
-  tx(svg,W-R-6,T+14,'Normales o lluviosas',{class:'strong','font-size':'11.5','text-anchor':'end'});
-  tx(svg,L+6,H-B-8,`${DRY.filter(r=>r.mz_malo).length} años malos, todos aquí`,{fill:'var(--red)','font-size':'11','font-weight':'600'});
-  tx(svg,W-R-4,H-B-8,`${NOR.filter(r=>r.mz_malo).length} años malos`,{'text-anchor':'end','font-size':'11','font-weight':'600'});
-  const off={2005:[-9,4,'end'],2019:[2,-10,'middle'],2020:[0,17,'middle'],2009:[9,-4,'start'],2014:[9,4,'start'],2011:[9,4,'start'],2023:[9,4,'start'],2022:[-9,9,'end'],2024:[-9,4,'end'],2007:[0,-10,'middle']};
-  YR.slice().sort((p,q)=>p.mz_malo-q.mz_malo).forEach(r=>{
-    const cx=X(r.lluvia),cy=Y(r.mz_tha),g=el('g',{tabindex:0,role:'img','aria-label':`${r.y}: ${fmt(r.lluvia)} mm, ${r.mz_tha.toFixed(2)} t por hectárea`},svg);
-    el('circle',{cx,cy,r:12,fill:'transparent'},g);
-    el('circle',{cx,cy,r:5.5,fill:r.mz_malo?'var(--red)':'var(--dot)',stroke:'#fff','stroke-width':2},g);
-    const o=off[r.y];if(o)tx(svg,cx+o[0],cy+o[1],(r.y===2023?'2023, la más seca':String(r.y)),{'text-anchor':o[2],'font-size':'10.5',fill:r.mz_malo?'var(--ink)':'var(--ink2)','font-weight':r.mz_malo?'600':'400'});
-    const show=ev=>{const b=ev.clientX!=null&&ev.clientX!==0?[ev.clientX,ev.clientY]:(()=>{const q=g.getBoundingClientRect();return [q.right,q.top];})();
-      showTip(b[0],b[1],`${r.y}${r.mz_malo?' · año malo del maíz':''}`,[{v:fmt(r.lluvia)+' mm',l:`lluvia jun–sep, ${r.pct} % del promedio`},{v:r.mz_tha.toFixed(2)+' t/ha',l:`maíz; se perdió ${r.mz_loss.toFixed(0)} % de lo sembrado`}]);};
-    g.addEventListener('pointerenter',show);g.addEventListener('pointermove',show);g.addEventListener('focus',show);
-    g.addEventListener('pointerleave',hideTip);g.addEventListener('blur',hideTip);
-  });
-}
-/* ---------- validación: cultivos en años malos ---------- */
-function drawCrops(){
-  const svg=$('#valCrops');svg.replaceChildren();
-  const rows=BADY.map(r=>({lab:String(r.y),mz:pctOf(r,'mz'),av:pctOf(r,'av'),fr:pctOf(r,'fr'),frFill:r.fr_fill})).concat([{lab:'Promedio',mz:BADPCT.mz,av:BADPCT.av,fr:BADPCT.fr,avgRow:true}]);
-  const W=520,H=300,L=74,R=24,T=18,B=34,x1=150,rh=(H-T-B)/rows.length;
-  const X=v=>L+Math.min(v,x1)/x1*(W-L-R);
-  const ax=el('g',{class:'ax'},svg);
-  for(let v=0;v<=150;v+=50){el('line',{x1:X(v),x2:X(v),y1:T,y2:H-B,stroke:v===100?'var(--ink3)':'var(--line)','stroke-width':v===100?1.2:1},ax);tx(ax,X(v),H-B+16,v+' %',{'text-anchor':'middle'});}
-  tx(svg,X(100)+4,T+2,'año normal',{'font-size':'10','fill':'var(--ink3)'});
-  rows.forEach((r,i)=>{
-    const cy=T+rh*(i+.5);
-    if(r.avgRow)el('line',{x1:6,x2:W-R,y1:T+rh*i,y2:T+rh*i,stroke:'var(--line2)'},svg);
-    tx(svg,L-10,cy+4,r.lab,{'text-anchor':'end','font-size':r.avgRow?'12':'11.5','font-weight':r.avgRow?'700':'500',fill:'var(--ink)'});
-    const vs=[r.mz,r.av,r.fr];el('line',{x1:X(Math.min(...vs)),x2:X(Math.max(...vs)),y1:cy,y2:cy,stroke:'var(--line2)','stroke-width':2},svg);
-    [['mz',r.mz],['av',r.av],['fr',r.fr]].forEach(([c,v])=>{
-      const hollow=c==='fr'&&r.frFill;
-      const g=el('g',{tabindex:0,role:'img','aria-label':`${r.lab}, ${CROP[c]}: ${Math.round(v)} % de lo normal`},svg);
-      el('circle',{cx:X(v),cy,r:11,fill:'transparent'},g);
-      el('circle',{cx:X(v),cy,r:5,fill:hollow?'#fff':COLV[c],stroke:hollow?COLV[c]:'#fff','stroke-width':2},g);
-      const show=ev=>{const b=ev.clientX?[ev.clientX,ev.clientY]:(()=>{const q=g.getBoundingClientRect();return [q.right,q.top];})();showTip(b[0],b[1],`${r.lab} · ${cap(CROP[c])}`,[{c:COLV[c],v:Math.round(v)+' %',l:'de su año normal'+(hollow?' (dato de Huimilpan)':'')}]);};
-      g.addEventListener('pointerenter',show);g.addEventListener('pointermove',show);g.addEventListener('focus',show);g.addEventListener('pointerleave',hideTip);g.addEventListener('blur',hideTip);
-      if(r.avgRow)tx(svg,X(v),c==='fr'?cy+19:cy-10,Math.round(v)+' %',{'text-anchor':'middle','font-size':'11','font-weight':'700',fill:'var(--ink)'});
-    });
-  });
-}
-/* ---------- estudio: brecha 2024 → 2025 ---------- */
-function drawGap(){
-  const svg=$('#gapChart');svg.replaceChildren();
-  const F=[['Página del proyecto completa',14,25],['Video del demo',28,18],['Repo en GitHub',15,13],['IA o ML dentro del producto',4,9],['Usuario concreto',-11,8],['Cifra del problema',20,2]];
-  const W=560,H=262,L=196,R=34,T=10,B=30,x0=-15,x1=30,rh=(H-T-B)/F.length;const X=v=>L+(v-x0)/(x1-x0)*(W-L-R);
-  const ax=el('g',{class:'ax'},svg);
-  for(let v=-10;v<=30;v+=10){el('line',{x1:X(v),x2:X(v),y1:T,y2:H-B,stroke:v===0?'var(--ink3)':'var(--line)','stroke-width':v===0?1.2:1},ax);tx(ax,X(v),H-B+16,(v>0?'+':'')+v,{'text-anchor':'middle'});}
-  F.forEach((f,i)=>{const cy=T+rh*(i+.5);
-    tx(svg,L-12,cy+4,f[0],{'text-anchor':'end','font-size':'12',fill:'var(--ink)'});
-    el('line',{x1:X(f[1]),x2:X(f[2]),y1:cy,y2:cy,stroke:'var(--blue-l)','stroke-width':2},svg);
-    const g=el('g',{tabindex:0,role:'img','aria-label':`${f[0]}: ${f[1]} puntos en 2024, ${f[2]} en 2025`},svg);
-    el('rect',{x:Math.min(X(f[1]),X(f[2]))-12,y:cy-12,width:Math.abs(X(f[2])-X(f[1]))+24,height:24,fill:'transparent'},g);
-    el('circle',{cx:X(f[1]),cy,r:5,fill:'#fff',stroke:'var(--blue-l)','stroke-width':2},g);
-    el('circle',{cx:X(f[2]),cy,r:5.5,fill:'var(--blue)',stroke:'#fff','stroke-width':2},g);
-    tx(svg,X(f[2]),cy-10,(f[2]>0?'+':'')+f[2],{'text-anchor':'middle','font-size':'11.5','font-weight':'700',fill:'var(--ink)'});
-    const show=ev=>{const b=ev.clientX?[ev.clientX,ev.clientY]:(()=>{const q=g.getBoundingClientRect();return [q.right,q.top];})();showTip(b[0],b[1],f[0],[{c:'var(--blue)',v:(f[2]>0?'+':'')+f[2]+' pts',l:'2025'},{c:'var(--blue-l)',v:(f[1]>0?'+':'')+f[1]+' pts',l:'2024'}]);};
-    g.addEventListener('pointerenter',show);g.addEventListener('pointermove',show);g.addEventListener('focus',show);g.addEventListener('pointerleave',hideTip);g.addEventListener('blur',hideTip);
-  });
-}
-/* ---------- estudio: tablas ---------- */
-(function(){
-  const C=[[2023,22,12,2,'AstroFire, Exonautas'],[2024,44,28,0,'Ninguno'],[2025,84,59,6,'6 de observación de la Tierra'],[2026,13,null,null,'Al 27 de septiembre']];const mx=84;
-  const bar=(v,cls)=>v==null?'<span class="neu">–</span>':`<div class="bar ${cls||''}"><i style="width:${Math.max(2,v/mx*120).toFixed(0)}px"></i><span>${v}</span></div>`;
-  $('#cdmxTbl tbody').innerHTML=C.map(c=>`<tr><td class="tn"><b>${c[0]}</b></td><td>${bar(c[1])}</td><td>${bar(c[2])}</td><td class="r"><b>${c[3]==null?'–':c[3]}</b><div class="fine">${c[4]}</div></td></tr>`).join('');
-  const mR=Math.max(...YR.map(r=>r.lluvia)),mM=Math.max(...YR.map(r=>r.mz_tha));
-  $('#amTbl tbody').innerHTML=YR.map(r=>`<tr><td class="tn"><b>${r.y}</b></td><td><div class="bar ${r.seca?'dry':''}"><i style="width:${(r.lluvia/mR*90).toFixed(0)}px"></i><span>${fmt(r.lluvia)} mm</span></div></td><td class="tn">${dday(r.inicio)}</td><td class="r">${r.sequia==null?'–':r.sequia+' %'}</td><td><div class="bar mz"><i style="width:${(r.mz_tha/mM*70).toFixed(0)}px"></i><span>${r.mz_tha.toFixed(2)}</span></div></td><td class="r">${r.mz_loss.toFixed(0)} %</td><td class="r">${r.av_tha.toFixed(1)}</td><td class="r">${r.fr_tha==null?'–':r.fr_tha.toFixed(2)}${r.fr_fill?'*':''}</td><td>${r.mz_malo?'<span class="flag">año malo</span>':(r.seca&&(r.y===2022||r.y===2023)?'<span class="flag gray">seca sin pérdida</span>':'')}</td></tr>`).join('');
-})();
-
-/* ---------- validación: textos calculados ---------- */
-$('#vAll').textContent=`${BADY.filter(r=>r.seca).length} de ${BADY.length}`;
-$('#vDry').textContent=`${DRY.filter(r=>r.mz_malo).length} de ${DRY.length}`;
-$('#vDryT').textContent=`temporadas secas fueron malas para el maíz. De las ${NOR.length} normales o lluviosas, ${NOR.filter(r=>r.mz_malo).length===0?'ninguna':NOR.filter(r=>r.mz_malo).length}.`;
-
 /* ---------- video: fondos ---------- */
 $$('.shot[data-bg]').forEach(s=>{const k=s.dataset.bg,t=k[0],y=+k.slice(1);s.style.backgroundImage=`url("${IM[t][y]}")`;});
 
 /* ---------- arranque ---------- */
-renderPlan();drawSim();drawScatter();drawCrops();drawGap();updateParcel(curYear());
+renderPlan();drawSim();updateParcel(curYear());
 const ro=new ResizeObserver(()=>{requestAnimationFrame(()=>{drawMap();placeHero();});});
 ro.observe($('#mapwrap'));ro.observe($('#heroMedia'));
 drawMap();placeHero();
@@ -1180,4 +895,148 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{drawMap()
 
 <script src="recorrido.js"></script>
 <script src="calculo.js"></script>
+<script>
+/* Evidencia adicional en #calculo: lee data/serie_regional.json y data/estres_mapa.json.
+   Mismo patrón que calculo.js: "sin dato" si falta un campo, ningún número escrito a mano. */
+(function () {
+  const raiz = document.getElementById('calculo');
+  if (!raiz) return;
+  const $c = s => raiz.querySelector(s);
+  const SIN = '<span class="falta">sin dato</span>';
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const num = (v, d) => (typeof v === 'number' && isFinite(v) ? v.toFixed(d) : SIN);
+  const signo = (v, d) => (typeof v === 'number' && isFinite(v) ? (v > 0 ? '+' : '') + v.toFixed(d) : SIN);
+  const cargar = n => fetch(`data/${n}.json`, { cache: 'no-cache' }).then(r => {
+    if (!r.ok) throw new Error(`${n}.json: ${r.status}`);
+    return r.json();
+  });
+
+  cargar('serie_regional').then(pintarSerie).catch(e => {
+    if ($c('#ccSerieGraf')) $c('#ccSerieGraf').innerHTML = `<p>${SIN} (${esc(e.message)})</p>`;
+  });
+  cargar('estres_mapa').then(pintarEstres).catch(e => {
+    if ($c('#ccEstresResumen')) $c('#ccEstresResumen').innerHTML = `${SIN} (${esc(e.message)})`;
+  });
+
+  function pintarSerie(sr) {
+    const filas = Array.isArray(sr && sr.datos) ? sr.datos : [];
+    if (!filas.length) {
+      $c('#ccSerieGraf').innerHTML = `<p>${SIN}</p>`;
+      $c('#ccSerieTabla').innerHTML = `<tbody><tr><td>${SIN}</td></tr></tbody>`;
+      return;
+    }
+    const vals = filas.map(f => typeof f.anomalia_ndvi_pico === 'number' ? Math.abs(f.anomalia_ndvi_pico) : 0);
+    const maxAbs = Math.max(...vals) || 1;
+
+    // Palabras simples en vez del número técnico (la "anomalía de NDVI"): qué tan verde se vio el
+    // campo comparado con su propio promedio. El número exacto queda solo en la tabla de abajo.
+    const palabra = v => {
+      if (v === null) return 'Sin dato';
+      if (Math.abs(v) < maxAbs * 0.12) return 'Normal';
+      const fuerte = Math.abs(v) >= maxAbs * 0.5 ? 'Mucho más' : 'Un poco más';
+      return v > 0 ? fuerte.replace('más', 'más verde') : fuerte.replace('más', 'menos verde');
+    };
+    const comoLeFue = (f, esMalo, esDemo) => esMalo ? 'Año malo para el maíz'
+      : esDemo ? `${f.anio != null ? esc(f.anio) : 'Esta temporada'}: la IA nunca la había visto`
+        : f.anio_malo_siap === false ? 'Año normal' : 'Sin dato';
+
+    // Una gráfica de barras con 26 años se veía apretada y el eje numérico ("anomalía de NDVI")
+    // no dice nada a quien no sabe de satélites. En su lugar: un año, un cuadro, un color — se lee
+    // de un vistazo y no se rompe en celular. El detalle con número exacto sigue en la tabla de abajo.
+    const chipsHtml = filas.map((f, idx) => {
+      const v = typeof f.anomalia_ndvi_pico === 'number' ? f.anomalia_ndvi_pico : null;
+      const esMalo = f.anio_malo_siap === true;
+      const esDemo = f.anio_malo_siap === null && idx === filas.length - 1;
+      const cls = esMalo ? 'malo' : esDemo ? 'demo' : (f.anio_malo_siap === false ? 'bueno' : 'sin');
+      const etqAnio = f.anio != null ? esc(f.anio) : '?';
+      const detalle = (v !== null ? `${palabra(v)} de lo normal · ` : '') + comoLeFue(f, esMalo, esDemo);
+      return `<span class="cc-anio ${cls}" tabindex="0" role="img" aria-label="${etqAnio}: ${detalle}" title="${detalle}">${etqAnio}</span>`;
+    }).join('');
+
+    $c('#ccSerieGraf').innerHTML = `<div class="cc-anios-grid" role="img" aria-label="Años buenos y malos para el maíz, comparados con el satélite, de 2001 a 2026">${chipsHtml}</div>`;
+
+    const cab = '<tr><th scope="col">Año</th><th scope="col">Qué tan verde se vio el campo</th><th scope="col">Cómo le fue al maíz</th></tr>';
+    $c('#ccSerieTabla').innerHTML = `<thead>${cab}</thead><tbody>${filas.map((f, idx) => {
+      const v = typeof f.anomalia_ndvi_pico === 'number' ? f.anomalia_ndvi_pico : null;
+      const esMalo = f.anio_malo_siap === true;
+      const esDemo = f.anio_malo_siap === null && idx === filas.length - 1;
+      const cls = esMalo ? 'cc-fila-malo' : esDemo ? 'cc-fila-demo' : '';
+      const color = esMalo ? 'var(--red)' : esDemo ? 'var(--blue)' : (f.anio_malo_siap === false ? 'var(--green)' : 'var(--dot)');
+      const pct = v !== null ? Math.min(50, (Math.abs(v) / maxAbs) * 50) : 0;
+      const izq = v !== null && v < 0 ? (50 - pct) : 50;
+      const barra = v === null ? SIN : `<div class="cc-barra"><div class="cc-barra-pista" aria-hidden="true"><span class="cc-barra-cero"></span><span class="cc-barra-fill" style="left:${izq.toFixed(1)}%;width:${Math.max(1, pct).toFixed(1)}%;background:${color}" title="${v > 0 ? '+' : ''}${v.toFixed(4)}"></span></div><span>${palabra(v)}</span></div>`;
+      const estado = `<span class="${esMalo ? 'flag' : esDemo ? 'lab est' : ''}">${comoLeFue(f, esMalo, esDemo)}</span>`;
+      return `<tr class="${cls}"><th scope="row">${f.anio != null ? esc(f.anio) : SIN}</th><td>${barra}</td><td>${estado}</td></tr>`;
+    }).join('')}</tbody>`;
+
+    $c('#ccSeriePie').innerHTML = `fuente: serie_regional.json${sr.fuente ? ' · ' + esc(sr.fuente) : ''}${sr.fecha_consulta ? ' · consultado ' + esc(sr.fecha_consulta) : ''}`;
+  }
+
+  function pintarEstres(em) {
+    const d = em && em.datos ? em.datos : {};
+    const pred = Array.isArray(d.pred) ? d.pred : null;
+    const obs = Array.isArray(d.obs) ? d.obs : null;
+    const banda = Array.isArray(d.banda) ? d.banda : null;
+    const clim = Array.isArray(d.clim) ? d.clim : null;
+
+    if (!pred || !obs || !banda) {
+      $c('#ccEstresKpis').innerHTML = `<div class="cc-kpi"><span class="k">Datos por píxel</span><span class="v">${SIN}</span></div>`;
+      $c('#ccEstresResumen').innerHTML = SIN;
+      return;
+    }
+
+    const total = Math.max(pred.length, obs.length, banda.length);
+    let sumaErrPred = 0, nPred = 0;
+    let sumaErrClim = 0, nClim = 0;
+    let dentroBanda = 0, nBanda = 0;
+
+    for (let i = 0; i < total; i++) {
+      const p = pred[i], o = obs[i], b = banda[i], c = clim ? clim[i] : null;
+      if (typeof p === 'number' && typeof o === 'number') {
+        const diff = p - o;
+        sumaErrPred += diff * diff;
+        nPred++;
+        if (typeof b === 'number') {
+          nBanda++;
+          if (Math.abs(diff) <= b) dentroBanda++;
+        }
+      }
+      if (typeof c === 'number' && typeof o === 'number') {
+        const diffC = c - o;
+        sumaErrClim += diffC * diffC;
+        nClim++;
+      }
+    }
+
+    const rmsePred = nPred > 0 ? Math.sqrt(sumaErrPred / nPred) : null;
+    const rmseClim = nClim > 0 ? Math.sqrt(sumaErrClim / nClim) : null;
+    const pctCobertura = nBanda > 0 ? (dentroBanda / nBanda) * 100 : null;
+    const pctMejora = (typeof rmsePred === 'number' && typeof rmseClim === 'number' && rmseClim > 0)
+      ? ((rmseClim - rmsePred) / rmseClim) * 100 : null;
+
+    // Palabras simples en vez de RMSE/"pred vs obs"/notación con barras: cuánto se acercó la IA a lo
+    // que de verdad pasó, comparado con solo usar el promedio de años pasados. El número técnico
+    // completo queda en el detalle de abajo, no como texto principal.
+    $c('#ccEstresKpis').innerHTML = [
+      ['¿Se acercó más que el promedio de años pasados?',
+        typeof pctMejora === 'number' ? `${pctMejora >= 0 ? '+' : ''}${pctMejora.toFixed(0)} %` : SIN,
+        typeof pctMejora === 'number' ? (pctMejora >= 0 ? 'La IA se acercó más' : 'El promedio de años pasados se acercó más') : ''],
+      ['¿Qué tan seguido acertó su propio margen de error?',
+        typeof pctCobertura === 'number' ? `${pctCobertura.toFixed(0)} %` : SIN,
+        `de los pedazos de tierra revisados (${dentroBanda} de ${nBanda})`]
+    ].map(([k, v, s]) => `<div class="cc-kpi"><span class="k">${k}</span><span class="v">${v}</span><span class="s">${s}</span></div>`).join('');
+
+    $c('#ccEstresResumen').innerHTML = `Revisamos <b>${total}</b> pedazos de tierra con cultivo${em.anio != null ? ' en la temporada ' + esc(em.anio) : ''}. `
+      + (typeof pctMejora === 'number'
+        ? (pctMejora >= 0
+          ? `La IA le atinó un <b>${pctMejora.toFixed(0)} % más cerca</b> que solo usar el promedio de años pasados.`
+          : `Un <b>${Math.abs(pctMejora).toFixed(0)} %</b> de las veces, el promedio de años pasados le atinó más que la IA.`)
+        : SIN)
+      + ` <details class="cc-detalle"><summary>Ver los números técnicos</summary><p class="fine">RMSE de la predicción contra lo real: ${num(rmsePred, 4)} (${nPred} de ${total} píxeles). RMSE del promedio histórico contra lo real: ${num(rmseClim, 4)} (${nClim} de ${total} píxeles). Cobertura de la banda de incertidumbre (|pred − obs| ≤ banda): ${typeof pctCobertura === 'number' ? pctCobertura.toFixed(1) + ' %' : SIN}.</p></details>`;
+
+    $c('#ccEstresPie').innerHTML = `fuente: evaluación de la IA (Google Colab)${em.fecha_consulta ? ' · consultado ' + esc(em.fecha_consulta) : ''}`
+      + (em.fuente ? ` <details class="cc-detalle" style="display:inline"><summary>detalle técnico de la fuente</summary><span class="fine">${esc(em.fuente)}</span></details>` : '');
+  }
+})();
+</script>
 </body></html>

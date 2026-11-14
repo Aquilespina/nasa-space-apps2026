@@ -1,0 +1,6 @@
+{
+  "buildCommand": "python3 pipeline/copiar_datos.py",
+  "outputDirectory": "site",
+  "cleanUrls": true,
+  "trailingSlash": false
+}

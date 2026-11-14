@@ -101,6 +101,28 @@ Enlace público: `[pendiente: poner aquí la URL de GitHub Pages]`
 
 Detalle y validación: [`referencia/amealco-datos-reales.md`](referencia/amealco-datos-reales.md).
 
+### Tabla completa de datos y método (detalle técnico)
+
+La página (`site/`) ya no muestra esta tabla tal cual — es demasiado técnica para un productor sin experiencia digital. Queda aquí como referencia para quien revise el proyecto a fondo (jurado, desarrolladores).
+
+| Dato | Qué mide | Detalle | En esta maqueta |
+|---|---|---|---|
+| NASA POWER `PRECTOTCORR` `T2M_MAX` `T2M_MIN` `RH2M` `WS2M` `ALLSKY_SFC_SW_DWN` `GWETROOT` | Lluvia diaria, clima para calcular la evaporación (ET₀) y humedad en la raíz | Celda de 0.5° (unos 55 km), diario, 2000–2026 | Usado |
+| HLS `HLSS30` `HLSL30` v2.0 | Imagen de la parcela en color real, una por temporada | 30 m, 2015–2025 | Usado |
+| Landsat WELD | La zona en 1985, 1990 y 2000 | 30 m, compuesto anual | Usado |
+| MODIS `MOD13Q1` v061 | Verdor (NDVI) de la zona | 250 m, cada 16 días | Usado |
+| SMAP L4 `SPL4SMGP` v008 | Humedad en la raíz para la ventana de siembra | 9 km, cada 3 horas, desde 2015 | App final |
+| GPM IMERG `GPM_3IMERGDF` v07 | Lluvia diaria con más detalle | Unos 10 km | App final |
+| SIAP, cierre agrícola municipal | Superficie sembrada y perdida, rendimiento y precio por cultivo | Municipio, 2003–2025 | Usado |
+| CONAGUA, Monitor de Sequía de México | Categoría de sequía (D0 a D4) | Municipio, cada 15 días, 2003–2026 | Usado |
+| FAO-56 (tablas 11 y 12) | Agua que pide cada cultivo: coeficiente Kc por etapa | Tabla genérica | Usado, falta ajustarlo |
+
+Fórmulas:
+- **Agua de cada cultivo:** ET₀ diaria con Penman-Monteith (FAO-56) y el clima de NASA POWER; agua del cultivo = Kc × ET₀ en su ciclo. Maíz: 180 días desde el 6 de junio; avena forrajera: 100 días desde el 1 de julio; frijol: 110 días desde el 15 de junio.
+- **Temporada seca:** lluvia de junio a septiembre por debajo de la mediana de 2003–2025 (540 mm). **Año malo:** el cultivo rindió menos de la mitad de su mediana por hectárea sembrada.
+- **Inicio de lluvias:** primer día desde el 1 de mayo con 20 mm en 5 días y sin 10 días secos en el mes siguiente.
+- **Dinero:** producción por hectárea sembrada (incluye lo que se perdió) × precio medio rural de Querétaro 2021–2025. Es ingreso bruto: faltan los costos.
+
 ## Límites (lo decimos claro)
 
 - Los datos son **de la zona y del municipio, no de una parcela**. NASA POWER es una celda de unos 55 km, así que las zonas comparten la misma lluvia.

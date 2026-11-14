@@ -13,14 +13,36 @@
     return r.json();
   });
 
+  // Nombres técnicos de modelos.comparacion.json traducidos a algo que se entienda sin saber de IA.
+  // El nombre técnico se conserva siempre entre paréntesis: no ocultamos el dato, solo lo traducimos.
+  const AMIGABLE = {
+    'Climatología del píxel': 'Promedio de años pasados',
+    Ridge: 'Cálculo simple (regresión)',
+    'Random Forest': 'Árbol de decisiones',
+  };
+  const amigable = nombre => {
+    if (AMIGABLE[nombre]) return `${AMIGABLE[nombre]} <span class="fine">(${esc(nombre)})</span>`;
+    return /^(LSTM|GRU)\b/.test(nombre || '') ? `Inteligencia artificial <span class="fine">(${esc(nombre)})</span>` : esc(nombre || SIN);
+  };
+
   // Cada archivo se carga por separado: si falta uno, el otro bloque se muestra igual.
   cargar('calendario').then(metodoFechas).catch(e => { $c('#ccFechas').innerHTML = `${SIN} (${esc(e.message)})`; });
-  cargar('modelos_comparacion').then(evaluacion).catch(e => { $c('#ccRed').innerHTML = `<p>${SIN}: no se pudo leer la evaluación de la red (${esc(e.message)}).</p>`; });
+  cargar('modelos_comparacion').then(evaluacion).catch(e => {
+    $c('#ccResumenIA').innerHTML = `${SIN}: no se pudo leer la evaluación (${esc(e.message)}).`;
+    $c('#ccRed').innerHTML = `<p>${SIN}: no se pudo leer la evaluación de la IA (${esc(e.message)}).</p>`;
+  });
 
   function metodoFechas(cal) {
-    const gen = cal.generado_por === 'red_neuronal' ? 'la red neuronal'
-      : cal.generado_por === 'baseline' ? 'el baseline, sin red neuronal' : (cal.generado_por ? esc(cal.generado_por) : SIN);
-    $c('#ccFechas').innerHTML = `Las fechas del recorrido vienen de <b>${gen}</b>. ${cal.fuente ? esc(cal.fuente) : ''}
+    const esRed = cal.generado_por === 'red_neuronal';
+    const esBaseline = cal.generado_por === 'baseline';
+    const etiqueta = esRed ? 'la red neuronal' : esBaseline ? 'reglas agronómicas (sin red neuronal)' : (cal.generado_por ? esc(cal.generado_por) : SIN);
+    // cal.fuente ya describe el método (y a veces repite "baseline sin red neuronal"); no lo repetimos en el
+    // titular, y movemos la referencia entre paréntesis (p. ej. el archivo) al final como cita.
+    let metodo = cal.fuente ? esc(cal.fuente).replace(/^(baseline sin red neuronal|red neuronal)\s*/i, '') : '';
+    const cita = metodo.match(/^\(([^)]+)\):\s*/);
+    if (cita) metodo = metodo.slice(cita[0].length).replace(/\.?$/, ` (${cita[1]}).`);
+    $c('#ccFechas').innerHTML = `<p><b>Las fechas del recorrido vienen de ${etiqueta}.</b></p>
+      ${metodo ? `<p class="src">${metodo}</p>` : ''}
       <span class="src">Consultado ${cal.fecha_consulta ? esc(cal.fecha_consulta) : SIN}</span>`;
   }
 
@@ -32,14 +54,16 @@
     $c('#ccVeredicto').className = 'card-msg ' + (gano ? 'ok' : 'warn');
     $c('#ccVeredicto').innerHTML = !red || !mejor ? `<b>Resultado</b><span>${SIN}</span>`
       : gano
-        ? `<b>La red sí superó al promedio histórico</b><span>${esc(red)} fue el mejor modelo según el criterio de abajo.</span>`
-        : `<b>La red neuronal no superó al promedio histórico</b><span>El mejor modelo fue <b>${esc(mejor)}</b>, no la red (${esc(red)}). Por eso las fechas del recorrido no usan la red. Lo decimos porque es lo que midieron los datos.</span>`;
+        ? `<b>Sí: la inteligencia artificial le atinó mejor que un cálculo simple.</b><span>Por eso este sitio sí la usa para tus fechas.</span>`
+        : `<b>No: un cálculo simple le atinó mejor que nuestra inteligencia artificial.</b><span>Ganó ${amigable(mejor)}, no la IA (${amigable(red)}). Por eso tus fechas no usan la IA, usan ese cálculo simple. Te lo decimos porque así salió al probarlo.</span>`;
 
-    const cab = '<tr><th scope="col">Modelo</th><th scope="col">Error en validación<br><small>RMSE 2018–2020</small></th><th scope="col">Error en prueba<br><small>RMSE 2021–2025</small></th><th scope="col">Mejora sobre el promedio<br><small>prueba</small></th></tr>';
+    $c('#ccResumenIA').innerHTML = `Probamos <b>${filas.length || SIN} formas distintas de calcular</b>, incluida nuestra inteligencia artificial, contra temporadas que nunca usamos para enseñarle. ${gano ? 'Ganó la IA.' : `Ganó ${amigable(mejor)}, un cálculo más simple que una IA.`} <button type="button" class="link-detalle" onclick="this.closest('.cc').querySelector('.cc-detalle').open=true;this.closest('.cc').querySelector('.cc-detalle').scrollIntoView({behavior:'smooth'})">Ver los números</button>`;
+
+    const cab = '<tr><th scope="col">Forma de calcular</th><th scope="col">Error en validación<br><small>RMSE 2018–2020</small></th><th scope="col">Error en prueba<br><small>RMSE 2021–2025</small></th><th scope="col">Mejora sobre el promedio<br><small>prueba</small></th></tr>';
     $c('#ccTabla').innerHTML = `<thead>${cab}</thead><tbody>${filas.map(f => {
       const cls = [f.modelo === mejor ? 'mejor' : '', f.modelo === red ? 'red' : ''].join(' ').trim();
-      const marca = (f.modelo === mejor ? ' <span class="lab real">mejor</span>' : '') + (f.modelo === red ? ' <span class="lab est">red del sitio</span>' : '');
-      return `<tr class="${cls}"><th scope="row">${esc(f.modelo)}${marca}</th><td>${num(f.val_rmse, 4)}</td><td>${num(f.test_rmse, 4)}</td><td>${signo(f.test_skill_vs_climatologia)}</td></tr>`;
+      const marca = (f.modelo === mejor ? ' <span class="lab real">mejor</span>' : '') + (f.modelo === red ? ' <span class="lab est">la IA de este sitio</span>' : '');
+      return `<tr class="${cls}"><th scope="row">${amigable(f.modelo)}${marca}</th><td>${num(f.val_rmse, 4)}</td><td>${num(f.test_rmse, 4)}</td><td>${signo(f.test_skill_vs_climatologia)}</td></tr>`;
     }).join('')}</tbody>`;
 
     const porAnio = m.skill_por_anio_prueba || {};
