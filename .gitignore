@@ -4,3 +4,7 @@ __pycache__/
 *.key
 data/raw/
 .venv/
+.claude/settings.local.json
+.DS_Store
+Thumbs.db
+node_modules/
