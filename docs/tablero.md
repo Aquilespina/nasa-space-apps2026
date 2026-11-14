@@ -5,9 +5,9 @@ Formato: `- [ ] Tarea · cómo se comprueba`. Al terminar: `- [x]` + commit.
 ## Fase 0–1 (sábado 14)
 - [ ] Acordar con Aquiles el contrato (`docs/contrato-datos.md`), las zonas y los cultivos · los dos confirman por mensaje y se anota en `docs/decisiones.md`
 - [ ] Confirmar con la sede fecha y hora límite de entrega, formato y regla de trabajo previo · respuesta anotada en `docs/decisiones.md`
-- [ ] Repo en GitHub con esta estructura y primer commit · `git log` muestra el commit
-- [ ] Sitio base desde la maqueta v6 en `site/`, sin la regla de "ciclo corto" · `python3 -m http.server 8000 -d site` abre y `grep -i "ciclo corto" site -r` no devuelve nada
-- [ ] Armar `data/processed/cultivos.json` desde `referencia/amealco-datos-reales.md` · tiene `fuente`, maíz/frijol/avena y `verifica.py` pasa
+- [ ] Repo en GitHub con esta estructura y primer commit · `git log` muestra el commit (commit local hecho; falta crear el repo en GitHub y hacer push)
+- [x] Sitio base desde la maqueta v6 en `site/`, sin la regla de "ciclo corto" · `python3 -m http.server 8000 -d site` abre y `grep -i "ciclo corto" site -r` no devuelve nada
+- [x] Armar `data/processed/cultivos.json` desde `referencia/amealco-datos-reales.md` · tiene `fuente`, maíz/frijol/avena y `verifica.py` pasa
 - [ ] Recorrido por zonas leyendo `calendario.json` (con el baseline de Aquiles) · cambiar de zona cambia fechas y razón en pantalla
 - [ ] Interfaz del chat respondiendo desde `cultivos.json` · pregunta por un cultivo ausente responde "no tengo ese dato"
 
