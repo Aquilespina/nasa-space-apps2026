@@ -1,0 +1,173 @@
+{
+  "fuente": "Baseline de referencia (referencia/amealco-datos-reales.md): inicio de lluvias NASA POWER 2003–2025 y ciclos FAO-56. Archivo de prueba de Ángel mientras llega el baseline de Aquiles; las 3 zonas comparten la misma celda de NASA POWER.",
+  "fecha_consulta": "2026-11-14",
+  "ejemplo": true,
+  "generado_por": "baseline",
+  "datos": [
+    {
+      "zona_id": "z1",
+      "cultivo": "maiz",
+      "actividad": "siembra",
+      "ventana_inicio": "2027-05-21",
+      "ventana_fin": "2027-06-15",
+      "fecha_recomendada": "2027-06-06",
+      "confianza": 0.65,
+      "razon": "La lluvia se estableció entre el 21 may y el 15 jun en 15 de 23 años (2003–2025); la fecha más común fue el 6 jun.",
+      "fuente": "NASA POWER PRECTOTCORR 2003–2025"
+    },
+    {
+      "zona_id": "z1",
+      "cultivo": "maiz",
+      "actividad": "fertilizacion",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": null,
+      "confianza": null,
+      "razon": null,
+      "fuente": null
+    },
+    {
+      "zona_id": "z1",
+      "cultivo": "maiz",
+      "actividad": "cosecha",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": "2027-12-03",
+      "confianza": null,
+      "razon": "Siembra recomendada + ciclo de 180 días (FAO-56). Es un cálculo, no un pronóstico.",
+      "fuente": "FAO-56 tablas 11 y 12"
+    },
+    {
+      "zona_id": "z1",
+      "cultivo": "frijol",
+      "actividad": "siembra",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": "2027-06-15",
+      "confianza": null,
+      "razon": "Fecha de inicio usada en el cálculo FAO-56 de agua del frijol (354 mm en 110 días).",
+      "fuente": "FAO-56 con clima NASA POWER 2003–2025"
+    },
+    {
+      "zona_id": "z1",
+      "cultivo": "frijol",
+      "actividad": "fertilizacion",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": null,
+      "confianza": null,
+      "razon": null,
+      "fuente": null
+    },
+    {
+      "zona_id": "z1",
+      "cultivo": "frijol",
+      "actividad": "cosecha",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": "2027-10-03",
+      "confianza": null,
+      "razon": "Siembra recomendada + ciclo de 110 días (FAO-56). Es un cálculo, no un pronóstico.",
+      "fuente": "FAO-56 tablas 11 y 12"
+    },
+    {
+      "zona_id": "z2",
+      "cultivo": "maiz",
+      "actividad": "siembra",
+      "ventana_inicio": "2027-05-21",
+      "ventana_fin": "2027-06-15",
+      "fecha_recomendada": "2027-06-06",
+      "confianza": 0.65,
+      "razon": "La lluvia se estableció entre el 21 may y el 15 jun en 15 de 23 años (2003–2025); la fecha más común fue el 6 jun.",
+      "fuente": "NASA POWER PRECTOTCORR 2003–2025"
+    },
+    {
+      "zona_id": "z2",
+      "cultivo": "maiz",
+      "actividad": "fertilizacion",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": null,
+      "confianza": null,
+      "razon": null,
+      "fuente": null
+    },
+    {
+      "zona_id": "z2",
+      "cultivo": "maiz",
+      "actividad": "cosecha",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": "2027-12-03",
+      "confianza": null,
+      "razon": "Siembra recomendada + ciclo de 180 días (FAO-56). Es un cálculo, no un pronóstico.",
+      "fuente": "FAO-56 tablas 11 y 12"
+    },
+    {
+      "zona_id": "z3",
+      "cultivo": "maiz",
+      "actividad": "siembra",
+      "ventana_inicio": "2027-05-21",
+      "ventana_fin": "2027-06-15",
+      "fecha_recomendada": "2027-06-06",
+      "confianza": 0.65,
+      "razon": "La lluvia se estableció entre el 21 may y el 15 jun en 15 de 23 años (2003–2025); la fecha más común fue el 6 jun.",
+      "fuente": "NASA POWER PRECTOTCORR 2003–2025"
+    },
+    {
+      "zona_id": "z3",
+      "cultivo": "maiz",
+      "actividad": "fertilizacion",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": null,
+      "confianza": null,
+      "razon": null,
+      "fuente": null
+    },
+    {
+      "zona_id": "z3",
+      "cultivo": "maiz",
+      "actividad": "cosecha",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": "2027-12-03",
+      "confianza": null,
+      "razon": "Siembra recomendada + ciclo de 180 días (FAO-56). Es un cálculo, no un pronóstico.",
+      "fuente": "FAO-56 tablas 11 y 12"
+    },
+    {
+      "zona_id": "z3",
+      "cultivo": "avena",
+      "actividad": "siembra",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": "2027-07-01",
+      "confianza": null,
+      "razon": "Fecha de inicio usada en el cálculo FAO-56 de agua de la avena (320 mm en 100 días).",
+      "fuente": "FAO-56 con clima NASA POWER 2003–2025"
+    },
+    {
+      "zona_id": "z3",
+      "cultivo": "avena",
+      "actividad": "fertilizacion",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": null,
+      "confianza": null,
+      "razon": null,
+      "fuente": null
+    },
+    {
+      "zona_id": "z3",
+      "cultivo": "avena",
+      "actividad": "cosecha",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": "2027-10-09",
+      "confianza": null,
+      "razon": "Siembra recomendada + ciclo de 100 días (FAO-56). Es un cálculo, no un pronóstico.",
+      "fuente": "FAO-56 tablas 11 y 12"
+    }
+  ]
+}

@@ -8,7 +8,7 @@ Formato: `- [ ] Tarea · cómo se comprueba`. Al terminar: `- [x]` + commit.
 - [ ] Repo en GitHub con esta estructura y primer commit · `git log` muestra el commit (commit local hecho; falta crear el repo en GitHub y hacer push)
 - [x] Sitio base desde la maqueta v6 en `site/`, sin la regla de "ciclo corto" · `python3 -m http.server 8000 -d site` abre y `grep -i "ciclo corto" site -r` no devuelve nada
 - [x] Armar `data/processed/cultivos.json` desde `referencia/amealco-datos-reales.md` · tiene `fuente`, maíz/frijol/avena y `verifica.py` pasa
-- [ ] Recorrido por zonas leyendo `calendario.json` (con el baseline de Aquiles) · cambiar de zona cambia fechas y razón en pantalla
+- [ ] Recorrido por zonas leyendo `calendario.json` (con el baseline de Aquiles) · cambiar de zona cambia fechas y razón en pantalla (interfaz hecha y probada con JSON de ejemplo; falta el baseline real de Aquiles y quitar `ejemplo: true`)
 - [ ] Interfaz del chat respondiendo desde `cultivos.json` · pregunta por un cultivo ausente responde "no tengo ese dato"
 
 ## Fase 2 (noche sábado a 09:00 domingo)

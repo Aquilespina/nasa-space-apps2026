@@ -45,6 +45,12 @@ if site.exists():
         if re.search(r"localhost|127\.0\.0\.1", f.read_text(encoding="utf-8", errors="ignore")):
             fallas.append(f"{f}: llama a localhost (el juez no lo podrá abrir)")
 
+copia = pathlib.Path("site/data")
+for f in sorted(pathlib.Path("data/processed").glob("*.json")):
+    c = copia / f.name
+    if not c.exists() or c.read_bytes() != f.read_bytes():
+        fallas.append(f"{c}: no coincide con {f} (corre python3 pipeline/copiar_datos.py)")
+
 if not pathlib.Path("docs/uso-ia.md").exists():
     avisos.append("falta docs/uso-ia.md (campo 'Use of AI')")
 

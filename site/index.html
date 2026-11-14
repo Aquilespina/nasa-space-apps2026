@@ -342,12 +342,33 @@ table.dense td{font-size:12.5px}
 .tip .r b{font-variant-numeric:tabular-nums}
 .tip .r span{color:var(--ink2)}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* recorrido por zonas */
+.rz{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:14px}
+.rz-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rz-nav .chips{display:flex;gap:6px;flex-wrap:wrap;flex:1 1 100%;order:-1}
+.rz-nav button{border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:6px 12px;font-weight:600;font-size:13.5px;cursor:pointer;min-height:36px}
+.rz-nav .chips button[aria-selected="true"]{background:var(--green);border-color:var(--green);color:#fff}
+.rz-zona{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.rz-zona h3{font-size:20px}
+.rz-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.rz-cult{border:1px solid var(--line);border-radius:6px;padding:12px;background:var(--soft)}
+.rz-cult h4{font-size:15px;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.rz-cult h4::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--cc)}
+.rz-cult ol{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.rz-act{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px}
+.rz-act-h{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.rz-fecha{font-weight:700;font-size:15px}
+.rz-act dl{display:flex;flex-wrap:wrap;gap:2px 16px;margin:4px 0;font-size:12.5px;color:var(--ink2)}
+.rz-act dl div{display:flex;gap:4px}.rz-act dd{margin:0;color:var(--ink)}
+.rz-razon{font-size:13.5px}
+.rz .src{font-size:11.5px;color:var(--ink3)}
 </style>
 
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#portada"><svg width="24" height="24" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="6" fill="#1f7a4d"/><path d="M13 20V9M13 13c-3 0-5-2-5-5 3 0 5 2 5 5zm0 2c3 0 5-2 5-5-3 0-5 2-5 5z" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>Milpa Clara <span class="tag">MAQUETA v6</span></a>
-    <nav class="nav" aria-label="Secciones"><a href="#portada">Portada</a><a href="#app">La app</a><a href="#proyecto">Página del proyecto</a><a href="#estudio">El estudio por año</a></nav>
+    <nav class="nav" aria-label="Secciones"><a href="#portada">Portada</a><a href="#recorrido">Zonas</a><a href="#app">La app</a><a href="#proyecto">Página del proyecto</a><a href="#estudio">El estudio por año</a></nav>
     <button class="notes-btn" id="notesBtn" aria-pressed="false" type="button"><span class="box"></span>Notas del estudio</button>
   </div>
 </header>
@@ -366,7 +387,7 @@ table.dense td{font-size:12.5px}
       <span class="eyebrow">Amealco de Bonfil, Querétaro · maíz de temporal</span>
       <h1>Antes de sembrar, mira lo que pasó en tu tierra.</h1>
       <p class="lead">Milpa Clara junta 23 años de lluvia medida por la NASA, la sequía de CONAGUA y las cosechas reales del SIAP para decirte qué arriesgas si siembras maíz otra vez y qué cambia si rotas.</p>
-      <div class="btns"><a class="primary" href="#app">Ver mi zona</a><a class="ghost" href="#video">Ver demo (30 s)</a></div>
+      <div class="btns"><a class="primary" href="#recorrido">Ver mi zona</a><a class="ghost" href="#video">Ver demo (30 s)</a></div>
       <div class="hero-stat">
         <span class="big">33 % y 39 %</span>
         <p>del maíz sembrado en Amealco se perdió en 2019 y en 2020. La NASA midió esas temporadas 17 y 18 % más secas que el promedio.</p>
@@ -376,6 +397,25 @@ table.dense td{font-size:12.5px}
     </div>
   </section>
   <aside class="note"><span class="n">Nota 1 · ganadores 2024–2025</span>Portada con imagen real del lugar, una sola promesa y dos botones: el patrón de SkySense (Twisters, ganador 2025), Queñaris (Local Impact 2025) y TerraTales (2024). La cifra es verificable (SIAP): en 2025 la cifra del problema ya casi no separaba a los nominados (+2 puntos), así que tiene que ser real y comprobable.</aside>
+
+  <!-- ============ RECORRIDO POR ZONAS ============ -->
+  <section class="block" id="recorrido" aria-label="Recorrido por zonas">
+    <div class="sec-h">
+      <div><span class="eyebrow">Recorrido por zonas</span><h2>¿Cuándo sembrar, fertilizar y cosechar en cada zona?</h2></div>
+      <p>Una zona a la vez. Cada fecha dice por qué y qué tan segura es. Los datos son de la zona, no de tu parcela: la decisión final es tuya.</p>
+    </div>
+    <div class="rz">
+      <p class="card-msg warn" id="rzEjemplo" hidden><b>Datos de prueba</b><span>Estas zonas y fechas son un archivo de prueba (<code>"ejemplo": true</code>) mientras llega el cálculo final.</span></p>
+      <div class="rz-nav">
+        <button type="button" id="rzAnt" aria-label="Zona anterior">←</button>
+        <div class="chips" id="rzChips" role="tablist" aria-label="Zonas"></div>
+        <button type="button" id="rzSig" aria-label="Zona siguiente">→</button>
+        <span class="muted" id="rzPaso" aria-live="polite"></span>
+      </div>
+      <div id="rzCuerpo" aria-live="polite"><p class="muted">Cargando datos…</p></div>
+      <p class="fine"><span id="rzMetodo"></span><br><span id="rzFuente"></span></p>
+    </div>
+  </section>
 
   <!-- ============ APP ============ -->
   <section class="block" id="app">
@@ -1093,4 +1133,5 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{drawMap()
 })();
 </script>
 
+<script src="recorrido.js"></script>
 </body></html>
