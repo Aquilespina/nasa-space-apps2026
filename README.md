@@ -42,8 +42,8 @@ Abre **http://localhost:8000**. Para detenerla: `Ctrl+C`.
 La página principal (`site/index.html`) es un asistente de 5 preguntas, una por pantalla:
 
 1. ¿Qué cultivas? (opciones de `cultivos.json`; "Otro cultivo" responde que no hay datos)
-2. ¿Dónde cultivas? (zonas de `zonas.json`, o la zona más cercana con la ubicación del teléfono, que no se guarda ni se envía)
-3. ¿Es este lugar donde cultivas? (imagen HLS de la NASA con la zona marcada; georreferencia en `imagen_zona.json`)
+2. ¿Dónde cultivas? (cualquier municipio de México, con autocompletado desde `municipios.json` de INEGI y sin internet, o la ubicación del teléfono, que no se guarda ni se envía)
+3. ¿Es este lugar donde cultivas? (imagen HLS de la NASA si el lugar cae dentro de ella; si no, un mapa de puntos con las cabeceras municipales de INEGI). Dice si hay datos para ese lugar: hay cobertura si está a `radio_cobertura_km` (25 km) o menos de una zona de `zonas.json`. Si no, "Tu plan" lo dice y solo muestra el plan de la zona más cercana si la persona lo pide, marcado como referencia.
 4. ¿Cuánto tiempo tienes cultivando? (marca los años malos del cultivo que le tocaron, de `cultivos.json`)
 5. ¿En qué te gustaría que te acompañe? (mejorar la cosecha, no gastar tanta agua, aumentar las cosechas)
 
@@ -63,6 +63,7 @@ Aquiles (Colab) / pipeline ──► data/processed/*.json ──► pipeline/co
 |---|---|---|
 | `data/processed/zonas.json` | Zonas: nombre, coordenadas, cultivos | Acordado entre los dos |
 | `data/processed/calendario.json` | Fecha, ventana, confianza y razón por zona, cultivo y actividad | Aquiles |
+| `data/processed/municipios.json` | 2,478 municipios con la coordenada de su cabecera | `pipeline/municipios_inegi.py` (INEGI) |
 | `data/processed/cultivos.json` | Ciclo, agua (FAO-56), suelo y rendimientos de maíz, frijol y avena | Ángel, desde `referencia/amealco-datos-reales.md` |
 | `data/processed/modelos_comparacion.json` | Error de cada modelo (climatología, Ridge, Random Forest, LSTM, GRU) por años | Aquiles (copiado de su `main`) |
 

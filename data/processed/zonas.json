@@ -13,7 +13,9 @@
         "maiz",
         "frijol"
       ],
-      "nota": "Punto de la referencia (SoilGrids e imagen HLS). La lluvia y la temperatura son de la celda NASA POWER de ~55 km que cubre todo el municipio."
+      "nota": "Punto de la referencia (SoilGrids e imagen HLS). La lluvia y la temperatura son de la celda NASA POWER de ~55 km que cubre todo el municipio.",
+      "radio_cobertura_km": 25,
+      "radio_cobertura_razon": "Mitad de la celda de NASA POWER (~55 km): un lugar a 25 km o menos del punto usa la misma lluvia y clima. Regla del ajuste de zona universal (14 nov); ver docs/decisiones.md."
     }
   ]
 }

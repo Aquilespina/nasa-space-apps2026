@@ -31,19 +31,36 @@
   const razonAmigable = r => sinJerga(r).replace(/\+\s*ciclo de (\d+) días/, 'más $1 días de ciclo').replace(/\s{2,}/g, ' ').trim();
 
   // ---------- estado (se recuerda solo en este teléfono) ----------
-  const CLAVE = 'milpaclara.respuestas.v1';
-  let estado = { cultivo: null, zona: null, distanciaKm: null, anios: 10, prioridades: [] };
+  const CLAVE = 'milpaclara.respuestas.v2';
+  // lugar = { nombre, detalle, lat, lon, origen: 'municipio' | 'gps' }
+  let estado = { cultivo: null, lugar: null, anios: 10, prioridades: [], verReferencia: false };
   try { Object.assign(estado, JSON.parse(localStorage.getItem(CLAVE) || '{}')); } catch (e) { /* sin almacenamiento */ }
   const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify(estado)); } catch (e) { /* sin almacenamiento */ } };
 
-  let D = { cultivos: null, zonas: null, calendario: null, imagen: null };
+  let D = { cultivos: null, zonas: null, calendario: null, imagen: null, municipios: null };
   const corto = c => {
     const n = (c && c.nombre) || '';
     return n.split(/\s+/)[0] || (c && c.cultivo) || '';
   };
   const art = c => (/^avena/i.test(corto(c)) ? 'la' : 'el');
   const cultivoSel = () => (D.cultivos && D.cultivos.datos || []).find(c => c.cultivo === estado.cultivo);
-  const zonaSel = () => (D.zonas && D.zonas.datos || []).find(z => z.zona_id === estado.zona);
+  const km = (a, b, c, d) => {
+    const R = 6371, r = x => x * Math.PI / 180;
+    const h = Math.sin(r(c - a) / 2) ** 2 + Math.cos(r(a)) * Math.cos(r(c)) * Math.sin(r(d - b) / 2) ** 2;
+    return 2 * R * Math.asin(Math.sqrt(h));
+  };
+  // Zona con datos más cercana al lugar y si el lugar queda dentro de su radio de cobertura
+  // (radio_cobertura_km de zonas.json; si una zona no lo trae, no se da por cubierto).
+  function cobertura() {
+    const L = estado.lugar;
+    const Z = ((D.zonas && D.zonas.datos) || []).filter(z => z.lat != null && z.lon != null);
+    if (!L || L.lat == null || !Z.length) return null;
+    const m = Z.map(z => ({ z, km: km(L.lat, L.lon, z.lat, z.lon) })).sort((a, b) => a.km - b.km)[0];
+    m.cubre = typeof m.z.radio_cobertura_km === 'number' && m.km <= m.z.radio_cobertura_km;
+    m.kmTxt = m.km < 1 ? 'menos de 1' : `${Math.round(m.km)}`;
+    return m;
+  }
+  const nombreLugar = () => (estado.lugar ? [estado.lugar.nombre, estado.lugar.detalle].filter(Boolean).join(', ') : '');
 
   // ---------- navegación ----------
   const TOTAL = 5;
@@ -80,60 +97,130 @@
     estado.cultivo = b.dataset.cultivo; guardar(); ir(2);
   });
 
-  // ---------- 2. ¿Dónde cultivas? ----------
-  function pintarZonas() {
+  // ---------- 2. ¿Dónde cultivas? (cualquier lugar de México) ----------
+  // Busca en municipios.json (INEGI) sin internet. No distingue acentos ni mayúsculas.
+  const norm = s => (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9ñ ]/g, ' ').replace(/\s+/g, ' ').trim();
+  let indice = [];
+  function prepararMunicipios() {
+    indice = ((D.municipios && D.municipios.datos) || []).map(m => ({ m, n: norm(m.municipio), e: norm(m.estado), a: norm(m.estado_abrev) }));
     const Z = (D.zonas && D.zonas.datos) || [];
-    $('#opZona').innerHTML = Z.length ? Z.map(z =>
-      `<button type="button" class="opcion" data-zona="${esc(z.zona_id)}" aria-pressed="${z.zona_id === estado.zona}">${esc(z.nombre)}</button>`).join('')
-      : `<p>${SIN}: no hay zonas.</p>`;
+    $('#zonasConDatos').textContent = Z.length
+      ? `Hoy tenemos datos para: ${Z.map(z => z.nombre).join(' · ')}. Para otros lugares te diremos si todavía no hay datos.`
+      : '';
+    if (!indice.length) $('#lugarAyuda').textContent = 'No se pudo cargar la lista de municipios. Usa tu ubicación.';
   }
-  $('#opZona').addEventListener('click', ev => {
-    const b = ev.target.closest('button'); if (!b) return;
-    estado.zona = b.dataset.zona; estado.distanciaKm = null; guardar(); ir(3);
+  function buscar(q) {
+    const t = norm(q).split(' ').filter(Boolean);
+    if (!t.length || !indice.length) return [];
+    const res = [];
+    for (const x of indice) {
+      const todo = `${x.n} ${x.e} ${x.a}`;
+      if (!t.every(w => todo.includes(w))) continue;
+      const puntos = (x.n.startsWith(t[0]) ? 0 : x.n.includes(t[0]) ? 1 : 2) + (x.n === t.join(' ') ? -1 : 0);
+      res.push({ x, puntos });
+    }
+    return res.sort((a, b) => a.puntos - b.puntos || a.x.n.length - b.x.n.length).slice(0, 7).map(r => r.x.m);
+  }
+  const lugarTxt = $('#lugarTxt'), sug = $('#lugarSug');
+  lugarTxt.addEventListener('input', () => {
+    const lista = buscar(lugarTxt.value);
+    sug.innerHTML = lista.map(m => `<li><button type="button" class="sug" role="option" data-cve="${esc(m.cvegeo)}"><b>${esc(m.municipio)}</b>, ${esc(m.estado)}</button></li>`).join('')
+      + (lugarTxt.value.trim().length >= 3 && !lista.length ? '<li class="fine">No encontré ese municipio. Revisa cómo se escribe o usa tu ubicación.</li>' : '');
   });
-  const km = (a, b, c, d) => {
-    const R = 6371, r = x => x * Math.PI / 180;
-    const h = Math.sin(r(c - a) / 2) ** 2 + Math.cos(r(a)) * Math.cos(r(c)) * Math.sin(r(d - b) / 2) ** 2;
-    return 2 * R * Math.asin(Math.sqrt(h));
-  };
+  lugarTxt.addEventListener('keydown', ev => {
+    if (ev.key === 'Enter') { const b = sug.querySelector('button'); if (b) { ev.preventDefault(); b.click(); } }
+  });
+  sug.addEventListener('click', ev => {
+    const b = ev.target.closest('button'); if (!b) return;
+    const m = ((D.municipios && D.municipios.datos) || []).find(x => x.cvegeo === b.dataset.cve);
+    if (!m) return;
+    estado.lugar = { nombre: m.municipio, detalle: m.estado, lat: m.lat, lon: m.lon, origen: 'municipio' };
+    estado.verReferencia = false; guardar(); ir(3);
+  });
   $('#btnUbicacion').addEventListener('click', () => {
-    const m = $('#msgZona');
-    if (!navigator.geolocation) { m.hidden = false; m.textContent = 'Tu teléfono no permite usar la ubicación. Elige tu zona de la lista.'; return; }
-    m.hidden = false; m.textContent = 'Buscando tu ubicación…';
+    const msg = $('#msgZona');
+    if (!navigator.geolocation) { msg.hidden = false; msg.textContent = 'Tu teléfono no permite usar la ubicación. Escribe tu municipio.'; return; }
+    msg.hidden = false; msg.textContent = 'Buscando tu ubicación…';
     navigator.geolocation.getCurrentPosition(pos => {
-      const Z = ((D.zonas && D.zonas.datos) || []).filter(z => z.lat != null && z.lon != null);
-      if (!Z.length) { m.textContent = 'No hay zonas con coordenadas.'; return; }
-      const conDist = Z.map(z => ({ z, d: km(pos.coords.latitude, pos.coords.longitude, z.lat, z.lon) })).sort((a, b) => a.d - b.d);
-      estado.zona = conDist[0].z.zona_id; estado.distanciaKm = Math.round(conDist[0].d); guardar();
-      m.hidden = true; ir(3);
-    }, () => { m.textContent = 'No se pudo usar tu ubicación. Elige tu zona de la lista.'; }, { timeout: 15000, maximumAge: 600000 });
+      const lat = pos.coords.latitude, lon = pos.coords.longitude;
+      // Nombre de referencia: la cabecera municipal más cercana (solo para mostrar)
+      const muni = ((D.municipios && D.municipios.datos) || []).map(m => ({ m, d: km(lat, lon, m.lat, m.lon) })).sort((a, b) => a.d - b.d)[0];
+      estado.lugar = {
+        nombre: muni ? `Cerca de ${muni.m.municipio}` : 'Tu ubicación',
+        detalle: muni ? muni.m.estado : `${lat.toFixed(3)}, ${lon.toFixed(3)}`,
+        lat, lon, origen: 'gps',
+      };
+      estado.verReferencia = false; guardar();
+      msg.hidden = true; ir(3);
+    }, () => { msg.textContent = 'No se pudo usar tu ubicación. Escribe tu municipio.'; }, { timeout: 15000, maximumAge: 600000 });
   });
 
   // ---------- 3. ¿Es este lugar? ----------
+  function mapaPais(L, cob) {
+    // Mapa de puntos de México dibujado con las cabeceras municipales de INEGI (sin internet).
+    const M = (D.municipios && D.municipios.datos) || [];
+    const svg = $('#mapaPais');
+    if (!M.length) { svg.toggleAttribute('hidden', true); return false; }
+    // Encuadre: tu lugar y la zona con datos más cercana, con margen (mínimo ~3° de lado).
+    const pts = [[L.lat, L.lon]].concat(cob ? [[cob.z.lat, cob.z.lon]] : []);
+    let n = Math.max(...pts.map(p => p[0])), s = Math.min(...pts.map(p => p[0]));
+    let o = Math.min(...pts.map(p => p[1])), e = Math.max(...pts.map(p => p[1]));
+    const pad = 0.8, minLado = 3;
+    const cy = (n + s) / 2, cx = (o + e) / 2;
+    const ladoX = Math.max(e - o + 2 * pad, minLado), ladoY = Math.max(n - s + 2 * pad, ladoX * 0.6);
+    n = cy + ladoY / 2; s = cy - ladoY / 2; o = cx - ladoX / 2; e = cx + ladoX / 2;
+    const kx = Math.cos(((n + s) / 2) * Math.PI / 180);
+    const Wd = (e - o) * kx, Hd = n - s, W = 400, H = Math.round(W * Hd / Wd);
+    const X = lon => ((lon - o) * kx / Wd) * W, Y = lat => ((n - lat) / Hd) * H;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.setAttribute('width', W); svg.setAttribute('height', H);
+    const dentro = M.filter(m => m.lat <= n && m.lat >= s && m.lon >= o && m.lon <= e);
+    const puntos = dentro.map(m => `M${X(m.lon).toFixed(1)} ${Y(m.lat).toFixed(1)}h0`).join('');
+    const zonas = ((D.zonas && D.zonas.datos) || []).filter(z => z.lat != null)
+      .map(z => `<circle cx="${X(z.lon).toFixed(1)}" cy="${Y(z.lat).toFixed(1)}" r="5" class="m-zona"><title>${esc(z.nombre)}: zona con datos</title></circle>`).join('');
+    const etiqueta = (x, y, txt, cls) => {
+      const izq = x > W * 0.6;
+      return `<text x="${(izq ? x - 10 : x + 10).toFixed(1)}" y="${(y + 5).toFixed(1)}" text-anchor="${izq ? 'end' : 'start'}" class="${cls}">${esc(txt)}</text>`;
+    };
+    const zl = cob ? etiqueta(X(cob.z.lon), Y(cob.z.lat), cob.z.nombre.split(',')[0], 'm-etq-zona') : '';
+    svg.innerHTML = `<path d="${puntos}" class="m-muni"/>${zonas}
+      <circle cx="${X(L.lon).toFixed(1)}" cy="${Y(L.lat).toFixed(1)}" r="7" class="m-tu"/>
+      ${etiqueta(X(L.lon), Y(L.lat), L.nombre, 'm-etq-tu')}${zl}`;
+    svg.setAttribute('aria-label', `Mapa: tu lugar en rojo${cob ? `; la zona con datos (${cob.z.nombre}) en verde` : ''}`);
+    svg.toggleAttribute('hidden', false);
+    return true;
+  }
   function pintarLugar() {
-    const z = zonaSel();
-    if (!z) { ir(2); return; }
-    $('#lugarNombre').textContent = z.nombre || 'sin dato';
-    const notas = [];
-    if (estado.distanciaKm != null) notas.push(`Es la zona con datos más cercana a ti: está a unos ${estado.distanciaKm} km.`);
-    notas.push('Los datos de lluvia y clima describen toda la zona, no tu parcela exacta.');
-    $('#lugarNota').textContent = notas.join(' ');
-    $('#lugarNota').title = z.nota || '';
+    const L = estado.lugar;
+    if (!L) { ir(2); return; }
+    const cob = cobertura();
+    $('#lugarNombre').textContent = nombreLugar();
+    $('#lugarCobertura').className = 'cobertura ' + (cob && cob.cubre ? 'si' : 'no');
+    $('#lugarCobertura').textContent = !cob ? 'Sin dato de cobertura.'
+      : cob.cubre ? `Tenemos datos de tu zona: ${cob.z.nombre}, a ${cob.kmTxt} km.`
+        : `Todavía no tenemos datos de tu zona. La más cercana con datos es ${cob.z.nombre}, a ${cob.kmTxt} km.`;
+    $('#lugarNota').textContent = 'Los datos de lluvia y clima describen toda la zona, no tu parcela exacta.'
+      + (L.origen === 'municipio' ? ' El punto es la cabecera municipal.' : '');
 
     const im = D.imagen && D.imagen.datos;
     const img = $('#mapaImg'), pin = $('#mapaPin');
-    if (!im || !im.archivo) { $('#mapa').hidden = true; return; }
+    const enImagen = im && im.archivo && L.lat <= im.norte && L.lat >= im.sur && L.lon >= im.oeste && L.lon <= im.este;
     $('#mapa').hidden = false;
-    img.src = im.archivo;
-    img.alt = `Imagen de satélite de la zona ${z.nombre || ''}`;
-    $('#mapaPie').textContent = `${im.producto || 'Imagen de satélite'} · ${im.fecha_imagen ? fecha(im.fecha_imagen) : 'sin dato'}`;
-    const dentro = z.lat != null && z.lon != null && z.lat <= im.norte && z.lat >= im.sur && z.lon >= im.oeste && z.lon <= im.este;
-    pin.hidden = !dentro;
-    if (dentro) {
-      pin.style.left = `${((z.lon - im.oeste) / (im.este - im.oeste)) * 100}%`;
-      pin.style.top = `${((im.norte - z.lat) / (im.norte - im.sur)) * 100}%`;
+    if (enImagen) {
+      $('#mapaPais').toggleAttribute('hidden', true);
+      $('#mapa').classList.remove('pais');
+      img.hidden = false; img.src = im.archivo;
+      img.alt = `Imagen de satélite alrededor de ${nombreLugar()}`;
+      pin.hidden = false;
+      pin.style.left = `${((L.lon - im.oeste) / (im.este - im.oeste)) * 100}%`;
+      pin.style.top = `${((im.norte - L.lat) / (im.norte - im.sur)) * 100}%`;
+      $('#mapaPie').textContent = `${im.producto || 'Imagen de satélite'} · ${im.fecha_imagen ? fecha(im.fecha_imagen) : 'sin dato'}`;
     } else {
-      $('#mapaPie').textContent += ' · esta zona queda fuera de la imagen';
+      img.hidden = true; pin.hidden = true;
+      const ok = mapaPais(L, cob);
+      $('#mapa').hidden = !ok;
+      $('#mapa').classList.add('pais');
+      $('#mapaPie').textContent = 'Rojo: tu lugar · Verde: zonas con datos · Puntos: municipios (INEGI)';
     }
   }
   $('#btnSiLugar').addEventListener('click', () => ir(4));
@@ -170,19 +257,32 @@
   let ultimoPlan = null;
 
   function armarPlan() {
-    const c = cultivoSel(), z = zonaSel();
-    if (!c || !z) return null;
+    const c = cultivoSel(), cob = cobertura();
+    if (!c || !cob) return null;
+    const z = cob.z;
     const nombreC = corto(c).toLowerCase();
     const cal = D.calendario || {};
+    const lugar = nombreLugar();
+    const slug = norm(lugar).replace(/ /g, '-').slice(0, 40) || z.zona_id;
     const plan = {
-      titulo: `Tu plan para ${nombreC} en ${z.nombre}`,
-      archivo: `milpa-clara-plan-${c.cultivo}-${z.zona_id}.pdf`,
+      titulo: `Tu plan para ${nombreC} en ${lugar}`,
+      archivo: `milpa-clara-plan-${c.cultivo}-${slug}.pdf`,
+      lugar: estado.lugar,
+      cobertura: cob,
+      soloAviso: !cob.cubre && !estado.verReferencia,
+      referencia: !cob.cubre && estado.verReferencia,
+      datosDe: cob.cubre ? `Con datos de la zona ${z.nombre}, a ${cob.kmTxt} km de tu lugar.` : null,
+      avisoReferencia: !cob.cubre
+        ? `Tu lugar está a ${cob.kmTxt} km de ${z.nombre}, fuera de su cobertura${typeof z.radio_cobertura_km === 'number' ? ` (${z.radio_cobertura_km} km)` : ''}. Lo que sigue es de otra zona: úsalo solo como referencia.`
+        : null,
+      sinCobertura: `La zona con datos más cercana a ${lugar} es ${z.nombre}, a ${cob.kmTxt} km. Las fechas dependen de la lluvia de cada zona, así que no las usamos para tu lugar.`,
       ejemplo: [D.zonas, cal].some(d => d && d.ejemplo === true),
       metodo: cal.generado_por === 'red_neuronal' ? 'Calculado por la inteligencia artificial.'
         : cal.generado_por === 'baseline' ? 'Calculado con las lluvias de años pasados, sin inteligencia artificial.' : null,
       respuestas: [
         ['Cultivo', corto(c)],
-        ['Zona', z.nombre || null],
+        ['Lugar', lugar || null],
+        ['Datos de', cob.cubre ? `${z.nombre} (a ${cob.kmTxt} km)` : `Sin datos de tu zona (la más cercana: ${z.nombre}, a ${cob.kmTxt} km)`],
         ['Años cultivando', estado.anios != null ? `${estado.anios}` : null],
         ['Te acompaño en', estado.prioridades.map(p => PRIORIDAD[p]).join(', ') || null],
       ],
@@ -272,7 +372,15 @@
     if (!plan) { ir(1); return; }
     ultimoPlan = plan;
     $('#pr').textContent = plan.titulo;
-    $('#resEjemplo').hidden = !plan.ejemplo;
+    $('#resEjemplo').hidden = !plan.ejemplo || plan.soloAviso;
+    $('#resDatosDe').textContent = plan.datosDe || '';
+    $('#resDatosDe').hidden = !plan.datosDe;
+    $('#resSinCobertura').hidden = !plan.soloAviso;
+    $('#sinCTexto').textContent = plan.sinCobertura;
+    $('#btnReferencia').textContent = `Ver el plan de ${plan.cobertura.z.nombre} como referencia`;
+    $('#resReferencia').hidden = !plan.referencia;
+    $('#resReferencia').textContent = plan.avisoReferencia || '';
+    ['#resCalendario', '#resPrioridades', '#resFuente'].forEach(s => { $(s).hidden = plan.soloAviso; });
 
     $('#calLista').innerHTML = !plan.fechas
       ? `<p>${SIN}: ${esc(plan.sinFechas)} Abajo puedes ver qué necesita el cultivo.</p>`
@@ -285,7 +393,7 @@
         </li>`).join('')}</ol>`;
     $('#calMetodo').textContent = plan.metodo || '';
 
-    $('#resAnios').hidden = !plan.anios;
+    $('#resAnios').hidden = !plan.anios || plan.soloAviso;
     if (plan.anios) {
       const a = plan.anios;
       $('#aniosCuerpo').innerHTML = a.sinDato ? `<p>${SIN} para esos años.</p>` : `
@@ -305,6 +413,8 @@
       <p class="fine">${esc(b.nota)}</p></article>`).join('');
     $('#resFuente').textContent = plan.fuente || '';
   }
+
+  $('#btnReferencia').addEventListener('click', () => { estado.verReferencia = true; guardar(); pintarPlan(); $('#resReferencia').focus && window.scrollTo(0, 0); });
 
   // ---------- Descargar el plan en PDF ----------
   // Usa jsPDF guardado en vendor/ (funciona sin internet). Si no cargó, abre "Imprimir" para
@@ -375,7 +485,9 @@
     doc.text(`Generado el ${hoyL.getDate()} de ${MESES[hoyL.getMonth()]} de ${hoyL.getFullYear()}`, W - M, 9.3, { align: 'right' });
     y = 22;
     texto(plan.titulo, { size: 18, bold: true, gap: 3 });
-    if (plan.ejemplo) texto('Atención: estas fechas son de prueba mientras llega el cálculo final.', { size: 10, color: AMBAR });
+    if (plan.ejemplo && !plan.soloAviso) texto('Atención: estas fechas son de prueba mientras llega el cálculo final.', { size: 10, color: AMBAR });
+    if (plan.datosDe) texto(plan.datosDe, { size: 10, color: GRIS });
+    if (plan.referencia) texto(plan.avisoReferencia, { size: 10.5, bold: true, color: AMBAR });
 
     // Respuestas
     titulo('Tus respuestas');
@@ -383,16 +495,17 @@
 
     // Imagen de la zona con el punto
     const im = D.imagen && D.imagen.datos;
-    if (im && im.archivo) {
+    const L = plan.lugar || {};
+    const lugarEnImagen = im && L.lat != null && L.lat <= im.norte && L.lat >= im.sur && L.lon >= im.oeste && L.lon <= im.este;
+    if (im && im.archivo && lugarEnImagen) {
       const foto = await cargarImagen(im.archivo);
       if (foto) {
         const ancho = Math.min(ANCHO, 110), alto = ancho * foto.h / foto.w;
         y += 2; salto(alto + 8);
         doc.addImage(foto.data, 'JPEG', M, y, ancho, alto);
-        const z = plan.zona;
-        if (z.lat != null && z.lon != null && z.lat <= im.norte && z.lat >= im.sur && z.lon >= im.oeste && z.lon <= im.este) {
-          const px = M + ((z.lon - im.oeste) / (im.este - im.oeste)) * ancho;
-          const py = y + ((im.norte - z.lat) / (im.norte - im.sur)) * alto;
+        {
+          const px = M + ((L.lon - im.oeste) / (im.este - im.oeste)) * ancho;
+          const py = y + ((im.norte - L.lat) / (im.norte - im.sur)) * alto;
           doc.setDrawColor(255, 255, 255); doc.setLineWidth(0.8); doc.setFillColor(184, 65, 44);
           doc.circle(px, py, 2.2, 'FD'); doc.setLineWidth(0.2);
         }
@@ -401,8 +514,14 @@
       }
     }
 
+    if (plan.soloAviso) {
+      titulo('Aún no tenemos datos de tu zona');
+      texto(plan.sinCobertura, { size: 11 });
+    }
+
     // Fechas
-    titulo('Tus fechas');
+    if (!plan.soloAviso) titulo('Tus fechas');
+    if (plan.soloAviso) { /* sin fechas para este lugar */ } else
     if (!plan.fechas) texto(`Sin dato: ${plan.sinFechas}`, { color: AMBAR });
     else plan.fechas.forEach(f => {
       salto(22);
@@ -412,10 +531,10 @@
       if (f.conf) texto(`Confianza: ${f.conf}`, { size: 10.5, gap: 0.5 });
       texto(f.porque ? f.porque : `¿Por qué? ${SD}`, { size: 10, color: f.porque ? GRIS : AMBAR, gap: 3 });
     });
-    if (plan.metodo) texto(plan.metodo, { size: 9, color: GRIS });
+    if (plan.metodo && !plan.soloAviso) texto(plan.metodo, { size: 9, color: GRIS });
 
     // Años
-    if (plan.anios) {
+    if (plan.anios && !plan.soloAviso) {
       titulo('Los años que te ha tocado sembrar');
       if (plan.anios.sinDato) texto(`${SD} para esos años.`, { color: AMBAR });
       else {
@@ -426,7 +545,7 @@
     }
 
     // Prioridades
-    plan.bloques.forEach(b => {
+    (plan.soloAviso ? [] : plan.bloques).forEach(b => {
       titulo(b.titulo);
       if (b.intro) texto(b.intro, { size: 10.5 });
       if (b.filas) b.filas.forEach(f => fila(f.n, f.v, { tuyo: f.tuyo }));
@@ -449,8 +568,8 @@
     texto('Esta herramienta te acompaña con datos del pasado. La decisión final es tuya.', { size: 11, bold: true, x: M + 4, ancho: ANCHO - 4 });
     doc.setDrawColor(...VERDE); doc.setLineWidth(1); doc.line(M, y0, M, y - 1); doc.setLineWidth(0.2);
     y += 3;
-    if (plan.fuente) texto(plan.fuente, { size: 8.5, color: GRIS });
-    texto('Fuentes: NASA POWER, MODIS y HLS (NASA), SIAP, CONAGUA (Monitor de Sequía) y FAO-56. Proyecto para NASA Space Apps Challenge 2026, sede CDMX.', { size: 8.5, color: GRIS });
+    if (plan.fuente && !plan.soloAviso) texto(plan.fuente, { size: 8.5, color: GRIS });
+    texto('Fuentes: NASA POWER, MODIS y HLS (NASA), SIAP, CONAGUA (Monitor de Sequía), FAO-56 e INEGI (municipios). Proyecto para NASA Space Apps Challenge 2026, sede CDMX.', { size: 8.5, color: GRIS });
 
     // Número de página
     const n = doc.getNumberOfPages();
@@ -469,18 +588,19 @@
   $('#btnReiniciar').addEventListener('click', () => ir(1));
 
   // ---------- arranque ----------
-  Promise.allSettled([cargar('cultivos'), cargar('zonas'), cargar('calendario'), cargar('imagen_zona')]).then(([cu, zo, ca, im]) => {
+  Promise.allSettled([cargar('cultivos'), cargar('zonas'), cargar('calendario'), cargar('imagen_zona'), cargar('municipios')]).then(([cu, zo, ca, im, mu]) => {
     D.cultivos = cu.status === 'fulfilled' ? cu.value : null;
     D.zonas = zo.status === 'fulfilled' ? zo.value : null;
     D.calendario = ca.status === 'fulfilled' ? ca.value : null;
     D.imagen = im.status === 'fulfilled' ? im.value : null;
+    D.municipios = mu.status === 'fulfilled' ? mu.value : null;
     if (!D.cultivos || !D.zonas) {
       $('#opCultivo').innerHTML = '<p class="aviso">No se pudieron leer los datos. Abre el sitio con un servidor: <code>python3 -m http.server 8000 -d site</code>.</p>';
       return;
     }
-    pintarCultivos(); pintarZonas(); pintarPrioridades();
+    pintarCultivos(); prepararMunicipios(); pintarPrioridades();
     // Si ya contestó todo antes en este teléfono, va directo a su plan.
-    const completo = cultivoSel() && zonaSel() && estado.prioridades.length;
+    const completo = cultivoSel() && cobertura() && estado.prioridades.length;
     ir(completo ? 6 : 1, false);
   });
 })();

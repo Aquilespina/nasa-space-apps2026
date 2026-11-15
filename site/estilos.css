@@ -53,10 +53,32 @@ main{flex:1;width:100%;max-width:640px;margin:0 auto;padding:4px 16px 32px}
 .atras{align-self:flex-start;border:0;background:none;color:var(--ink2);font-weight:600;padding:10px 4px;min-height:44px;cursor:pointer}
 .aviso{background:var(--amber-soft);color:#5d3c06;border-radius:12px;padding:12px 14px;font-size:15px}
 
+/* 2. buscador de municipio */
+.buscador{display:flex;flex-direction:column;gap:6px}
+.etq-campo{font-weight:700;font-size:16px}
+.buscador input{width:100%;font:600 19px var(--sans);padding:14px 16px;border:2px solid var(--line2);border-radius:14px;background:var(--panel);color:var(--ink)}
+.buscador input:focus{border-color:var(--green);outline:none;box-shadow:0 0 0 3px var(--green-soft)}
+.sugerencias{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}
+.sugerencias:empty{display:none}
+.sug{width:100%;text-align:left;min-height:50px;padding:10px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--soft);font-size:17px;cursor:pointer}
+.sug:hover,.sug:focus-visible{border-color:var(--green);background:var(--green-soft)}
+.cobertura{text-align:center;font-weight:700;border-radius:12px;padding:10px 12px;font-size:16px}
+.cobertura.si{background:var(--green-soft);color:var(--green-d)}
+.cobertura.no{background:var(--amber-soft);color:#5d3c06}
+.sin-cobertura{border-color:var(--amber)}
+#mapaPais{display:block;width:100%;height:auto;background:#eef3f6}
+#mapaPais .m-muni{stroke:#9aa7a0;stroke-width:3.2;stroke-linecap:round;fill:none}
+#mapaPais .m-zona{fill:var(--green);stroke:#fff;stroke-width:1.5}
+#mapaPais .m-tu{fill:var(--red);stroke:#fff;stroke-width:2.5}
+#mapaPais text{font:700 15px var(--sans);paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+#mapaPais .m-etq-tu{fill:var(--red)}
+#mapaPais .m-etq-zona{fill:var(--green-d)}
+
 /* 3. mapa */
 .mapa{position:relative;border-radius:14px;overflow:hidden;border:2px solid var(--borde);background:var(--soft)}
 .mapa img{display:block;width:100%;height:auto}
 .mapa figcaption{position:absolute;left:8px;bottom:8px;background:rgba(255,255,255,.92);padding:2px 8px;border-radius:6px}
+.mapa.pais figcaption{position:static;background:none;padding:6px 10px}
 .pin{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;border:3px solid #fff;background:var(--red);box-shadow:0 0 0 2px var(--red),0 2px 8px rgba(0,0,0,.4)}
 .lugar{text-align:center;font-size:21px;font-weight:700}
 

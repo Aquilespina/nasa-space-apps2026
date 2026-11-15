@@ -27,13 +27,19 @@
   <section class="pantalla" data-paso="2" aria-labelledby="p2" hidden>
     <div class="tarjeta">
       <h1 class="pregunta" id="p2" tabindex="-1">¿Dónde cultivas?</h1>
-      <div class="opciones" id="opZona"><p class="muted">Cargando…</p></div>
+      <div class="buscador">
+        <label for="lugarTxt" class="etq-campo">Escribe tu municipio</label>
+        <input id="lugarTxt" type="search" autocomplete="off" spellcheck="false" aria-describedby="lugarAyuda" aria-controls="lugarSug" aria-autocomplete="list">
+        <p class="fine" id="lugarAyuda">Por ejemplo: Amealco, Querétaro · Texcoco, México</p>
+        <ul class="sugerencias" id="lugarSug" role="listbox" aria-label="Municipios encontrados"></ul>
+      </div>
       <button type="button" class="opcion secundaria" id="btnUbicacion">
         <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3" fill="currentColor"/><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 1v3M10 16v3M1 10h3M16 10h3" stroke="currentColor" stroke-width="1.6"/></svg>
         Usar mi ubicación
       </button>
-      <p class="fine centro">Tu ubicación solo se usa en tu teléfono para buscar la zona más cercana. No se guarda ni se envía.</p>
+      <p class="fine centro">Tu ubicación solo se usa en tu teléfono. No se guarda ni se envía.</p>
       <p class="aviso" id="msgZona" aria-live="polite" hidden></p>
+      <p class="fine centro" id="zonasConDatos"></p>
     </div>
     <button type="button" class="atras" data-atras>← Atrás</button>
   </section>
@@ -43,15 +49,17 @@
     <div class="tarjeta">
       <h1 class="pregunta" id="p3" tabindex="-1">¿Es este lugar donde cultivas?</h1>
       <figure class="mapa" id="mapa">
-        <img id="mapaImg" alt="" width="408" height="307">
+        <img id="mapaImg" alt="" width="408" height="307" hidden>
+        <svg id="mapaPais" viewBox="0 0 400 260" role="img" hidden></svg>
         <span class="pin" id="mapaPin" hidden aria-hidden="true"></span>
         <figcaption class="fine" id="mapaPie"></figcaption>
       </figure>
       <p class="lugar" id="lugarNombre"></p>
+      <p class="cobertura" id="lugarCobertura"></p>
       <p class="fine centro" id="lugarNota"></p>
       <div class="opciones dos">
         <button type="button" class="opcion principal" id="btnSiLugar">Sí, es aquí</button>
-        <button type="button" class="opcion" data-atras>No, elegir otro</button>
+        <button type="button" class="opcion" data-atras>No, corregir</button>
       </div>
     </div>
   </section>
@@ -89,6 +97,13 @@
   <section class="pantalla resultado" data-paso="6" aria-labelledby="pr" hidden>
     <h1 class="titulo-plan" id="pr" tabindex="-1">Tu plan</h1>
     <p class="aviso" id="resEjemplo" hidden>Estas fechas son de prueba mientras llega el cálculo final.</p>
+    <p class="fine" id="resDatosDe"></p>
+    <article class="bloque sin-cobertura" id="resSinCobertura" hidden aria-labelledby="hSinC">
+      <h2 id="hSinC">Aún no tenemos datos de tu zona</h2>
+      <p id="sinCTexto"></p>
+      <button type="button" class="opcion" id="btnReferencia"></button>
+    </article>
+    <p class="aviso" id="resReferencia" hidden></p>
 
     <article class="bloque" id="resCalendario" aria-labelledby="hCal">
       <h2 id="hCal">Tus fechas</h2>
