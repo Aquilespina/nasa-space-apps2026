@@ -104,7 +104,9 @@ git add -A && git commit -m "Datos del baseline de Aquiles" && git push
 
 Cada `git push` a `main` publica `site/` en **GitHub Pages** con `.github/workflows/pages.yml`. Antes de publicar, el flujo copia los datos.
 
-Enlace público: `[pendiente: poner aquí la URL de GitHub Pages]`
+**Enlace público: https://milpa-clara.vercel.app** (Vercel, cuenta angels-projects-28a1b259, proyecto `milpa-clara`; incluye el chat en `/api/chat`).
+
+Para volver a publicar desde la carpeta del proyecto (necesita Node.js y `npx vercel login` una vez): `npx vercel --prod`. `.vercelignore` evita subir secretos locales y carpetas que el sitio no usa. GitHub Pages no sirve para el chat, porque no corre funciones.
 
 ## Estructura
 
