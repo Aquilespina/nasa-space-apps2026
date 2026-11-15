@@ -1,0 +1,199 @@
+{
+  "fuente": "Frases escritas para el tono de Amealquito (cercano, sin tecnicismos, sin dar órdenes). Las marcas <...> las llena el sitio con datos de data/processed; la LSTM nunca escribe números. La primera frase de cada tema es la plantilla de respaldo.",
+  "fecha_consulta": "2026-11-15",
+  "ejemplo": false,
+  "temas": {
+    "intro": [
+      "Con lo que me cuentas de tu <CULTIVO> en <LUGAR>:",
+      "Pensando en tu <CULTIVO> en <LUGAR>:",
+      "Para tu <CULTIVO> allá en <LUGAR>, esto es lo que veo:",
+      "Te cuento lo que sé de tu <CULTIVO> en <LUGAR>:",
+      "Sobre tu <CULTIVO> en <LUGAR>, mira:",
+      "Revisé los datos de tu <CULTIVO> en <LUGAR>:",
+      "Con tu <CULTIVO> en <LUGAR> en mente:",
+      "Esto encontré para tu <CULTIVO> en <LUGAR>:",
+      "Vamos con tu <CULTIVO> en <LUGAR>:",
+      "Para lo que siembras, tu <CULTIVO> en <LUGAR>, te comparto esto:"
+    ],
+    "intro_nota": [
+      "Con lo que me cuentas de tu <CULTIVO> en <LUGAR> y que <NOTA>:",
+      "Pensando en tu <CULTIVO> en <LUGAR>, y en que <NOTA>:",
+      "Tomando en cuenta que <NOTA>, esto veo para tu <CULTIVO> en <LUGAR>:",
+      "Me dijiste que <NOTA>; para tu <CULTIVO> en <LUGAR>, esto encontré:",
+      "Si <NOTA>, conviene ver esto de tu <CULTIVO> en <LUGAR>:",
+      "Con tu <CULTIVO> en <LUGAR>, y sabiendo que <NOTA>:",
+      "Ya que <NOTA>, revisé los datos de tu <CULTIVO> en <LUGAR>:",
+      "Sabiendo que <NOTA>, te cuento lo de tu <CULTIVO> en <LUGAR>:"
+    ],
+    "intro_simple": [
+      "Con lo que me cuentas de tu <CULTIVO>:",
+      "Pensando en tu <CULTIVO>:",
+      "Sobre tu <CULTIVO>, esto encontré:",
+      "Te cuento lo que sé de tu <CULTIVO>:",
+      "Revisé los datos de tu <CULTIVO>:",
+      "Vamos con tu <CULTIVO>:"
+    ],
+    "fuera_zona": [
+      "Tu lugar está fuera de la zona con datos, así que no tengo fechas, lluvia ni suelo para ahí.",
+      "Para tu lugar todavía no tengo datos de la zona, así que no puedo darte fechas, lluvia ni suelo de ahí.",
+      "Tu parcela queda lejos de las zonas que conozco; por eso no tengo fechas, lluvia ni suelo de ahí.",
+      "Todavía no conozco tu zona, así que no tengo fechas, lluvia ni suelo para tu lugar.",
+      "Aún no tengo datos de tu zona; no puedo darte fechas, lluvia ni suelo de ahí."
+    ],
+    "no_dato": [
+      "No tengo ese dato. Puedo contarte de fechas de siembra y cosecha, el agua que necesita tu cultivo, sus años malos, la humedad y el suelo de tu zona o lo que predijo el modelo que entrenamos.",
+      "Ese dato no lo tengo. Sí te puedo hablar de fechas de siembra y cosecha, el agua de tu cultivo, sus años malos, la humedad y el suelo de tu zona o lo que predijo el modelo que entrenamos.",
+      "No tengo ese dato, y prefiero no inventarlo. Te puedo contar de fechas, el agua de tu cultivo, sus años malos, la humedad y el suelo de tu zona o lo que predijo el modelo que entrenamos.",
+      "De eso no tengo dato. Lo que sí sé: fechas de siembra y cosecha, agua de tu cultivo, años malos, humedad y suelo de tu zona y lo que predijo el modelo que entrenamos."
+    ],
+    "fecha": [
+      "Para <ACT> de tu <CULTIVO>, la fecha es el <FECHA>, con días buenos <VENTANA> (confianza de <CONF>).",
+      "<ACT_MAYUS> de tu <CULTIVO> cae el <FECHA>; los días buenos van <VENTANA>, con confianza de <CONF>.",
+      "La fecha para <ACT> de tu <CULTIVO> es el <FECHA>. Los días buenos van <VENTANA> (confianza de <CONF>).",
+      "Para <ACT> de tu <CULTIVO>, apunta el <FECHA>; los días buenos van <VENTANA>, con confianza de <CONF>.",
+      "El mejor día para <ACT> de tu <CULTIVO> es el <FECHA>, con días buenos <VENTANA> y confianza de <CONF>.",
+      "Para <ACT> de tu <CULTIVO>, los días buenos van <VENTANA>; el más común es el <FECHA> (confianza de <CONF>).",
+      "<ACT_MAYUS> de tu <CULTIVO>: el <FECHA>, con días buenos <VENTANA> y una confianza de <CONF>.",
+      "Si piensas en <ACT> de tu <CULTIVO>, la fecha es el <FECHA> y los días buenos van <VENTANA> (confianza de <CONF>)."
+    ],
+    "fecha_sin_ventana": [
+      "Para <ACT> de tu <CULTIVO>, la fecha es el <FECHA>.",
+      "<ACT_MAYUS> de tu <CULTIVO> cae el <FECHA>.",
+      "La fecha para <ACT> de tu <CULTIVO> es el <FECHA>.",
+      "Para <ACT> de tu <CULTIVO>, apunta el <FECHA>.",
+      "<ACT_MAYUS> de tu <CULTIVO>: el <FECHA>.",
+      "Si piensas en <ACT> de tu <CULTIVO>, la fecha es el <FECHA>."
+    ],
+    "fecha_sin_dato": [
+      "Para <ACT> de tu <CULTIVO> no tengo fecha (sin dato).",
+      "De <ACT> de tu <CULTIVO> no tengo fecha todavía (sin dato).",
+      "Para <ACT> de tu <CULTIVO> aún no tengo fecha (sin dato).",
+      "<ACT_MAYUS> de tu <CULTIVO>: sin dato, no tengo fecha.",
+      "No tengo fecha para <ACT> de tu <CULTIVO> (sin dato)."
+    ],
+    "agua": [
+      "<EL_CULTIVO> necesita <MM> mm de agua en sus <DIAS> días de ciclo (<M3> m³ por hectárea).",
+      "En todo su ciclo de <DIAS> días, <EL_CULTIVO> pide unos <MM> mm de agua (<M3> m³ por hectárea).",
+      "<EL_CULTIVO> usa unos <MM> mm de agua en <DIAS> días de ciclo, o sea <M3> m³ por hectárea.",
+      "Para crecer en sus <DIAS> días, <EL_CULTIVO> necesita <MM> mm de agua (<M3> m³ por hectárea).",
+      "<EL_CULTIVO> se toma unos <MM> mm de agua en sus <DIAS> días (<M3> m³ por hectárea).",
+      "El agua que pide <EL_CULTIVO> en sus <DIAS> días de ciclo es de <MM> mm, unos <M3> m³ por hectárea.",
+      "En sus <DIAS> días de ciclo, <EL_CULTIVO> necesita <MM> mm de agua; son <M3> m³ por hectárea."
+    ],
+    "falta_agua": [
+      "Le faltó agua en <X> años, entre 2003 y 2025.",
+      "Entre 2003 y 2025, el agua no le alcanzó en <X> años.",
+      "En <X> años, entre 2003 y 2025, le quedó corta el agua.",
+      "Del 2003 al 2025, le faltó agua en <X> años.",
+      "La lluvia no le alcanzó en <X> años, entre 2003 y 2025."
+    ],
+    "cosechas": [
+      "<EL_CULTIVO> tuvo <N> años malos entre 2003 y 2025 (<LISTA>).",
+      "Entre 2003 y 2025, <EL_CULTIVO> tuvo <N> años malos: <LISTA>.",
+      "Hubo <N> años malos para <EL_CULTIVO> entre 2003 y 2025 (<LISTA>).",
+      "De 2003 a 2025, a <EL_CULTIVO> le fue mal en <N> años: <LISTA>.",
+      "<EL_CULTIVO> la pasó mal en <N> años, entre 2003 y 2025 (<LISTA>).",
+      "En el municipio, <EL_CULTIVO> tuvo <N> años malos de 2003 a 2025: <LISTA>."
+    ],
+    "rend_propio": [
+      "En esos años rindió <P> % de lo normal.",
+      "Esos años rindió apenas <P> % de lo normal.",
+      "En esos años malos dio <P> % de lo normal.",
+      "En esos años la cosecha fue <P> % de lo normal."
+    ],
+    "rend_otro": [
+      "En los años malos del maíz, <EL_CULTIVO> rindió <P> % de lo normal.",
+      "Cuando al maíz le fue mal, <EL_CULTIVO> dio <P> % de lo normal.",
+      "En los años en que el maíz falló, <EL_CULTIVO> rindió <P> % de lo normal.",
+      "En los malos años del maíz, <EL_CULTIVO> sacó <P> % de lo normal."
+    ],
+    "ingreso": [
+      "Un año normal deja unos <DINERO> por hectárea, antes de costos.",
+      "En un año normal deja unos <DINERO> por hectárea, sin contar costos.",
+      "Un año normal da unos <DINERO> por hectárea, antes de pagar costos.",
+      "En un año normal se sacan unos <DINERO> por hectárea, antes de costos."
+    ],
+    "humedad": [
+      "La humedad guardada abajo, donde están las raíces, está <ESTADO> que lo normal para <MES> (<VALOR> contra <NORMAL> en años pasados).",
+      "Abajo, donde están las raíces, la tierra está <ESTADO> que lo normal para <MES> (<VALOR> contra <NORMAL>).",
+      "Los satélites ven la humedad de abajo <ESTADO> que lo normal para <MES>: <VALOR> contra <NORMAL> en años pasados.",
+      "En <MES>, la tierra guarda humedad <ESTADO> que lo normal en la zona de las raíces (<VALOR> contra <NORMAL>).",
+      "La humedad donde están las raíces está <ESTADO> que en años pasados para <MES> (<VALOR> contra <NORMAL>)."
+    ],
+    "lluvia_temporada": [
+      "En esta temporada han caído <LLUVIA> mm desde el 1 de mayo, contra <NORMAL> mm de un año normal a estas fechas.",
+      "Desde el 1 de mayo van <LLUVIA> mm de lluvia; un año normal lleva <NORMAL> mm a estas fechas.",
+      "Esta temporada lleva <LLUVIA> mm de lluvia desde mayo, y lo normal a estas fechas son <NORMAL> mm.",
+      "Han caído <LLUVIA> mm desde el 1 de mayo, cuando lo normal a esta altura es <NORMAL> mm."
+    ],
+    "heladas": [
+      "En un año normal hay unos <DIAS> días de helada, sobre todo en <MESES>.",
+      "Las heladas llegan unos <DIAS> días al año, casi siempre en <MESES>.",
+      "Cada año hay unos <DIAS> días de helada, más que nada en <MESES>.",
+      "Lo normal son unos <DIAS> días de helada al año, sobre todo en <MESES>."
+    ],
+    "suelo": [
+      "La tierra de tu zona guarda unos <AGUA_SUELO> mm de agua por metro de suelo, tiene <ARC1> % de arcilla arriba y <ARC2> % más abajo, y un pH de <PH>.",
+      "Tu zona tiene una tierra que guarda unos <AGUA_SUELO> mm de agua por metro, con <ARC1> % de arcilla arriba, <ARC2> % más abajo y pH de <PH>.",
+      "El suelo de tu zona retiene unos <AGUA_SUELO> mm de agua por metro; tiene <ARC1> % de arcilla arriba, <ARC2> % abajo y pH de <PH>.",
+      "La tierra por tu zona guarda <AGUA_SUELO> mm de agua por metro, con <ARC1> % de arcilla en la capa de arriba, <ARC2> % más abajo y un pH de <PH>."
+    ],
+    "verdor": [
+      "Desde el satélite, el campo de toda la región se vio <VERDOR> en <ANIO>.",
+      "En <ANIO>, el satélite vio el campo de la región <VERDOR>.",
+      "El campo de la región se vio <VERDOR> en <ANIO>, según el satélite.",
+      "Visto desde arriba, en <ANIO> el campo de la región estuvo <VERDOR>."
+    ],
+    "prueba_ia": [
+      "Probamos si la inteligencia artificial que entrenamos adivinaba el verdor del campo mejor que el promedio de años pasados: de 2021 a 2025 no le ganó (resultado <RES>; abajo de 0 es peor), así que las fechas salen de las lluvias de años pasados.",
+      "La inteligencia artificial que entrenamos no le ganó al promedio de años pasados de 2021 a 2025 (resultado <RES>; abajo de 0 es peor); por eso las fechas salen de las lluvias de años pasados.",
+      "Comparamos la inteligencia artificial que entrenamos contra el promedio de años pasados y de 2021 a 2025 no le ganó (resultado <RES>; abajo de 0 es peor). Por eso las fechas salen de las lluvias de años pasados.",
+      "De 2021 a 2025, la inteligencia artificial que entrenamos no adivinó mejor que el promedio de años pasados (resultado <RES>; abajo de 0 es peor), y por eso las fechas salen de las lluvias de años pasados."
+    ],
+    "modelo": [
+      "El modelo que entrenamos predijo que en <ANIO> el campo de tu zona estaría <PRED> (<PCT> % de sus <N> terrenos agrícolas por debajo). Esta temporada se equivocó menos que el promedio de años pasados (error de <ERR> contra <ERRC>).",
+      "Para <ANIO>, el modelo que entrenamos predijo un campo <PRED> en tu zona (<PCT> % de sus <N> terrenos agrícolas por debajo); esta temporada se equivocó menos que el promedio de años pasados (error de <ERR> contra <ERRC>).",
+      "Nuestro modelo predijo que en <ANIO> tu zona estaría <PRED>, con <PCT> % de sus <N> terrenos agrícolas por debajo. Esta vez acertó más que el promedio de años pasados (error de <ERR> contra <ERRC>).",
+      "El modelo que entrenamos vio venir un campo <PRED> en <ANIO> (<PCT> % de los <N> terrenos agrícolas de tu zona por debajo), y esta temporada se equivocó menos que el promedio (error de <ERR> contra <ERRC>)."
+    ],
+    "advertencia_modelo": [
+      "Pero en la prueba de 2021 a 2025 no le ganó al promedio de años pasados y falló en la sequía de 2023; por eso las fechas no lo usan.",
+      "Ojo: de 2021 a 2025 no le ganó al promedio de años pasados y falló en la sequía de 2023, así que las fechas no lo usan.",
+      "Aun así, de 2021 a 2025 no superó al promedio de años pasados y falló en la sequía de 2023; por eso las fechas no se basan en él.",
+      "Eso sí, en la prueba de 2021 a 2025 no le ganó al promedio y falló en la sequía de 2023, por eso las fechas no lo usan."
+    ],
+    "metodo": [
+      "Las fechas salen de las lluvias de 2003 a 2025 medidas por satélites de la NASA, sin inteligencia artificial.",
+      "Estas fechas se calcularon con las lluvias de 2003 a 2025 que miden los satélites de la NASA, sin inteligencia artificial.",
+      "Las fechas vienen de las lluvias de 2003 a 2025 medidas por la NASA desde el espacio, sin inteligencia artificial.",
+      "Para las fechas usamos las lluvias de 2003 a 2025 que midieron los satélites de la NASA, sin inteligencia artificial."
+    ],
+    "zona": [
+      "Tus datos vienen de la zona <ZONA>; la lluvia y el clima son de toda la zona, no de tu parcela exacta.",
+      "Estos datos son de la zona <ZONA>: describen toda la zona, no tu parcela exacta.",
+      "Los datos son de la zona <ZONA>; hablan de toda la zona y no de tu parcela exacta.",
+      "Uso los datos de la zona <ZONA>, que describen toda la zona y no tu parcela exacta."
+    ],
+    "sin_registro": [
+      "De <CULTIVO> no tengo datos:",
+      "Sobre <CULTIVO> no tengo datos:",
+      "Todavía no tengo datos de <CULTIVO>:",
+      "De <CULTIVO> aún no tengo datos:"
+    ],
+    "cierre": [
+      "Compáralo con lo que ves en tu parcela: la decisión final es tuya.",
+      "Tú conoces tu tierra mejor que nadie; compáralo con lo que ves y decide tú.",
+      "Revísalo con lo que ves en tu parcela; la última palabra es tuya.",
+      "Úsalo como una ayuda más: lo que tú ves en tu parcela pesa más.",
+      "Tómalo como referencia y compáralo con tu experiencia; la decisión es tuya.",
+      "Contrástalo con lo que ves en el campo; tú decides."
+    ],
+    "cierre_alterno": [
+      "Si quieres probar con <ALTERNO>, revisa primero qué semilla se consigue fácil y si tiene buen comprador en tu mercado local.",
+      "Si te late probar con <ALTERNO>, antes checa qué semilla hay cerca y si tiene comprador en tu mercado.",
+      "Para probar con <ALTERNO>, conviene revisar primero si la semilla se consigue fácil y si hay quién la compre en tu región.",
+      "Si piensas en <ALTERNO>, mira antes qué semilla se consigue y si tiene buen comprador por tu zona.",
+      "Antes de animarte con <ALTERNO>, revisa si hay semilla a la mano y comprador en tu mercado local."
+    ]
+  }
+}

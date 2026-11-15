@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Cultivo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="contenedor-principal">
+
+    <!-- Paso 1 -->
+    <section class="tarjeta activa" id="paso-1">
+      <div class="caja-pregunta">
+        <label for="cultivo">¿Qué cultivas?</label>
+        <input type="text" id="cultivo" placeholder="Ej. Maíz, frijol, avena...">
+        <button onclick="siguientePaso(2)">Siguiente →</button>
+      </div>
+    </section>
+
+    <!-- Paso 2 -->
+    <section class="tarjeta" id="paso-2">
+      <div class="caja-pregunta">
+        <label for="lugar">¿Dónde cultivas?</label>
+        <input type="text" id="lugar" placeholder="Ciudad, municipio o estado">
+        <button class="secundario" id="boton-ubicacion" onclick="usarMiUbicacion()">📍 Usar mi ubicación</button>
+        <p class="dato-ayuda" id="estado-ubicacion"></p>
+        <button onclick="siguientePaso(3)">Siguiente →</button>
+      </div>
+    </section>
+
+    <!-- Paso 3 -->
+    <section class="tarjeta" id="paso-3">
+      <div class="caja-pregunta">
+        <p>¿Es este el lugar donde cultivas?</p>
+        <p class="dato-confirmacion" id="texto-ubicacion">Ubicación seleccionada</p>
+        <div class="botones-fila">
+          <button onclick="siguientePaso(4)">Sí, continuar</button>
+          <button class="secundario" onclick="siguientePaso(2)">Corregir</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Paso 4 -->
+    <section class="tarjeta" id="paso-4">
+      <div class="caja-pregunta">
+        <label for="tiempo">¿Cuánto tiempo tienes cultivando?</label>
+        <input type="text" id="tiempo" placeholder="Ej. 10 años">
+        <button onclick="siguientePaso(5)">Siguiente →</button>
+      </div>
+    </section>
+
+    <!-- Paso 5 -->
+    <section class="tarjeta" id="paso-5">
+      <div class="caja-pregunta">
+        <p>¿En qué te gustaría que te acompañe?</p>
+        <div class="opciones">
+          <button class="opcion" onclick="finalizar('Mejorar mi cosecha')">Mejorar mi cosecha</button>
+          <button class="opcion" onclick="finalizar('No gastar tanta agua')">No gastar tanta agua</button>
+          <button class="opcion" onclick="finalizar('Aumentar mis cosechas')">Aumentar mis cosechas</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pantalla Final (Entrada a la plataforma) -->
+    <section class="tarjeta" id="paso-final">
+      <div class="caja-pregunta">
+        <h2>¡Listo! Ya estás dentro</h2>
+        <p id="resumen"></p>
+        <button class="secundario" onclick="reiniciar()">Volver al inicio</button>
+      </div>
+    </section>
+
+    <!-- Chat (RAG) -->
+    <section class="tarjeta" id="paso-chat">
+      <div class="caja-pregunta caja-chat">
+        <h2>Pregúntame sobre tu cultivo</h2>
+        <p class="dato-ayuda">Solo respondo con datos verificados de Amealco de Bonfil, Qro. Si no tengo el dato, te lo digo.</p>
+        <div id="mensajes" class="mensajes" aria-live="polite"></div>
+        <div class="caja-pregunta-chat">
+          <input type="text" id="pregunta" placeholder="Ej. ¿Cuándo debo sembrar?">
+          <button id="boton-enviar" onclick="enviarPregunta()">Enviar</button>
+        </div>
+        <button class="secundario" onclick="reiniciar()">Volver al inicio</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -35,7 +35,7 @@
   Promise.all([cargar('zonas'), cargar('calendario'), cargar('cultivos')])
     .then(([zonas, cal, cult]) => iniciar(zonas, cal, cult))
     .catch(err => {
-      $r('#rzCuerpo').innerHTML = `<p class="card-msg warn">No se pudieron leer los datos (${esc(err.message)}). Abre el sitio con un servidor: <code>python3 -m http.server 8000 -d site</code>.</p>`;
+      $r('#rzCuerpo').innerHTML = `<p class="card-msg warn">No se pudieron leer los datos (${esc(err.message)}). Abre el sitio con <code>npx vercel dev</code> desde la carpeta del proyecto, no el archivo <code>index.html</code> directamente.</p>`;
     });
 
   function iniciar(zonas, cal, cult) {

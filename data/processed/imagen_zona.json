@@ -1,0 +1,17 @@
+{
+  "fuente": "NASA HLS Sentinel-2 (HLSS30 v2.0), color real, 2024-10-10, vía NASA GIBS/CMR. Recorte de la maqueta v6; área y tamaño de referencia/amealco-datos-reales.md (sección 'Imágenes de la maqueta').",
+  "fecha_consulta": "2026-09-27",
+  "ejemplo": false,
+  "generado_por": "referencia",
+  "datos": {
+    "archivo": "img/zona-hls-2024-10-10.jpg",
+    "fecha_imagen": "2024-10-10",
+    "producto": "HLS Sentinel-2 · 30 m",
+    "norte": 20.2382,
+    "sur": 20.1518,
+    "oeste": -100.1674,
+    "este": -100.0526,
+    "ancho_px": 408,
+    "alto_px": 307
+  }
+}

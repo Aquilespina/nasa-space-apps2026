@@ -11,7 +11,7 @@ Meta del equipo: ganar el evento local de CDMX. Envío: 15 nov 2026. Hora límit
 1. **Ningún dato inventado.** Todo número del sitio sale de `data/processed/*.json`. Cada JSON lleva `fuente`, `fecha_consulta` y `ejemplo` (ver `docs/contrato-datos.md`). Si falta un dato, el sitio muestra "sin dato".
 2. **Un JSON de prueba lleva `"ejemplo": true`** y no puede quedar ninguno al congelar el alcance.
 3. **El sitio no llama a APIs de NASA en vivo.** Todo viene precalculado por Aquiles o por `pipeline/`. La única llamada en vivo permitida es la del chat, y va a un backend propio.
-4. **La llave de la API de Claude nunca va en el HTML ni en el repo.** Solo en variable de entorno del backend del chat.
+4. **El chat nunca usa la API de Anthropic ni otra API de modelos de lenguaje con llave.** Es un RAG propio (`api/_recuperar.js` + `api/chat.js`) que responde con `data/processed/*.json` y con lo que predijo el modelo del equipo. Ver `docs/decisiones.md` (14 nov 23:55).
 5. **No escribas código de la red neuronal ni la entrenes.** Eso es de Aquiles en Colab. Si falta un campo del contrato, pídelo; no lo inventes.
 6. Si el modelo de Aquiles no supera al baseline, el sitio lo dice así. No presentes como red neuronal algo que no lo es.
 7. Anota en `docs/uso-ia.md` lo que generó la IA (campo obligatorio *Use of AI*).
@@ -34,7 +34,7 @@ NO: login · backend más allá del proxy del chat · depender de internet de la
 
 ## Estructura y comandos
 - `site/` página estática · `pipeline/` scripts de apoyo · `data/processed/` JSON del contrato · `docs/` plan, contrato, tablero, decisiones, uso de IA.
-- Ver el sitio: `python3 -m http.server 8000 -d site`
+- Ver el sitio con el chat: `npm run local` (http://localhost:3000, sin llaves ni cuenta de Vercel). Igual que en producción: `npx vercel dev`.
 - Verificar el repo: `python3 .claude/hooks/verifica.py`
 - Tareas con su comprobación: `docs/tablero.md`
 

@@ -13,15 +13,25 @@ Proyecto para **NASA Space Apps Challenge 2026, sede CDMX**, reto *Field Shift: 
 
 ## Ver la página en tu computadora
 
-Requisitos: Python 3 (en Fedora ya viene como `python3`).
+**Sin cuenta de Vercel (recomendado para probar):**
 
 ```bash
-python3 -m http.server 8000 -d site
+npm run local
 ```
 
-Abre **http://localhost:8000**. Para detenerla: `Ctrl+C`.
+Abre **http://localhost:3000**. Sirve `site/` y el chat (`/api/chat`) con la misma función de `api/chat.js`. No necesita llaves ni internet.
 
-> Hay que usar el servidor. Si abres `site/index.html` con doble clic, el recorrido se queda en "Cargando datos…" porque el navegador no deja leer los JSON desde un archivo suelto.
+**Igual que en producción (pide `npx vercel login` la primera vez):**
+
+Requisitos: Node.js (para `npx`).
+
+```bash
+npx vercel dev
+```
+
+Abre la dirección que imprime en la terminal (normalmente **http://localhost:3000**). Para detenerla: `Ctrl+C`.
+
+> Hay que usar este servidor, no abrir `site/index.html` con doble clic: el navegador no deja leer los JSON desde un archivo suelto, y además es el único modo en que funciona el chat (`/api/chat`), que corre como función de Vercel.
 
 ## Cómo se usa la página
 
@@ -37,6 +47,23 @@ Abre **http://localhost:8000**. Para detenerla: `Ctrl+C`.
 3. **La app (maqueta v6).** Pestañas *Mi zona*, *Mi plan*, *Historia* y *Avisos* con 23 temporadas (2003–2025) de datos reales de Amealco.
 4. **Página del proyecto y estudio por año.** Explicación del método y de las fuentes para el jurado.
 
+## Front-end simple (rama `frontend-simple`, combinada con el chat)
+
+La página principal (`site/index.html`) es un asistente de 9 preguntas, una por pantalla, acompañado por Amealquito:
+
+1. ¿Qué cultivas? (opciones de `cultivos.json`; "Otro cultivo" responde que no hay datos)
+2. ¿Dónde cultivas? (cualquier municipio de México, con autocompletado desde `municipios.json` de INEGI y sin internet, o la ubicación del teléfono, que no se guarda ni se envía)
+3. ¿Es este lugar donde cultivas? (imagen HLS de la NASA si el lugar cae dentro de ella; si no, un mapa de puntos con las cabeceras municipales de INEGI). Dice si hay datos para ese lugar: hay cobertura si está a `radio_cobertura_km` (25 km) o menos de una zona de `zonas.json`. Si hay una fecha de siembra real para esa zona y cultivo, una tarjeta "Lo que ven los satélites de la NASA aquí" muestra la razón de esa fecha (de `calendario.json`); si no hay, la tarjeta no aparece — nunca se inventa una frase de clima.
+4. ¿Cuánto tiempo tienes cultivando? (marca los años malos del cultivo que le tocaron, de `cultivos.json`)
+5. ¿En qué te gustaría que te acompañe? (mejorar la cosecha, no gastar tanta agua, aumentar las cosechas)
+6. ¿Cómo riegas? 7. ¿Qué notas en tu parcela? 8. ¿Qué haces tras cosechar? 9. ¿Qué te gustaría explorar? — lo que la persona cuenta de su propia parcela (no es medición de satélite); en la 9, las opciones de frijol y avena usan datos reales de `cultivos.json` (ciclo, agua, el aviso real contra usar avena como regla), nunca porcentajes inventados.
+
+Al final muestra **Tu plan**: fechas del cultivo en su zona (`calendario.json`), una tarjeta por cada prioridad (`cultivos.json`). Debajo, un chat RAG (`site/chat.js` + `api/chat.js` + `api/_recuperar.js`): para cada pregunta busca con BM25 los fragmentos más parecidos de `data/processed/*.json` y con ellos arma la respuesta como Amealquito (sin servicios externos ni llaves; incluye lo que predijo el modelo LSTM que entrenó el equipo, con su advertencia), personalizado con lo que la persona contó, anclado solo a `data/processed/*.json` y con las fuentes usadas ("Basado en:"), con voz opcional (dictado y lectura) y chips con el contexto real usado; si no encuentra el dato, responde "no tengo ese dato". El chat también responde lo que antes eran secciones aparte: todas las fechas de la zona (`calendario.json`) y si se puede confiar en ellas (`modelos_comparacion.json`: la red neuronal no superó al promedio de años pasados), y tiene un botón para mandar el plan por WhatsApp (el plan ya no se descarga en PDF). Las respuestas se recuerdan solo en ese teléfono; "Cambiar mis respuestas" las borra.
+
+**Amealquito:** el asistente cambia de cara según lo que pasa (imágenes en `site/img/amealquito/`): feliz al presentarse o con el plan listo, neutral al preguntar, nervioso cuando no encuentra algo, triste cuando no hay datos de la zona.
+
+La página anterior completa sigue en `site/estudio.html` (ya sin enlace desde el plan; usa `recorrido.js`, `calculo.js` y `evidencia.js`).
+
 ## De dónde salen los datos
 
 ```
@@ -47,6 +74,7 @@ Aquiles (Colab) / pipeline ──► data/processed/*.json ──► pipeline/co
 |---|---|---|
 | `data/processed/zonas.json` | Zonas: nombre, coordenadas, cultivos | Acordado entre los dos |
 | `data/processed/calendario.json` | Fecha, ventana, confianza y razón por zona, cultivo y actividad | Aquiles |
+| `data/processed/municipios.json` | 2,478 municipios con la coordenada de su cabecera | `pipeline/municipios_inegi.py` (INEGI) |
 | `data/processed/cultivos.json` | Ciclo, agua (FAO-56), suelo y rendimientos de maíz, frijol y avena | Ángel, desde `referencia/amealco-datos-reales.md` |
 | `data/processed/modelos_comparacion.json` | Error de cada modelo (climatología, Ridge, Random Forest, LSTM, GRU) por años | Aquiles (copiado de su `main`) |
 
@@ -82,7 +110,8 @@ Enlace público: `[pendiente: poner aquí la URL de GitHub Pages]`
 
 | Carpeta | Para qué |
 |---|---|
-| `site/` | La página estática: `index.html` (sale de la maqueta v6), `recorrido.js` y `calculo.js` |
+| `colab/` | `lstm_zona.ipynb`: reentrena la LSTM con los terrenos a 30 km o menos del agricultor (Earth Engine + NASA POWER) y exporta los JSON del sitio |
+| `site/` | La página: `index.html` + `asistente.js` + `estilos.css` (asistente), `recorrido.js`, `calculo.js`, `evidencia.js` (módulos de datos) y `estudio.html` (maqueta v6 completa) |
 | `data/processed/` | Los JSON del contrato |
 | `pipeline/` | Scripts de apoyo (`copiar_datos.py`) |
 | `docs/` | Plan, contrato de datos, tablero de tareas, decisiones, uso de IA |
