@@ -172,6 +172,11 @@
     </details>
 
     <div class="acciones">
+      <button type="button" class="opcion principal" id="btnPdf">
+        <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v10m0 0l-4-4m4 4l4-4M4 16h12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Descargar mi plan en PDF
+      </button>
+      <p class="fine centro" id="msgPdf" aria-live="polite" hidden></p>
       <button type="button" class="opcion" id="btnReiniciar">Cambiar mis respuestas</button>
       <a class="opcion enlace" href="estudio.html">Ver el estudio completo (23 años de datos)</a>
     </div>
@@ -180,6 +185,7 @@
 
 <footer class="pie">Datos: NASA POWER, MODIS, HLS (NASA), SIAP, CONAGUA, FAO-56 · NASA Space Apps Challenge 2026 · CDMX</footer>
 
+<script src="vendor/jspdf.umd.min.js"></script>
 <script src="asistente.js"></script>
 <script src="recorrido.js"></script>
 <script src="calculo.js"></script>

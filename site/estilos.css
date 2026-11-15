@@ -176,3 +176,11 @@ main{flex:1;width:100%;max-width:640px;margin:0 auto;padding:4px 16px 32px}
 .cc-kpi .s{font-size:12px;color:var(--ink3)}
 @media (max-width:520px){.cc dl div{grid-template-columns:1fr;gap:0}}
 @media (prefers-reduced-motion:no-preference){.pantalla:not([hidden]){animation:entra .18s ease-out}@keyframes entra{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}}
+
+/* respaldo si jsPDF no carga: Imprimir → Guardar como PDF muestra solo el plan */
+@media print{
+  body{background:#fff;font-size:12pt}
+  .barra,.pie,.acciones,.mas,.atras,.pantalla:not(.resultado){display:none!important}
+  .resultado{display:flex!important}
+  .bloque{border:1px solid #999;break-inside:avoid}
+}

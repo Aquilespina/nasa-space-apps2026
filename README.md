@@ -49,6 +49,8 @@ La página principal (`site/index.html`) es un asistente de 5 preguntas, una por
 
 Al final muestra **Tu plan**: fechas del cultivo en su zona (`calendario.json`) y una tarjeta por cada prioridad (`cultivos.json`). Debajo, sin cambios, están el recorrido por zonas (`recorrido.js`) y "¿Puedes confiar en estas fechas?" (`calculo.js` y `evidencia.js`). Las respuestas se recuerdan solo en ese teléfono.
 
+**Descargar mi plan en PDF:** el botón al final de "Tu plan" genera un PDF de 1–2 páginas con las respuestas, la imagen de la zona, las fechas, los años malos y una sección por prioridad. Sale del mismo resumen que la pantalla, así que dice lo mismo, incluido "sin dato". Usa jsPDF 2.5.1 (licencia MIT) guardado en `site/vendor/`, así funciona sin internet. Si no carga, abre Imprimir para guardar como PDF.
+
 La página anterior completa sigue en `site/estudio.html` (enlace "Ver el estudio completo").
 
 ## De dónde salen los datos
