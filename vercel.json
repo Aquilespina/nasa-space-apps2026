@@ -1,0 +1,11 @@
+{
+  "buildCommand": "python3 pipeline/copiar_datos.py",
+  "outputDirectory": "site",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "functions": {
+    "api/chat.js": {
+      "includeFiles": "{data/processed/**,colab/corpus_amealquito.json}"
+    }
+  }
+}

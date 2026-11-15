@@ -1,0 +1,8 @@
+{
+  "buildCommand": "node scripts/sync-datos.js",
+  "functions": {
+    "api/chat.js": {
+      "includeFiles": "data/**"
+    }
+  }
+}

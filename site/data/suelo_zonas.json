@@ -1,0 +1,109 @@
+{
+  "fuente": "Pronósticos de humedad del suelo en la zona de raíces (GWETROOT, próximos 14 días) entrenados por zona en colab/lstm_zona.ipynb con NASA POWER diario (2001-2026).",
+  "fecha_consulta": "2026-11-15",
+  "ejemplo": false,
+  "datos": [
+    {
+      "fecha_consulta": "2026-11-15",
+      "ejemplo": false,
+      "zona_id": "tlalpan",
+      "fuente": "LSTM (5 semillas) entrenada con NASA POWER diario en el punto del agricultor: PRECTOTCORR, T2M_MAX, T2M_MIN, ALLSKY_SFC_SW_DWN, RH2M, GWETROOT, GWETTOP; ET0 de Hargreaves",
+      "lugar": {
+        "nombre": "Tlalpan, Ciudad de México",
+        "lat": 19.2695,
+        "lon": -99.1738,
+        "radio_km": 30,
+        "celda_power_centro": [
+          19.5,
+          -99.375
+        ],
+        "km_al_centro_de_la_celda": 33.2
+      },
+      "ultimo_dia_con_dato": "2026-11-13",
+      "humedad_raiz_hoy": {
+        "valor": 0.654,
+        "normal": 0.556,
+        "estado": "más húmeda"
+      },
+      "pronostico": {
+        "dias": 14,
+        "valor": 0.641,
+        "banda": 0.014,
+        "modelo_usado": "Ridge",
+        "normal": 0.533,
+        "estado": "más húmeda"
+      },
+      "como_leer": "Humedad del suelo en la zona de raíces de 0 (seca) a 1 (saturada). 'más seca' o 'más húmeda' = media desviación típica o más lejos de lo normal para esa época del año.",
+      "mejor_modelo": "Ridge",
+      "comparacion": {
+        "Climatología (promedio de años pasados)": {
+          "val": {
+            "rmse": 0.0419,
+            "skill_vs_climatologia": 0.0,
+            "skill_vs_persistencia": -5.28
+          },
+          "prueba": {
+            "rmse": 0.0619,
+            "skill_vs_climatologia": 0.0,
+            "skill_vs_persistencia": -10.482
+          }
+        },
+        "Persistencia (lo de hoy se mantiene)": {
+          "val": {
+            "rmse": 0.0167,
+            "skill_vs_climatologia": 0.841,
+            "skill_vs_persistencia": 0.0
+          },
+          "prueba": {
+            "rmse": 0.0183,
+            "skill_vs_climatologia": 0.913,
+            "skill_vs_persistencia": 0.0
+          }
+        },
+        "Ridge": {
+          "val": {
+            "rmse": 0.0143,
+            "skill_vs_climatologia": 0.884,
+            "skill_vs_persistencia": 0.271
+          },
+          "prueba": {
+            "rmse": 0.0155,
+            "skill_vs_climatologia": 0.938,
+            "skill_vs_persistencia": 0.283
+          }
+        },
+        "LSTM 1x32 (5 semillas)": {
+          "val": {
+            "rmse": 0.0145,
+            "skill_vs_climatologia": 0.881,
+            "skill_vs_persistencia": 0.253
+          },
+          "prueba": {
+            "rmse": 0.018,
+            "skill_vs_climatologia": 0.915,
+            "skill_vs_persistencia": 0.026
+          }
+        }
+      },
+      "skill_lstm_vs_persistencia_por_anio": {
+        "2021": 0.051,
+        "2022": -0.089,
+        "2023": -0.149,
+        "2024": 0.042,
+        "2025": 0.181
+      },
+      "confianza_en_palabras": "En 3 de 5 años de prueba (2021-2025) el modelo pronosticó la humedad mejor que suponer que se queda como hoy.",
+      "variables": [
+        "lluvia_mm",
+        "et0_mm",
+        "tmax_c",
+        "tmin_c",
+        "rad_mj",
+        "hr_pct",
+        "humedad_raiz",
+        "humedad_superficie"
+      ],
+      "pasos_semanales": 8
+    }
+  ]
+}

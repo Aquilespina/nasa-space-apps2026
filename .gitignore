@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.env
+*.key
+data/raw/
+.venv/
+.claude/settings.local.json
+.DS_Store
+Thumbs.db
+node_modules/
+.vercel
+.env*

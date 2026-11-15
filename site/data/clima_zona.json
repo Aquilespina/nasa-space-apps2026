@@ -1,0 +1,34 @@
+{
+ "fuente": "NASA POWER (AG), diario: GWETROOT (humedad del suelo en la raíz, de MERRA-2), PRECTOTCORR y T2M_MIN; celda de ~0.5° en el punto de cada zona (pipeline/clima_power.py)",
+ "fecha_consulta": "2026-11-15",
+ "ejemplo": false,
+ "datos": [
+  {
+   "zona_id": "z1",
+   "ultimo_dia_con_dato": "2026-11-12",
+   "humedad_raiz": {
+    "mes": "octubre de 2026",
+    "valor": 0.75,
+    "normal": 0.64,
+    "estado": "más húmeda",
+    "percentil_vs_2003_2025": 0.91,
+    "como_leer": "GWETROOT de 0 (tierra seca) a 1 (saturada) en la zona de raíces (~1 m). 'más seca' o 'más húmeda' = fuera del 25-75 % de los mismos meses de 2003-2025."
+   },
+   "lluvia_temporada": {
+    "desde": "2026-05-01",
+    "hasta": "2026-11-12",
+    "mm": 746,
+    "normal_mm": 660
+   },
+   "heladas": {
+    "dias_por_anio": 3.0,
+    "meses": [
+     "enero",
+     "diciembre",
+     "noviembre"
+    ],
+    "como_leer": "Días con temperatura mínima de 0 °C o menos (NASA POWER T2M_MIN), promedio 2003-2025."
+   }
+  }
+ ]
+}

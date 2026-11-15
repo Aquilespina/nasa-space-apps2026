@@ -1,0 +1,74 @@
+{
+  "fuente": "Baseline sin red neuronal (referencia/amealco-datos-reales.md): inicio de lluvias con NASA POWER PRECTOTCORR 2003–2025 (20 mm en 5 días sin 10 días secos después) y ciclos FAO-56. Fechas para la temporada 2027.",
+  "fecha_consulta": "2026-11-14",
+  "ejemplo": false,
+  "generado_por": "baseline",
+  "datos": [
+    {
+      "zona_id": "z1",
+      "cultivo": "maiz",
+      "actividad": "siembra",
+      "ventana_inicio": "2027-05-21",
+      "ventana_fin": "2027-06-15",
+      "fecha_recomendada": "2027-06-06",
+      "confianza": 0.65,
+      "razon": "La lluvia se estableció entre el 21 may y el 15 jun en 15 de 23 años (2003–2025); la fecha más común fue el 6 jun.",
+      "fuente": "NASA POWER PRECTOTCORR 2003–2025"
+    },
+    {
+      "zona_id": "z1",
+      "cultivo": "maiz",
+      "actividad": "fertilizacion",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": null,
+      "confianza": null,
+      "razon": null,
+      "fuente": null
+    },
+    {
+      "zona_id": "z1",
+      "cultivo": "maiz",
+      "actividad": "cosecha",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": "2027-12-03",
+      "confianza": null,
+      "razon": "Siembra recomendada + ciclo de 180 días (FAO-56). Es un cálculo, no un pronóstico.",
+      "fuente": "FAO-56 tablas 11 y 12"
+    },
+    {
+      "zona_id": "z1",
+      "cultivo": "frijol",
+      "actividad": "siembra",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": "2027-06-15",
+      "confianza": null,
+      "razon": "Fecha de referencia del cálculo de agua FAO-56 (354 mm en 110 días). No se optimizó: tómala como punto de partida.",
+      "fuente": "FAO-56 con clima NASA POWER 2003–2025"
+    },
+    {
+      "zona_id": "z1",
+      "cultivo": "frijol",
+      "actividad": "fertilizacion",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": null,
+      "confianza": null,
+      "razon": null,
+      "fuente": null
+    },
+    {
+      "zona_id": "z1",
+      "cultivo": "frijol",
+      "actividad": "cosecha",
+      "ventana_inicio": null,
+      "ventana_fin": null,
+      "fecha_recomendada": "2027-10-03",
+      "confianza": null,
+      "razon": "Siembra recomendada + ciclo de 110 días (FAO-56). Es un cálculo, no un pronóstico.",
+      "fuente": "FAO-56 tablas 11 y 12"
+    }
+  ]
+}

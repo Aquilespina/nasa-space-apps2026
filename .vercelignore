@@ -1,0 +1,7 @@
+# No subir a Vercel: secretos locales y carpetas que el sitio no usa
+.env*
+.vercel
+.claude
+respaldos
+prototipo-rag
+referencia

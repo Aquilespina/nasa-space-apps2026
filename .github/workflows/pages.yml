@@ -1,0 +1,42 @@
+# Publica la carpeta site/ en GitHub Pages en cada push a main.
+# Antes copia data/processed/*.json a site/data/ para que la página tenga los datos al día.
+name: Publicar sitio
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Copiar datos a site/data
+        run: python3 pipeline/copiar_datos.py
+      # No bloquea la publicación (después de H24 los JSON de ejemplo cuentan como falla),
+      # pero el aviso queda visible en la pestaña Actions.
+      - name: Verificar el repo
+        continue-on-error: true
+        run: python3 .claude/hooks/verifica.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4

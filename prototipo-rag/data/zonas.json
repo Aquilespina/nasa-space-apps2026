@@ -1,0 +1,19 @@
+{
+  "fuente": "referencia/amealco-datos-reales.md: punto El Llano (20.209 N, 100.146 O) usado para SoilGrids y la imagen HLS. Una sola zona hasta que Aquiles defina más.",
+  "fecha_consulta": "2026-11-14",
+  "ejemplo": false,
+  "generado_por": "acordado_angel",
+  "datos": [
+    {
+      "zona_id": "z1",
+      "nombre": "El Llano, norte de Amealco",
+      "lat": 20.209,
+      "lon": -100.146,
+      "cultivos": [
+        "maiz",
+        "frijol"
+      ],
+      "nota": "Punto de la referencia (SoilGrids e imagen HLS). La lluvia y la temperatura son de la celda NASA POWER de ~55 km que cubre todo el municipio."
+    }
+  ]
+}
