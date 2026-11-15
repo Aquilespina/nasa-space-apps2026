@@ -1,5 +1,5 @@
 {
-  "fuente": "referencia/amealco-datos-reales.md (2026-09-27): FAO-56 tablas 11 y 12 con clima NASA POWER (punto 20.19 N, 100.14 O, 2003-2025); SIAP cierre agrícola municipal Amealco 2003-2025; SoilGrids 250 m (20.209 N, 100.146 O); precio medio rural Querétaro 2021-2025 (SIAP)",
+  "fuente": "referencia/amealco-datos-reales.md (2026-09-27): FAO-56 tablas 11 y 12 con clima NASA POWER (punto 20.19 N, 100.14 O, 2003-2025); SIAP cierre agrícola municipal Amealco 2003-2025; SoilGrids 250 m (20.209 N, 100.146 O); precio medio rural Querétaro 2021-2025 (SIAP); calabaza (15 nov 2026): pipeline/agua_cultivo.py con el mismo método, sin datos del SIAP",
   "fecha_consulta": "2026-09-27",
   "ejemplo": false,
   "generado_por": "tabla_de_referencia",
@@ -10,11 +10,23 @@
     "No hay datos de fertilización (dosis ni fechas) en la referencia: el chat debe responder 'no tengo ese dato'."
   ],
   "suelo_zona": {
-    "punto": {"lat": 20.209, "lon": -100.146},
-    "arcilla_pct": {"0-5cm": 32, "15-30cm": 42},
-    "arena_pct": {"0-5cm": 45, "15-30cm": 38},
+    "punto": {
+      "lat": 20.209,
+      "lon": -100.146
+    },
+    "arcilla_pct": {
+      "0-5cm": 32,
+      "15-30cm": 42
+    },
+    "arena_pct": {
+      "0-5cm": 45,
+      "15-30cm": 38
+    },
     "ph": "5.8-5.9",
-    "carbono_organico_pct": {"0-5cm": 3.3, "15-30cm": 1.3},
+    "carbono_organico_pct": {
+      "0-5cm": 3.3,
+      "15-30cm": 1.3
+    },
     "agua_disponible_mm_por_m": 168,
     "fuente": "SoilGrids 250 m (ISRIC)"
   },
@@ -24,12 +36,19 @@
       "nombre": "Maíz grano de temporal",
       "ciclo_dias": 180,
       "inicio_referencia": "06-06",
-      "inicio_referencia_razon": "Fecha más común de inicio de lluvias en Amealco 2003-2025 (20 mm en 5 días sin 10 días secos después).",
+      "inicio_referencia_razon": "Fecha más común de inicio de lluvias en El Llano, 2003-2025 (20 mm en 5 días sin 10 días secos después).",
       "agua_ciclo_mm": 528,
       "agua_ciclo_m3_ha": 5280,
       "anios_con_falta_agua_mas_15pct": "7 de 23 (balance simple con 100 mm de suelo)",
       "superficie_amealco_ha": "~11,000 al año (10,800 en 2025)",
-      "anios_malos_2003_2025": [2005, 2009, 2011, 2014, 2019, 2020],
+      "anios_malos_2003_2025": [
+        2005,
+        2009,
+        2011,
+        2014,
+        2019,
+        2020
+      ],
       "rendimiento_en_anios_malos_maiz_pct_de_lo_normal": 36,
       "ingreso_bruto_ha_anio_normal_mxn": 8070,
       "precio_medio_rural_mxn_t": 5413,
@@ -46,7 +65,12 @@
       "agua_ciclo_m3_ha": 3540,
       "anios_con_falta_agua_mas_15pct": "1 de 23 (balance simple con 100 mm de suelo)",
       "superficie_amealco_ha": "10-290 al año (30 en 2025)",
-      "anios_malos_2003_2025": [2006, 2011, 2024, 2025],
+      "anios_malos_2003_2025": [
+        2006,
+        2011,
+        2024,
+        2025
+      ],
       "rendimiento_en_anios_malos_maiz_pct_de_lo_normal": 79,
       "ingreso_bruto_ha_anio_normal_mxn": 6710,
       "precio_medio_rural_mxn_t": 14627,
@@ -55,25 +79,29 @@
       "fuente": "FAO-56 + NASA POWER; SIAP Amealco (2018-2019 con dato de Huimilpan)"
     },
     {
-      "cultivo": "avena",
-      "nombre": "Avena forrajera de temporal",
-      "ciclo_dias": 100,
-      "inicio_referencia": "07-01",
-      "agua_ciclo_mm": 320,
-      "agua_ciclo_m3_ha": 3200,
+      "cultivo": "calabaza",
+      "nombre": "Calabaza de temporal (milpa)",
+      "ciclo_dias": 120,
+      "inicio_referencia": "06-06",
+      "inicio_referencia_razon": "En la milpa se siembra junto con el maíz, al inicio de las lluvias.",
+      "agua_ciclo_mm": 373,
+      "agua_ciclo_m3_ha": 3730,
       "anios_con_falta_agua_mas_15pct": "0 de 23 (balance simple con 100 mm de suelo)",
-      "superficie_amealco_ha": "85-3,650 al año (85 en 2025)",
-      "anios_malos_2003_2025": [2003, 2005, 2006, 2011],
-      "rendimiento_en_anios_malos_maiz_pct_de_lo_normal": 72,
-      "ingreso_bruto_ha_anio_normal_mxn": 5410,
-      "precio_medio_rural_mxn_t": 592,
+      "superficie_amealco_ha": null,
+      "anios_malos_2003_2025": null,
+      "rendimiento_en_anios_malos_maiz_pct_de_lo_normal": null,
+      "ingreso_bruto_ha_anio_normal_mxn": null,
+      "precio_medio_rural_mxn_t": null,
       "etapas": null,
       "fertilizacion": null,
-      "aviso": "Cambiar a avena cuando la lluvia llega tarde perdió $4,048/ha frente a sembrar siempre maíz en 2003-2025; no se recomienda como regla.",
-      "fuente": "FAO-56 + NASA POWER; SIAP Amealco"
+      "nota": "No hay registros de cosecha de calabaza de temporal: en la milpa se siembra con el maíz y no se reporta aparte.",
+      "fuente": "FAO-56 tablas 11 y 12 (calabaza de invierno: etapas 25/35/35/25 días, Kc 0.50/1.00/0.80) con NASA POWER 2003-2025 (pipeline/agua_cultivo.py; reproduce maíz 526 de 528 mm y frijol 354 de 354 mm de la referencia); SIAP: sin registro"
     }
   ],
   "sin_registro": [
-    {"cultivo": "haba", "nota": "Sin registro en Amealco 2003-2025 (SIAP). En Acambay, unas 25 ha de haba verde al año."}
+    {
+      "cultivo": "haba",
+      "nota": "Sin registro en Amealco 2003-2025 (SIAP). En Acambay, unas 25 ha de haba verde al año."
+    }
   ]
 }

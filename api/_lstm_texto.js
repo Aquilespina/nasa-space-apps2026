@@ -5,6 +5,15 @@
 const M = require('./_modelo_texto.json');
 
 const IDX = Object.fromEntries(M.vocab.map((w, i) => [w, i]));
+// Pares de palabras seguidas que existen en el corpus de cada tema: una frase de la red con un par
+// que nunca aparece (p. ej. "de tu ,") se descarta, aunque traiga las marcas correctas.
+const CORPUS = require('../colab/corpus_amealquito.json').temas;
+const TOKEN = /<[A-Z_0-9]+>|[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]+|[^\sA-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]/g;
+const PARES = Object.fromEntries(Object.entries(CORPUS).map(([t, fs]) => {
+  const set = new Set();
+  for (const f of fs) { const k = ['<INI>', ...(f.match(TOKEN) || []), '<FIN>']; for (let i = 1; i < k.length; i++) set.add(`${k[i - 1]} ${k[i]}`); }
+  return [t, set];
+}));
 const FIN = IDX['<FIN>'];
 const sigm = (x) => 1 / (1 + Math.exp(-x));
 
@@ -62,6 +71,8 @@ const juntar = (toks) => toks.join(' ')
 
 function valida(toks, tema) {
   if (!toks || toks.length < 3) return false;
+  const k = ['<INI>', ...toks, '<FIN>'], pares = PARES[tema];
+  if (pares) for (let i = 1; i < k.length; i++) if (!pares.has(`${k[i - 1]} ${k[i]}`)) return false;
   const marcas = toks.filter((w) => /^<[A-Z_0-9]+>$/.test(w)).map((w) => M.equivalencias[w] || w).sort();
   const req = M.marcas_requeridas[tema] || [];
   return marcas.length === req.length && marcas.every((m, i) => m === req[i]) && /[.:?!]$/.test(toks[toks.length - 1]);

@@ -4,6 +4,8 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "functions": {
-    "api/chat.js": { "includeFiles": "data/processed/**" }
+    "api/chat.js": {
+      "includeFiles": "{data/processed/**,colab/corpus_amealquito.json}"
+    }
   }
 }

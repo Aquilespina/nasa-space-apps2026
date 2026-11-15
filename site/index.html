@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Milpa Clara · Amealco</title>
-<meta name="description" content="Milpa Clara: te acompaña a decidir cuándo sembrar y cosechar en Amealco, con datos de satélite de la NASA.">
+<title>Milpa Clara · tu milpa con datos de la NASA</title>
+<meta name="description" content="Milpa Clara: te acompaña a decidir cuándo sembrar y qué sembrar en tu parcela, con datos de satélite de la NASA.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -43,7 +43,7 @@
         <h1 class="pregunta" id="p2" tabindex="-1">¿Dónde está tu parcela?</h1>
         <div class="buscador">
           <label for="lugarTxt" class="etq-campo">Escribe tu municipio</label>
-          <input id="lugarTxt" type="search" placeholder="Ej. Amealco, Texcoco, Celaya..." autocomplete="off" spellcheck="false" aria-describedby="lugarAyuda" aria-controls="lugarSug" aria-autocomplete="list"> <!-- ok-sin-datos: placeholder del campo de texto, no un dato del sitio -->
+          <input id="lugarTxt" type="search" placeholder="Ej. Texcoco, Celaya, Tlalpan..." autocomplete="off" spellcheck="false" aria-describedby="lugarAyuda" aria-controls="lugarSug" aria-autocomplete="list"> <!-- ok-sin-datos: placeholder del campo de texto, no un dato del sitio -->
           <p class="fine" id="lugarAyuda">Busca cualquier municipio de México.</p>
           <ul class="sugerencias" id="lugarSug" role="listbox" aria-label="Municipios encontrados"></ul>
         </div>
@@ -207,10 +207,10 @@
           <span class="det-tit">Alternar con frijol</span>
           <span class="det-txt" id="estratLeguminosaDato"></span>
         </button>
-        <button type="button" class="opcion detalle" data-estrategia="cobertura">
+        <button type="button" class="opcion detalle" data-estrategia="calabaza">
           <span class="det-etq">3. Cubrir la tierra</span>
-          <span class="det-tit">Cultivo de cobertura (avena)</span>
-          <span class="det-txt" id="estratCoberturaAviso"></span>
+          <span class="det-tit">Sembrar calabaza con el maíz (milpa)</span>
+          <span class="det-txt" id="estratCalabazaDato"></span>
         </button>
       </div>
     </div>
@@ -222,9 +222,15 @@
     <h1 class="titulo-plan" id="pr" tabindex="-1">Tu plan</h1>
     <p class="aviso" id="resEjemplo" hidden>Estas fechas son de prueba mientras llega el cálculo final.</p>
     <p class="fine" id="resDatosDe"></p>
+    <article class="bloque resumen" id="resResumen" aria-labelledby="hRes">
+      <h2 id="hRes">Tu plan en corto</h2>
+      <ul class="resumen-lista" id="resumenLista"></ul>
+    </article>
+    <h2 class="sub-plan" id="resPlanCompleto" tabindex="-1">Más detalles de tu plan</h2>
     <article class="bloque sin-cobertura" id="resSinCobertura" hidden aria-labelledby="hSinC">
       <h2 id="hSinC">Aún no tenemos datos de tu zona</h2>
       <p id="sinCTexto"></p>
+      <ul class="datos" id="sinCFilas" hidden></ul>
       <button type="button" class="opcion" id="btnReferencia"></button>
     </article>
     <p class="aviso" id="resReferencia" hidden></p>
@@ -246,23 +252,18 @@
 
     <div class="recordatorio">Esta herramienta te acompaña con datos del pasado. <b>La decisión final es tuya.</b></div>
 
-    <details class="mas" open>
-      <summary>Pregúntame sobre tu cultivo</summary>
-      <section id="chat" aria-label="Chat sobre tu cultivo">
+    <article class="bloque chat-bloque" id="seccionChat" aria-labelledby="hChat" tabindex="-1">
+      <section id="chat" aria-label="Chat con Amealquito">
         <div class="chat-cabecera">
-          <span class="chat-avatar"><img src="img/amealquito/feliz.png" alt="Amealquito" width="40" height="40"></span>
+          <span class="chat-avatar"><img src="img/amealquito/feliz.png" alt="" width="40" height="40"></span>
           <div class="chat-titulos">
-            <span class="chat-estado"><span class="chat-punto" aria-hidden="true"></span>En línea · datos de tu zona</span>
-            <span class="chat-nombre">Amealquito, tu consejero de parcela</span>
+            <h2 class="chat-nombre" id="hChat">Pregúntale a Amealquito</h2>
+            <span class="chat-estado"><span class="chat-punto" aria-hidden="true"></span>En línea</span>
           </div>
-          <button type="button" class="chat-voz" id="chatVoz" aria-pressed="false">Leer respuestas en voz alta</button>
+          <button type="button" class="chat-voz" id="chatVoz" aria-pressed="false" aria-label="Leer respuestas en voz alta" title="Leer respuestas en voz alta">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z" stroke-linejoin="round"/><path d="M15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13" stroke-linecap="round"/></svg>
+          </button>
         </div>
-        <div class="chat-chips" id="chatChips" aria-hidden="true"></div>
-        <p class="fine">Solo respondo con datos verificados de tu zona y cultivo. Si no tengo el dato, te lo digo.</p>
-        <button type="button" class="chat-whatsapp" id="btnWhatsApp">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm0 18.2a8.2 8.2 0 01-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1112 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 01-3.3-2.9c-.3-.4.3-.4.8-1.4a.5.5 0 000-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 00-.7.3 3 3 0 00-.9 2.2 5.2 5.2 0 001.1 2.7 11.8 11.8 0 004.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 001.8-1.3 2.2 2.2 0 00.1-1.3c0-.1-.2-.2-.4-.3z"/></svg>
-          Mandar mi plan por WhatsApp
-        </button>
         <div id="chatMensajes" class="chat-mensajes" aria-live="polite"></div>
         <div class="chat-sugeridas" id="chatSugeridas">
           <button type="button" class="chat-sugerida verde" data-pregunta="¿Cuándo debo sembrar y qué tan segura es esa fecha?">Fecha y confianza</button>
@@ -273,18 +274,25 @@
         </div>
         <div class="chat-caja">
           <button type="button" class="chat-mic" id="chatMic" aria-label="Dictar pregunta por voz">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 1.5a3 3 0 00-3 3v7a3 3 0 006 0v-7a3 3 0 00-3-3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19 10.5a7 7 0 01-14 0M12 17.5v3.5"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 1.5a3 3 0 00-3 3v7a3 3 0 006 0v-7a3 3 0 00-3-3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19 10.5a7 7 0 01-14 0M12 17.5v3.5"/></svg>
           </button>
-          <input type="text" id="chatPregunta" placeholder="Ej. ¿Cuándo debo sembrar?"> <!-- ok-sin-datos: placeholder del campo de texto, no un dato del sitio -->
-          <button type="button" class="opcion principal" id="chatEnviar">Enviar</button>
+          <input type="text" id="chatPregunta" placeholder="Escribe tu pregunta" aria-label="Escribe tu pregunta"> <!-- ok-sin-datos: placeholder del campo de texto, no un dato del sitio -->
+          <button type="button" class="chat-enviar" id="chatEnviar" aria-label="Enviar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.27 3.13A59.8 59.8 0 0121.49 12 59.8 59.8 0 013.27 20.88L6 12zm0 0h7.5"/></svg>
+          </button>
         </div>
         <p class="aviso" id="chatAviso" hidden></p>
       </section>
-    </details>
+    </article>
 
     <div class="acciones">
+      <button type="button" class="chat-whatsapp" id="btnWhatsApp">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm0 18.2a8.2 8.2 0 01-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1112 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 01-3.3-2.9c-.3-.4.3-.4.8-1.4a.5.5 0 000-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 00-.7.3 3 3 0 00-.9 2.2 5.2 5.2 0 001.1 2.7 11.8 11.8 0 004.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 001.8-1.3 2.2 2.2 0 00.1-1.3c0-.1-.2-.2-.4-.3z"/></svg>
+          Mandar mi plan por WhatsApp
+        </button>
       <button type="button" class="opcion" id="btnReiniciar">Cambiar mis respuestas</button>
     </div>
+    <a class="fab-chat" id="fabChat" href="#seccionChat" data-ir="seccionChat"><img src="img/amealquito/feliz.png" alt="" width="32" height="32"> Pregúntale a Amealquito</a>
   </section>
 </main>
 

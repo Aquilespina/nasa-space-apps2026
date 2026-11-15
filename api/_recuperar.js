@@ -14,14 +14,15 @@ const VACIAS = new Set(('el la los las un una unos unas de del al a y o u en con
   'pero sin sobre entre yo te nos fue ser estar tiene tengo puedo debo dame dime quiero saber').split(' '));
 // Palabras de campo -> palabras que aparecen en los fragmentos.
 const SINONIMOS = {
-  agua: ['riego', 'lluvia', 'mm', 'sequia'], regar: ['riego', 'agua'], llueve: ['lluvia'], lluvias: ['lluvia'], seca: ['falta', 'agua'],
+  agua: ['riego', 'lluvia', 'mm', 'sequia'], llueve: ['lluvia'], lluvias: ['lluvia'],
   sembrar: ['siembra'], siembro: ['siembra'], cuando: ['fecha'], fecha: ['siembra', 'ventana'], fechas: ['siembra', 'cosecha', 'fertilizacion', 'ventana'],
   cosechar: ['cosecha'], levantar: ['cosecha'], fertilizar: ['fertilizacion', 'abono'], abono: ['fertilizacion'], abonar: ['fertilizacion'],
   confiar: ['confianza', 'inteligencia', 'promedio', 'metodo'], seguro: ['confianza'], segura: ['confianza'], salen: ['metodo', 'calculo'],
   mal: ['malos', 'rendimiento', 'perdida'], riesgo: ['malos', 'falta'], perder: ['malos', 'perdida'],
   suelo: ['tierra', 'arcilla', 'carbono'], tierra: ['suelo', 'arcilla'], verde: ['verdor'], vegetacion: ['verdor'], satelite: ['verdor', 'lluvia'],
   ganar: ['ingreso', 'precio'], dinero: ['ingreso', 'precio'], vender: ['precio'], precio: ['ingreso'], inversion: ['ingreso'],
-  alternar: ['frijol', 'avena'], rotar: ['frijol', 'avena'], cambiar: ['frijol', 'avena', 'aviso'], ia: ['inteligencia'], red: ['inteligencia']
+  humedad: ['humeda', 'seca', 'raices'], humeda: ['humedad'], mojada: ['humedad'], seca: ['humedad', 'falta', 'agua'], regar: ['riego', 'agua', 'humedad'],
+  alternar: ['frijol', 'calabaza', 'rotacion'], rotar: ['frijol', 'calabaza', 'rotacion'], milpa: ['calabaza', 'rotacion'], rotacion: ['rotar', 'alternar'], cambiar: ['frijol', 'calabaza', 'aviso'], ia: ['inteligencia'], red: ['inteligencia']
 };
 const raiz = (t) => (t.length > 5 ? t.slice(0, 5) : t);
 const palabras = (s) => norm(s).split(/[^a-z0-9ñ]+/).filter((t) => t.length > 1 && !VACIAS.has(t));
@@ -52,17 +53,29 @@ function construirFragmentos() {
         inicio_referencia_razon: c.inicio_referencia_razon || null, fuente: c.fuente }
     });
     F.push({
-      id: `cosechas:${c.cultivo}`, cultivo: c.cultivo, fuente: 'Cosechas del municipio (SIAP)',
+      id: `cosechas:${c.cultivo}`, zona_id: 'z1', cultivo: c.cultivo, fuente: 'Registros de cosecha del gobierno',
       texto: `${c.nombre} ${c.cultivo} anios malos perdida rendimiento ${(c.anios_malos_2003_2025 || []).join(' ')} ingreso ganancia dinero precio venta por hectarea superficie sembrada amealco ${c.aviso || ''}`,
       datos: { cultivo: c.nombre, anios_malos_2003_2025: c.anios_malos_2003_2025,
         rendimiento_en_los_anios_malos_del_maiz_pct_de_lo_normal: c.rendimiento_en_anios_malos_maiz_pct_de_lo_normal,
         ingreso_bruto_ha_anio_normal_mxn: c.ingreso_bruto_ha_anio_normal_mxn, precio_medio_rural_mxn_t: c.precio_medio_rural_mxn_t,
         superficie_amealco_ha: c.superficie_amealco_ha, aviso: c.aviso || null, fertilizacion: c.fertilizacion,
-        nota: 'Datos del municipio de Amealco (SIAP 2003-2025), no de una parcela. Ingreso bruto: sin costos.' }
+        nota: c.nota || 'Registros de cosecha del municipio de 2003 a 2025, no de una parcela. Lo que deja es sin contar gastos.' }
     });
   }
+  // Comparación de rotaciones (lo central del reto): seguir igual vs. alternar con frijol vs. sembrar calabaza con el maíz (milpa).
+  F.push({ id: 'rotacion', zona_id: 'z1', fuente: 'Comparación de cultivos',
+    texto: 'rotacion rotar alternar estrategia estrategias opciones comparar comparacion cambiar de cultivo cuidar el suelo mejorar la tierra ahorrar agua gastar menos agua cobertura leguminosa nitrogeno abono que me conviene que siembro despues',
+    datos: { cultivos: (cultivos.datos || []).map((c) => ({ cultivo: c.cultivo, nombre: c.nombre, agua_ciclo_mm: c.agua_ciclo_mm, ciclo_dias: c.ciclo_dias,
+      falta_agua: c.anios_con_falta_agua_mas_15pct ? c.anios_con_falta_agua_mas_15pct.split(' (')[0] : null,
+      anios_malos: Array.isArray(c.anios_malos_2003_2025) ? c.anios_malos_2003_2025.length : null,
+      ingreso: c.ingreso_bruto_ha_anio_normal_mxn, aviso: c.aviso || null })) } });
+
+  F.push({ id: 'rotacion_general', zona_id: '__fuera_de_el_llano__', fuente: 'Comparación de cultivos',
+    texto: 'rotacion rotar alternar estrategia estrategias opciones comparar comparacion cambiar de cultivo cuidar el suelo mejorar la tierra ahorrar agua gastar menos agua leguminosa nitrogeno abono milpa calabaza frijol que me conviene que siembro despues',
+    datos: { cultivos: (cultivos.datos || []).map((c) => ({ cultivo: c.cultivo, ciclo_dias: c.ciclo_dias, agua_ciclo_mm: c.agua_ciclo_mm })) } });
+
   for (const s of cultivos.sin_registro || []) {
-    F.push({ id: `sin_registro:${s.cultivo}`, cultivo: s.cultivo, fuente: 'Cosechas del municipio (SIAP)',
+    F.push({ id: `sin_registro:${s.cultivo}`, zona_id: 'z1', cultivo: s.cultivo, fuente: 'Registros de cosecha del gobierno',
       texto: `${s.cultivo} sin registro sin dato ${s.nota}`, datos: s });
   }
 
@@ -81,7 +94,7 @@ function construirFragmentos() {
         confianza: typeof r.confianza === 'number' ? `${Math.round(r.confianza * 100)} %` : 'sin dato', razon: sd(r.razon), fuente: sd(r.fuente) }
     });
   }
-  for (const z of zonas.datos || []) {
+  for (const z of (zonas.datos || []).filter((x) => (calendario.datos || []).some((r) => r.zona_id === x.zona_id && r.fecha_recomendada))) {
     F.push({ id: `metodo:${z.zona_id}`, zona_id: z.zona_id, fuente: 'Lluvia medida por satélites de la NASA',
       texto: 'de donde salen las fechas metodo calculo confiar confianza calendario lluvias de anios pasados baseline sin inteligencia artificial',
       datos: { generado_por: calendario.generado_por, como_se_calculo: calendario.fuente, consultado: calendario.fecha_consulta } });
@@ -92,7 +105,7 @@ function construirFragmentos() {
   if (suelo && suelo.punto) {
     const z = (zonas.datos || []).find((x) => Math.abs(x.lat - suelo.punto.lat) < 0.01 && Math.abs(x.lon - suelo.punto.lon) < 0.01);
     if (z) {
-      F.push({ id: `suelo:${z.zona_id}`, zona_id: z.zona_id, fuente: 'Suelo de tu zona (SoilGrids)',
+      F.push({ id: `suelo:${z.zona_id}`, zona_id: z.zona_id, fuente: 'Mapa de suelos de tu zona',
         texto: 'suelo tierra arcilla arena ph acidez carbono organico materia agua que guarda humedad disponible retiene',
         datos: suelo });
     }
@@ -102,7 +115,7 @@ function construirFragmentos() {
     const serie = leer('serie_regional.json');
     const filas = (serie.datos || []).filter((r) => typeof r.anomalia_ndvi_pico === 'number');
     const signo = (v) => (v > 0 ? 'más verde que lo normal' : v < 0 ? 'menos verde que lo normal' : 'igual que lo normal');
-    F.push({ id: 'verdor', fuente: 'Verdor del campo (satélite MODIS)',
+    F.push({ id: 'verdor', zona_id: 'z1', fuente: 'Verdor del campo (satélite de la NASA)',
       texto: 'verdor verde vegetacion campo satelite modis region anio este anio como va la temporada sequia 2023',
       datos: { alcance: 'Toda la región, no una parcela. Mide verdor de la vegetación, no humedad ni temperatura.',
         ultimos_anios: filas.slice(-6).map((r) => ({ anio: r.anio, verdor: signo(r.anomalia_ndvi_pico), anio_malo_maiz_siap: r.anio_malo_siap })),
@@ -112,7 +125,7 @@ function construirFragmentos() {
   try {
     const m = leer('modelos_comparacion.json');
     const fila = (m.datos || []).find((d) => d.modelo === m.red_del_sitio);
-    F.push({ id: 'prueba_ia', fuente: 'Prueba de la inteligencia artificial',
+    F.push({ id: 'prueba_ia', zona_id: 'z1', fuente: 'Prueba de la inteligencia artificial',
       texto: 'confiar confianza inteligencia artificial red neuronal modelo prediccion promedio de anios pasados mejor peor prueba metodo de donde salen',
       datos: { que_se_probo: 'Si una red neuronal predecía el verdor del campo mejor que el promedio de años pasados.',
         mejor_modelo: m.mejor_modelo, red_neuronal: m.red_del_sitio,
@@ -122,35 +135,72 @@ function construirFragmentos() {
         consecuencia: 'Las fechas NO usan la red neuronal; salen de las lluvias de años pasados.' } });
   } catch (e) { /* sin comparación: no hay fragmento */ }
 
-  // Lo que predijo el modelo que entrenó el equipo (LSTM) para 2026, en los terrenos agrícolas
-  // dentro de cada zona. Se resume aquí; no se corre el modelo en vivo.
-  try {
-    const e = leer('estres_mapa.json');
-    const d = e.datos || {};
-    const km = (a, b, c, dd) => { const R = 6371, r = (x) => x * Math.PI / 180; const h = Math.sin(r(c - a) / 2) ** 2 + Math.cos(r(a)) * Math.cos(r(c)) * Math.sin(r(dd - b) / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
-    for (const z of zonas.datos || []) {
-      if (typeof z.radio_cobertura_km !== 'number' || !Array.isArray(d.lat)) continue;
-      const I = d.lat.map((_, i) => i).filter((i) => km(z.lat, z.lon, d.lat[i], d.lon[i]) <= z.radio_cobertura_km);
-      if (!I.length) continue;
-      const prom = (a) => I.reduce((s, i) => s + a[i], 0) / I.length;
-      const error = (a) => Math.sqrt(I.reduce((s, i) => s + (a[i] - d.obs[i]) ** 2, 0) / I.length);
-      const pct = (f) => Math.round(100 * I.filter(f).length / I.length);
-      const pred = prom(d.pred), clim = prom(d.clim);
-      F.push({ id: `modelo:${z.zona_id}`, zona_id: z.zona_id, fuente: 'Modelo que entrenamos (LSTM)',
-        texto: 'modelo que entrenamos red neuronal lstm inteligencia artificial prediccion predijo pronostico este anio temporada 2026 verdor verde campo estres sequia como viene como va',
-        datos: {
-          anio: e.anio, terrenos_agricolas: I.length,
-          prediccion: pred < clim ? 'un poco menos verde que lo normal' : pred > clim ? 'un poco más verde que lo normal' : 'igual que lo normal',
-          verdor_predicho: +pred.toFixed(3), verdor_normal: +clim.toFixed(3), verdor_que_hubo: +prom(d.obs).toFixed(3),
-          pct_terrenos_predichos_bajo_lo_normal: pct((i) => d.pred[i] < d.clim[i]),
-          error_del_modelo: +error(d.pred).toFixed(3), error_si_solo_se_usa_el_promedio: +error(d.clim).toFixed(3),
-          pct_terrenos_dentro_de_su_margen: pct((i) => Math.abs(d.pred[i] - d.obs[i]) <= d.banda[i]),
-          que_mide: 'Verdor del campo de 0 a 1 (satélite MODIS), del 28 de julio al 15 de octubre, predicho con datos hasta el 27 de julio.',
-          advertencia: 'En la prueba de 2021 a 2025 el modelo no le ganó al promedio de años pasados y falló en la sequía de 2023; por eso las fechas no lo usan.',
-          fuente: e.fuente
-        } });
-    }
-  } catch (err) { /* sin predicción del modelo: no hay fragmento */ }
+  // Lo que predijeron los modelos que entrenó el equipo, por zona. Cada zona usa sus propios
+  // resultados de colab/lstm_zona.ipynb (data/processed/zonas/<zona>/); si no tiene, los de Amealco.
+  // Se resume aquí; no se corre el modelo en vivo.
+  const km = (a, b, c, dd) => { const R = 6371, r = (x) => x * Math.PI / 180; const h = Math.sin(r(c - a) / 2) ** 2 + Math.cos(r(a)) * Math.cos(r(c)) * Math.sin(r(dd - b) / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
+  const leerSiHay = (ruta) => { try { return leer(ruta); } catch (e) { return null; } };
+  for (const z of zonas.datos || []) {
+    if (typeof z.radio_cobertura_km !== 'number') continue;
+    const propio = leerSiHay(`zonas/${z.zona_id}/estres_mapa.json`);
+    const e = propio || leerSiHay('estres_mapa.json');
+    const comp = (propio ? leerSiHay(`zonas/${z.zona_id}/modelos_comparacion.json`) : leerSiHay('modelos_comparacion.json')) || {};
+    const d = (e && e.datos) || {};
+    if (!Array.isArray(d.lat)) continue;
+    const I = d.lat.map((_, i) => i).filter((i) => d.pred[i] != null && d.obs[i] != null && d.clim[i] != null
+      && km(z.lat, z.lon, d.lat[i], d.lon[i]) <= z.radio_cobertura_km);
+    if (!I.length) continue;
+    const prom = (a) => I.reduce((s, i) => s + a[i], 0) / I.length;
+    const error = (a) => Math.sqrt(I.reduce((s, i) => s + (a[i] - d.obs[i]) ** 2, 0) / I.length);
+    const pct = (f) => Math.round(100 * I.filter(f).length / I.length);
+    const pred = prom(d.pred), clim = prom(d.clim), errM = error(d.pred), errC = error(d.clim);
+
+    // Advertencia honesta según la comparación de ESA zona (regla 6)
+    const red = comp.red_del_sitio || 'el modelo';
+    const fila = (comp.datos || []).find((x) => x.modelo === red) || {};
+    const skill = fila.test_skill_vs_climatologia;
+    const porAnio = (comp.skill_por_anio_prueba || {})[red] || {};
+    const peor = Object.entries(porAnio).sort((a, b) => a[1] - b[1])[0];
+    let advertencia = typeof skill === 'number'
+      ? (skill > 0 ? `En la prueba de 2021 a 2025 le ganó un poco al promedio de años pasados (resultado ${skill})`
+        : `En la prueba de 2021 a 2025 no le ganó al promedio de años pasados (resultado ${skill})`)
+      : 'No tengo su comparación contra el promedio de años pasados';
+    if (peor && peor[1] < -0.3) advertencia += ` y falló en ${peor[0]}${peor[0] === '2023' ? ' (la sequía)' : ''}`;
+    advertencia += '; por eso las fechas de siembra no lo usan.';
+
+    F.push({ id: `modelo:${z.zona_id}`, zona_id: z.zona_id, fuente: 'Modelo que entrenamos',
+      texto: 'modelo que entrenamos red neuronal lstm gru inteligencia artificial prediccion predijo pronostico este anio temporada 2026 verdor verde campo estres sequia como viene como va',
+      datos: {
+        red, anio: e.anio, terrenos_agricolas: I.length,
+        prediccion: pred < clim ? 'un poco menos verde que lo normal' : pred > clim ? 'un poco más verde que lo normal' : 'igual que lo normal',
+        verdor_predicho: +pred.toFixed(3), verdor_normal: +clim.toFixed(3), verdor_que_hubo: +prom(d.obs).toFixed(3),
+        pct_terrenos_predichos_bajo_lo_normal: pct((i) => d.pred[i] < d.clim[i]),
+        error_del_modelo: +errM.toFixed(3), error_si_solo_se_usa_el_promedio: +errC.toFixed(3),
+        mejor_que_el_promedio_esta_temporada: errM < errC,
+        pct_terrenos_dentro_de_su_margen: pct((i) => d.banda[i] != null && Math.abs(d.pred[i] - d.obs[i]) <= d.banda[i]),
+        confianza_en_palabras: comp.confianza_en_palabras || null,
+        que_mide: 'Verdor del campo de 0 a 1 (satélite MODIS), del 28 de julio al 15 de octubre, predicho con datos hasta el 27 de julio.',
+        advertencia, fuente: e.fuente
+      } });
+  }
+
+  // Humedad del suelo, lluvia de la temporada y heladas de NASA POWER por zona (pipeline/clima_power.py).
+  // Solo para zonas sin pronóstico del suelo propio (esas ya traen su humedad de hoy).
+  const conPronostico = new Set(((leerSiHay('suelo_zonas.json') || {}).datos || []).map((x) => x.zona_id));
+  for (const c of ((leerSiHay('clima_zona.json') || {}).datos || [])) {
+    if (!c.zona_id || conPronostico.has(c.zona_id)) continue;
+    F.push({ id: `clima:${c.zona_id}`, zona_id: c.zona_id, fuente: 'Humedad del suelo y lluvia (NASA)',
+      texto: 'humedad humeda humedo seca seco tierra abajo raices raiz suelo mojada agua guardada estado del suelo como esta la tierra lluvia temporada cuanto ha llovido heladas helada frio',
+      datos: c });
+  }
+
+  // Estado del suelo (humedad en la zona de raíces) y su pronóstico a 14 días, por zona (colab/lstm_zona.ipynb, celda 1a)
+  for (const s of ((leerSiHay('suelo_zonas.json') || {}).datos || [])) {
+    if (!s.zona_id || !s.humedad_raiz_hoy || !s.pronostico) continue;
+    F.push({ id: `suelo_hoy:${s.zona_id}`, zona_id: s.zona_id, fuente: 'Humedad del suelo (NASA) y pronóstico del equipo',
+      texto: 'humedad humeda humedo seca seco tierra abajo raices raiz suelo mojada agua guardada estado del suelo como esta la tierra proximos dias pronostico regar riego sembrar ahorita ahora hoy',
+      datos: s });
+  }
 
   for (const f of F) {
     const ts = palabras(`${f.texto} ${JSON.stringify(f.datos)}`).map(raiz);
@@ -163,10 +213,36 @@ function construirFragmentos() {
 let FRAGMENTOS = null;
 
 // Devuelve hasta k fragmentos para la pregunta. Los de zona solo si la persona está en esa zona.
-function recuperar(pregunta, perfil, k = 8) {
+function conTf(f) {
+  const ts = palabras(`${f.texto} ${JSON.stringify(f.datos)}`).map(raiz);
+  f.tf = ts.reduce((o, t) => ((o[t] = (o[t] || 0) + 1), o), {});
+  f.largo = ts.length;
+  return f;
+}
+
+// Celda de NASA POWER (0.5° x 0.625°) que contiene el lugar: clima_mexico.json cubre todo México.
+// Así cualquier lugar tiene la humedad del suelo, la lluvia y las heladas de su propia celda.
+let CLIMA_MX = null;
+function celdaClima(lat, lon) {
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+  CLIMA_MX = CLIMA_MX || (() => { try { return leer('clima_mexico.json'); } catch (e) { return {}; } })();
+  const col = (CLIMA_MX.columnas || []).reduce((o, c, i) => ((o[c] = i), o), {});
+  const r = (CLIMA_MX.celdas || []).find((c) => Math.abs(c[col.lat] - lat) <= 0.25 && Math.abs(c[col.lon] - lon) <= 0.3125);
+  if (!r) return null;
+  const pc = r[col.percentil];
+  return {
+    celda: { lat: r[col.lat], lon: r[col.lon], tamano: 'unos 55 x 65 km' },
+    humedad_raiz: { mes: CLIMA_MX.mes_humedad, valor: r[col.humedad], normal: r[col.humedad_normal],
+      estado: pc <= 0.25 ? 'más seca' : pc >= 0.75 ? 'más húmeda' : 'igual de húmeda' },
+    lluvia_temporada: { mm: r[col.lluvia_mm], normal_mm: r[col.lluvia_normal_mm], tramo: CLIMA_MX.lluvia_tramo },
+    heladas: { dias_por_anio: r[col.dias_helada_anio], meses: r[col.meses_helada] ? r[col.meses_helada].split(', ') : [] },
+  };
+}
+
+function recuperar(pregunta, perfil, k = 8, extras = []) {
   FRAGMENTOS = FRAGMENTOS || construirFragmentos();
   const zona = perfil && perfil.zona_id;
-  const cand = FRAGMENTOS.filter((f) => !f.zona_id || f.zona_id === zona);
+  const cand = FRAGMENTOS.filter((f) => !f.zona_id || f.zona_id === zona || (f.zona_id === '__fuera_de_el_llano__' && zona !== 'z1')).concat(extras.map(conTf));
   const q = consulta(pregunta);
   const N = cand.length;
   const prom = cand.reduce((s, f) => s + f.largo, 0) / (N || 1);
@@ -190,4 +266,4 @@ function recuperar(pregunta, perfil, k = 8) {
   return res.map(({ f, s }) => ({ id: f.id, fuente: f.fuente, datos: f.datos, puntaje: s }));
 }
 
-module.exports = { recuperar };
+module.exports = { recuperar, celdaClima };

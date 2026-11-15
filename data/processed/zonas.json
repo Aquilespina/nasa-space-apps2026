@@ -1,12 +1,12 @@
 {
-  "fuente": "referencia/amealco-datos-reales.md: punto El Llano (20.209 N, 100.146 O) usado para SoilGrids y la imagen HLS. Una sola zona hasta que Aquiles defina más.",
+  "fuente": "referencia/amealco-datos-reales.md: punto El Llano (20.209 N, 100.146 O) usado para SoilGrids y la imagen HLS. Una sola zona hasta que Aquiles defina más. Tlalpan: lugar del agricultor de ejemplo con modelos por zona (salida/tlalpan, 15 nov).",
   "fecha_consulta": "2026-11-14",
   "ejemplo": false,
   "generado_por": "acordado_angel",
   "datos": [
     {
       "zona_id": "z1",
-      "nombre": "El Llano, norte de Amealco",
+      "nombre": "El Llano, Querétaro",
       "lat": 20.209,
       "lon": -100.146,
       "cultivos": [
@@ -16,6 +16,16 @@
       "nota": "Punto de la referencia (SoilGrids e imagen HLS). La lluvia y la temperatura son de la celda NASA POWER de ~55 km que cubre todo el municipio.",
       "radio_cobertura_km": 25,
       "radio_cobertura_razon": "Mitad de la celda de NASA POWER (~55 km): un lugar a 25 km o menos del punto usa la misma lluvia y clima. Regla del ajuste de zona universal (14 nov); ver docs/decisiones.md."
+    },
+    {
+      "zona_id": "tlalpan",
+      "nombre": "Tlalpan, Ciudad de México",
+      "lat": 19.2695,
+      "lon": -99.1738,
+      "cultivos": [],
+      "nota": "Zona del agricultor de ejemplo. Estado del suelo (NASA POWER GWETROOT) y verdor (MODIS, 1,163 terrenos agrícolas) entrenados por el equipo en colab/lstm_zona.ipynb. Todavía sin calendario de siembra ni datos de cosechas del SIAP.",
+      "radio_cobertura_km": 30,
+      "radio_cobertura_razon": "Modelo entrenado solo con terrenos a 30 km o menos de este punto (colab/lstm_zona.ipynb, 15 nov)."
     }
   ]
 }

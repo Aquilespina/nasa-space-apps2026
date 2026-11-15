@@ -10,7 +10,7 @@
   --blue:#0369a1; --blue-d:#075985; --blue-soft:#f0f9ff; --blue-b:#bae6fd;
   --amber:#b45309; --amber-d:#92400e; --amber-soft:#fffbeb; --amber-b:#fde68a;
   --red:#b91c1c; --red-soft:#fef2f2;
-  --c-maiz:#d97706; --c-avena:#059669; --c-frijol:#6d28d9; --dot:#a8a29e;
+  --c-maiz:#d97706; --c-avena:#059669; --c-calabaza:#ca8a04; --c-frijol:#6d28d9; --dot:#a8a29e;
   --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --r:24px;
@@ -107,10 +107,10 @@ main{flex:1;width:100%;max-width:416px;margin:0 auto;padding:0 16px 32px}
 /* paso 9: tarjetas de opción con etiqueta, título y dato */
 .opcion.detalle{flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:2px;padding:12px;border-width:1px;border-radius:16px;background:var(--soft)}
 .opcion.detalle[data-estrategia="leguminosa"]{background:rgba(236,253,245,.8);border:2px solid var(--green)}
-.opcion.detalle[data-estrategia="cobertura"]{background:rgba(240,249,255,.7);border-color:#7dd3fc}
+.opcion.detalle[data-estrategia="calabaza"]{background:rgba(240,249,255,.7);border-color:#7dd3fc}
 .det-etq{font-size:12px;font-weight:700;text-transform:uppercase;color:var(--ink3)}
 .opcion.detalle[data-estrategia="leguminosa"] .det-etq{color:var(--green)}
-.opcion.detalle[data-estrategia="cobertura"] .det-etq{color:var(--blue)}
+.opcion.detalle[data-estrategia="calabaza"] .det-etq{color:var(--blue)}
 .det-tit{font-size:14px;font-weight:700;color:var(--ink)}
 .det-txt{font-size:11px;font-weight:500;color:var(--ink3);line-height:1.4}
 .det-txt:empty{display:none}
@@ -192,7 +192,7 @@ main{flex:1;width:100%;max-width:416px;margin:0 auto;padding:0 16px 32px}
 .datos{list-style:none;padding:0;display:flex;flex-direction:column}
 .datos li{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
 .datos li:last-child{border-bottom:0}
-.datos li b{white-space:nowrap;font-variant-numeric:tabular-nums}
+.datos li b{text-align:right;font-variant-numeric:tabular-nums;min-width:0}
 .datos li.tuyo,.barras li.tuyo{font-weight:700}
 .barras{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px}
 .barras li{display:grid;grid-template-columns:1fr;gap:3px}
@@ -254,7 +254,7 @@ main{flex:1;width:100%;max-width:416px;margin:0 auto;padding:0 16px 32px}
 .lab::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
 .lab.real{color:var(--green)}.lab.est{color:var(--blue)}
 .lab.est::before{background:transparent;box-shadow:inset 0 0 0 1.5px currentColor}
-.falta{background:var(--amber-soft);color:var(--amber);border-radius:4px;padding:0 5px;font:500 .84em var(--mono);white-space:nowrap}
+.falta{background:var(--amber-soft);color:var(--amber-d);border-radius:4px;padding:0 5px;font:600 .92em var(--sans)}
 .src{font-size:12px;color:var(--ink3)}
 .sq{display:inline-block;width:10px;height:10px;border-radius:2px}
 .flag{font:600 11px var(--mono);color:var(--red);text-transform:uppercase}
@@ -339,3 +339,42 @@ main{flex:1;width:100%;max-width:416px;margin:0 auto;padding:0 16px 32px}
 .chat-fuentes{margin-top:8px;padding-top:6px;border-top:1px solid rgba(214,211,209,.8);display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .chat-fuentes span{font-size:10px;font-weight:500;background:#fff;border:1px solid var(--line2);color:var(--ink2);padding:1px 6px;border-radius:4px}
 .chat-fuentes .chat-fuentes-etq{background:none;border:0;padding:0 4px 0 0;font-weight:700;text-transform:uppercase;color:var(--ink3)}
+#sinCFilas li b{white-space:normal;text-align:right;max-width:55%}
+
+/* Amealquito en "Tu plan": mismo tamaño de letra que el resto del plan */
+.resultado .guia{max-width:none;padding:16px}
+.resultado .guia-icono{width:56px;height:56px}
+.resultado .guia-icono img{width:48px;height:48px}
+.resultado .guia p{font-size:15px;line-height:1.45;color:var(--ink)}
+
+/* "Tu plan": resumen arriba, chat abierto y barra fija con dos atajos */
+.resumen{border-color:var(--green);background:var(--green-soft)}
+.resumen-lista{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.resumen-lista li{display:flex;flex-direction:column;gap:2px;background:var(--panel);border-radius:12px;padding:10px 12px;border:1px solid var(--green-b)}
+.resumen-lista .r-etq{font-size:12px;font-weight:700;color:var(--green-d);text-transform:uppercase;letter-spacing:.03em}
+.resumen-lista .r-val{font-size:16px;font-weight:700;color:var(--ink);line-height:1.35}
+.sub-plan{font-size:18px;font-weight:700;margin-top:6px}
+.sub-plan:focus{outline:none}
+.chat-bloque h2{font-size:18px}
+.resultado{padding-bottom:88px}
+@media print{.fab-chat{display:none!important}}
+.chat-caja,.chat-sugeridas,.chat-whatsapp{scroll-margin-bottom:96px}
+
+.fab-chat{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:20;display:flex;align-items:center;gap:8px;padding:8px 16px 8px 8px;border-radius:999px;background:var(--green);color:#fff;font-weight:700;font-size:15px;text-decoration:none;box-shadow:0 4px 0 var(--green-dd),0 8px 18px rgba(0,0,0,.18)}
+.fab-chat img{width:32px;height:32px;object-fit:contain;background:#fff;border-radius:50%}
+.fab-chat.oculta{display:none}
+
+/* Chat más limpio: un encabezado, 7 preguntas en lista, caja simple */
+.chat-bloque{padding:0;overflow:hidden;gap:0}
+.chat-bloque #chat{display:flex;flex-direction:column;gap:12px;padding:0 0 16px}
+.chat-bloque .chat-cabecera{border-radius:0;margin:0;padding:12px 16px;flex-wrap:nowrap}
+.chat-bloque .chat-nombre{margin:0;font-size:16px;font-weight:700;color:#fff;line-height:1.2}
+.chat-bloque .chat-estado{font-size:11px;letter-spacing:.02em;text-transform:none;font-weight:600}
+.chat-voz{display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border-radius:50%;margin-left:auto}
+.chat-bloque .chat-mensajes,.chat-bloque .chat-sugeridas,.chat-bloque .chat-caja,.chat-bloque .aviso{margin:0 16px}
+.chat-enviar{flex:none;width:44px;height:44px;border:0;border-radius:12px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 3px 0 var(--green-dd)}
+.chat-enviar:disabled{opacity:.5}
+.chat-bloque .chat-caja input{font-size:15px;min-height:44px}
+.acciones .chat-whatsapp{margin-bottom:4px}
+
+.chat-bloque .chat-mensajes{max-height:440px}

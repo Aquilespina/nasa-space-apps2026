@@ -16,6 +16,7 @@
   if (!mensajes || !campo || !boton) return;
 
   let vozActiva = false;
+  let ocupado = false;
   let nombresCultivo = {};
   let zonas = null;
 
@@ -51,6 +52,12 @@
   fetch('data/cultivos.json', { cache: 'no-cache' }).then(r => r.json()).then(j => {
     (j.datos || []).forEach(c => { nombresCultivo[c.cultivo] = (c.nombre || c.cultivo).split(/\s+/)[0]; });
     pintarChips();
+    // Amealquito abre la conversación, como en WhatsApp
+    if (!mensajes.children.length) {
+      const e = estadoActual();
+      const c = e.cultivo ? (nombresCultivo[e.cultivo] || e.cultivo).toLowerCase() : 'tu cultivo';
+      agregar(`¡Hola! ¿Qué quieres saber de tu ${c}? Toca una pregunta de abajo o escríbeme. Solo te digo lo que sé de tu zona; si no lo sé, te lo digo.`, 'asistente');
+    }
   }).catch(() => { /* sin nombres amigables, los chips igual funcionan con el id crudo */ });
 
   function agregar(texto, quien, fuentes = []) {
@@ -81,7 +88,8 @@
 
   async function enviar(preguntaForzada) {
     const pregunta = (preguntaForzada || campo.value).trim();
-    if (!pregunta) return;
+    if (!pregunta || ocupado) return;
+    ocupado = true;
     aviso.hidden = true;
     agregar(pregunta, 'usuario');
     campo.value = '';
@@ -115,6 +123,7 @@
       aviso.textContent = 'No pude conectar con el servidor del chat. Intenta de nuevo.';
     } finally {
       boton.disabled = false;
+      ocupado = false;
     }
   }
 
@@ -125,11 +134,13 @@
     b.addEventListener('click', () => enviar(b.dataset.pregunta));
   });
 
+
   if (vozBtn) {
     vozBtn.addEventListener('click', () => {
       vozActiva = !vozActiva;
       vozBtn.setAttribute('aria-pressed', String(vozActiva));
-      vozBtn.textContent = vozActiva ? 'Dejar de leer en voz alta' : 'Leer respuestas en voz alta';
+      const et = vozActiva ? 'Dejar de leer en voz alta' : 'Leer respuestas en voz alta';
+      vozBtn.setAttribute('aria-label', et); vozBtn.title = et;
       if (!vozActiva && 'speechSynthesis' in window) window.speechSynthesis.cancel();
     });
   }

@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Milpa Clara · tu milpa con datos de la NASA</title>
+<meta name="description" content="Milpa Clara: te acompaña a decidir cuándo sembrar y qué sembrar en tu parcela, con datos de satélite de la NASA.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<header class="barra">
+  <span class="marca"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="7" fill="#1f7a4d"/><path d="M13 20V9M13 13c-3 0-5-2-5-5 3 0 5 2 5 5zm0 2c3 0 5-2 5-5-3 0-5 2-5 5z" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>Milpa Clara</span>
+  <span class="avance-txt"><span class="progreso" id="progreso" aria-live="polite"></span><span class="pct" id="progresoPct"></span></span>
+</header>
+<div class="barra-avance" id="barraAvance" role="progressbar" aria-label="Avance" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="barraRelleno"></span></div>
+
+<main id="principal">
+  <!-- Pantalla 1 -->
+  <section class="pantalla" data-paso="1" aria-labelledby="p1">
+    <div class="tarjeta">
+      <div class="tarjeta-centro">
+        <div class="guia verde" id="guia1"><span class="guia-icono"><img id="guia1Img" src="img/amealquito/feliz.png" alt="Amealquito"></span><div><b class="guia-nombre">¡Hola! Soy Amealquito, tu guía de parcela</b><p id="guia1Msg">Te acompaño a planear tu siembra con datos de satélite de la NASA. Empecemos: ¿qué cultivas?</p></div></div>
+      </div>
+      <div class="recuadro">
+        <h1 class="pregunta" id="p1" tabindex="-1">¿Qué cultivas?</h1>
+        <div class="opciones flecha" id="opCultivo"><p class="muted">Cargando…</p></div>
+        <p class="aviso" id="msgCultivo" aria-live="polite" hidden></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla 2 -->
+  <section class="pantalla" data-paso="2" aria-labelledby="p2" hidden>
+    <div class="tarjeta">
+      <div class="tarjeta-top"><button type="button" class="atras" data-atras>← Atrás</button></div>
+      <div class="tarjeta-centro">
+        <div class="guia azul" id="guia2"><span class="guia-icono"><img id="guia2Img" src="img/amealquito/neutral.png" alt="Amealquito"></span><div><p id="guia2Msg">¿Dónde está tu parcela? Escribe tu municipio o usa tu ubicación.</p></div></div>
+      </div>
+      <div class="recuadro">
+        <h1 class="pregunta" id="p2" tabindex="-1">¿Dónde está tu parcela?</h1>
+        <div class="buscador">
+          <label for="lugarTxt" class="etq-campo">Escribe tu municipio</label>
+          <input id="lugarTxt" type="search" placeholder="Ej. Texcoco, Celaya, Tlalpan..." autocomplete="off" spellcheck="false" aria-describedby="lugarAyuda" aria-controls="lugarSug" aria-autocomplete="list"> <!-- ok-sin-datos: placeholder del campo de texto, no un dato del sitio -->
+          <p class="fine" id="lugarAyuda">Busca cualquier municipio de México.</p>
+          <ul class="sugerencias" id="lugarSug" role="listbox" aria-label="Municipios encontrados"></ul>
+        </div>
+        <button type="button" class="opcion secundaria" id="btnUbicacion">
+          <svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3" fill="currentColor"/><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 1v3M10 16v3M1 10h3M16 10h3" stroke="currentColor" stroke-width="1.6"/></svg>
+          Usar mi ubicación actual
+        </button>
+        <p class="fine centro">Tu ubicación solo se usa en tu teléfono. No se guarda ni se envía.</p>
+        <p class="aviso" id="msgZona" aria-live="polite" hidden></p>
+        <p class="fine centro" id="zonasConDatos"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla 3 -->
+  <section class="pantalla" data-paso="3" aria-labelledby="p3" hidden>
+    <div class="tarjeta campo">
+      <div class="tarjeta-top"><button type="button" class="atras" data-atras>← Cambiar lugar</button></div>
+      <div class="tarjeta-centro">
+        <div class="guia verde" id="guia3" data-dinamico="1" aria-live="polite"><span class="guia-icono"><img id="guia3Img" src="img/amealquito/neutral.png" alt="Amealquito"></span><div><p id="guia3Msg"></p></div></div>
+        <figure class="mapa" id="mapa">
+          <img id="mapaImg" alt="" width="408" height="307" hidden>
+          <svg id="mapaPais" viewBox="0 0 400 260" role="img" hidden></svg>
+          <span class="pin" id="mapaPin" hidden aria-hidden="true"></span>
+          <figcaption class="fine" id="mapaPie"></figcaption>
+        </figure>
+        <div class="satelite" id="satelite" hidden>
+          <div class="satelite-cabeza">
+            <span class="satelite-titulo"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 10l6-6 4 4-6 6zM14 14l6-6M10 20a6 6 0 00-6-6M14 20a10 10 0 00-10-10" stroke-linecap="round" stroke-linejoin="round"/></svg>Lectura satelital en tu zona</span>
+            <span class="satelite-sello"><span aria-hidden="true">●</span> Datos reales</span>
+          </div>
+          <p class="satelite-intro"><b>Lo que ven los satélites de la NASA aquí:</b> <span id="sateliteTexto"></span></p>
+          <dl class="satelite-filas" id="sateliteFilas"></dl>
+          <p class="satelite-ojo">Ojo: El satélite mira toda la región desde arriba, pero tú ves cada surco de cerca.</p>
+        </div>
+      </div>
+      <div class="recuadro blanco">
+        <h1 class="pregunta chica" id="p3" tabindex="-1">¿Es aquí donde tienes tus tierras?</h1>
+        <p class="lugar" id="lugarNombre"></p>
+        <p class="cobertura" id="lugarCobertura"></p>
+        <p class="fine" id="lugarNota"></p>
+        <div class="opciones dos">
+          <button type="button" class="opcion" data-atras>No, corregir</button>
+          <button type="button" class="opcion principal" id="btnSiLugar">Sí, es ahí</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla 4 -->
+  <section class="pantalla" data-paso="4" aria-labelledby="p4" hidden>
+    <div class="tarjeta">
+      <div class="tarjeta-top"><button type="button" class="atras" data-atras>← Atrás</button></div>
+      <div class="tarjeta-centro">
+        <div class="guia neutral" id="guia4"><span class="guia-icono"><img id="guia4Img" src="img/amealquito/neutral.png" alt="Amealquito"></span><div><p id="guia4Msg">Nadie conoce esa tierra mejor que tú. Tu experiencia manda; los datos solo te ayudan a confirmar riesgos.</p></div></div>
+      </div>
+      <div class="recuadro">
+        <h1 class="pregunta" id="p4" tabindex="-1">¿Cuántos años llevas trabajando el campo?</h1>
+        <div class="contador">
+          <button type="button" class="redondo" id="aniosMenos" aria-label="Un año menos">−</button>
+          <label class="anios"><input id="anios" type="number" inputmode="numeric" min="0" max="80" value="10" aria-describedby="aniosUnidad"><span id="aniosUnidad">años</span></label>
+          <button type="button" class="redondo" id="aniosMas" aria-label="Un año más">+</button>
+        </div>
+        <button type="button" class="opcion principal" id="btnAnios">Continuar <span aria-hidden="true">→</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla 5 -->
+  <section class="pantalla" data-paso="5" aria-labelledby="p5" hidden>
+    <div class="tarjeta">
+      <div class="tarjeta-top"><button type="button" class="atras" data-atras>← Atrás</button><span class="sello verde">Puedes elegir varias</span></div>
+      <div class="tarjeta-centro">
+        <div class="guia verde" id="guia5"><span class="guia-icono"><img id="guia5Img" src="img/amealquito/neutral.png" alt="Amealquito"></span><div><p id="guia5Msg">¿En qué te ayudo más? Puedes elegir varias.</p></div></div>
+      </div>
+      <div class="recuadro">
+        <h1 class="pregunta chica" id="p5" tabindex="-1">¿En qué te gustaría que te acompañe?</h1>
+        <div class="opciones" id="opPrioridad" role="group" aria-labelledby="p5">
+          <button type="button" class="opcion tema-verde" data-prioridad="cosecha" aria-pressed="false">Mejorar mi cosecha</button>
+          <button type="button" class="opcion tema-azul" data-prioridad="agua" aria-pressed="false">No gastar tanta agua</button>
+          <button type="button" class="opcion tema-ambar" data-prioridad="ganar" aria-pressed="false">Aumentar mis cosechas</button>
+        </div>
+        <button type="button" class="opcion principal" id="btnPlan" disabled>Continuar <span aria-hidden="true">→</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla 6 -->
+  <section class="pantalla" data-paso="6" aria-labelledby="p6" hidden>
+    <div class="tarjeta">
+      <div class="tarjeta-top"><button type="button" class="atras" data-atras>← Atrás</button></div>
+      <div class="tarjeta-centro">
+        <div class="guia azul" id="guia6"><span class="guia-icono"><img id="guia6Img" src="img/amealquito/neutral.png" alt="Amealquito"></span><div><p id="guia6Msg">¿Cómo le das agua a tu cultivo? Así ajusto mis consejos sobre el agua y la sequía.</p></div></div>
+      </div>
+      <div class="recuadro">
+        <h1 class="pregunta chica" id="p6" tabindex="-1">¿Cómo obtiene agua tu cultivo?</h1>
+        <div class="opciones flecha" id="opRiego">
+          <button type="button" class="opcion tema-azul" data-riego="temporal">De temporal (solo lluvia)</button>
+          <button type="button" class="opcion tema-verde" data-riego="goteo">Riego por goteo o aspersión</button>
+          <button type="button" class="opcion tema-ambar" data-riego="rodado">Canal, pozo o riego rodado</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla 7 -->
+  <section class="pantalla" data-paso="7" aria-labelledby="p7" hidden>
+    <div class="tarjeta">
+      <div class="tarjeta-top"><button type="button" class="atras" data-atras>← Atrás</button><span class="sello ambar">Lo que tú observas</span></div>
+      <div class="tarjeta-centro">
+        <div class="guia ambar" id="guia7"><span class="guia-icono"><img id="guia7Img" src="img/amealquito/neutral.png" alt="Amealquito"></span><div><p id="guia7Msg">Yo veo tu zona desde el satélite, pero tú la caminas de cerca. ¿Qué has notado en tu parcela?</p></div></div>
+      </div>
+      <div class="recuadro">
+        <h1 class="pregunta chica" id="p7" tabindex="-1">Cuando caminas tu parcela, ¿qué notas más?</h1>
+        <div class="opciones flecha" id="opCondicion">
+          <button type="button" class="opcion tema-azul" data-condicion="falta_agua">La tierra se seca muy rápido</button>
+          <button type="button" class="opcion tema-ambar" data-condicion="tierra_cansada">Tierra cansada, rinde menos</button>
+          <button type="button" class="opcion tema-verde" data-condicion="plagas_clima">Más plagas o lluvias disparejas</button>
+        </div>
+        <p class="fine">No tenemos un sensor en tu parcela: esto es lo que tú observas, no una medición.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla 8 -->
+  <section class="pantalla" data-paso="8" aria-labelledby="p8" hidden>
+    <div class="tarjeta">
+      <div class="tarjeta-top"><button type="button" class="atras" data-atras>← Atrás</button><span class="sello ambar">Cuidado del suelo</span></div>
+      <div class="tarjeta-centro">
+        <div class="guia ambar" id="guia8"><span class="guia-icono"><img id="guia8Img" src="img/amealquito/neutral.png" alt="Amealquito"></span><div><p id="guia8Msg">¿Qué haces con la tierra después de levantar la cosecha?</p></div></div>
+      </div>
+      <div class="recuadro">
+        <h1 class="pregunta chica" id="p8" tabindex="-1">¿Qué haces después de levantar la cosecha?</h1>
+        <div class="opciones flecha" id="opDescanso">
+          <button type="button" class="opcion tema-ambar" data-descanso="descubierta">Queda la tierra descubierta</button>
+          <button type="button" class="opcion tema-verde" data-descanso="rastrojo">Dejo el rastrojo tapando la tierra</button>
+          <button type="button" class="opcion tema-azul" data-descanso="inmediato">Vuelvo a sembrar enseguida</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla 9 -->
+  <section class="pantalla" data-paso="9" aria-labelledby="p9" hidden>
+    <div class="tarjeta">
+      <div class="tarjeta-top"><button type="button" class="atras" data-atras>← Atrás</button><span class="sello verde">3 opciones</span></div>
+      <div class="tarjeta-centro">
+        <div class="guia verde" id="guia9"><span class="guia-icono"><img id="guia9Img" src="img/amealquito/neutral.png" alt="Amealquito"></span><div><p id="guia9Msg">Ya casi terminamos. Con lo que sabemos de tu zona, ¿qué te gustaría explorar para tu próxima siembra?</p></div></div>
+      </div>
+      <div>
+        <h1 class="pregunta chica" id="p9" tabindex="-1">Elige qué idea quieres explorar</h1>
+        <p class="fine">Con datos reales de tu zona, no porcentajes inventados.</p>
+      </div>
+      <div class="opciones" id="opEstrategia">
+        <button type="button" class="opcion detalle" data-estrategia="actual">
+          <span class="det-etq">1. Lo que haces hoy</span>
+          <span class="det-tit">Seguir solo con <span id="estratActualNombre">tu cultivo</span></span>
+        </button>
+        <button type="button" class="opcion detalle" data-estrategia="leguminosa">
+          <span class="det-etq">2. Alternar</span>
+          <span class="det-tit">Alternar con frijol</span>
+          <span class="det-txt" id="estratLeguminosaDato"></span>
+        </button>
+        <button type="button" class="opcion detalle" data-estrategia="calabaza">
+          <span class="det-etq">3. Cubrir la tierra</span>
+          <span class="det-tit">Sembrar calabaza con el maíz (milpa)</span>
+          <span class="det-txt" id="estratCalabazaDato"></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resultado -->
+  <section class="pantalla resultado" data-paso="10" aria-labelledby="pr" hidden>
+    <div class="guia verde" id="guia10" data-dinamico="1" aria-live="polite"><span class="guia-icono"><img id="guia10Img" src="img/amealquito/feliz.png" alt="Amealquito"></span><p id="guia10Msg">Preparando tu plan…</p></div>
+    <h1 class="titulo-plan" id="pr" tabindex="-1">Tu plan</h1>
+    <p class="aviso" id="resEjemplo" hidden>Estas fechas son de prueba mientras llega el cálculo final.</p>
+    <p class="fine" id="resDatosDe"></p>
+    <article class="bloque resumen" id="resResumen" aria-labelledby="hRes">
+      <h2 id="hRes">Tu plan en corto</h2>
+      <ul class="resumen-lista" id="resumenLista"></ul>
+    </article>
+    <h2 class="sub-plan" id="resPlanCompleto" tabindex="-1">Más detalles de tu plan</h2>
+    <article class="bloque sin-cobertura" id="resSinCobertura" hidden aria-labelledby="hSinC">
+      <h2 id="hSinC">Aún no tenemos datos de tu zona</h2>
+      <p id="sinCTexto"></p>
+      <ul class="datos" id="sinCFilas" hidden></ul>
+      <button type="button" class="opcion" id="btnReferencia"></button>
+    </article>
+    <p class="aviso" id="resReferencia" hidden></p>
+
+    <article class="bloque" id="resCalendario" aria-labelledby="hCal">
+      <h2 id="hCal">Tus fechas</h2>
+      <div id="calLista"><p class="muted">Cargando…</p></div>
+      <p class="fine" id="calMetodo"></p>
+    </article>
+
+    <article class="bloque" id="resAnios" aria-labelledby="hAnios" hidden>
+      <h2 id="hAnios">Los años que te ha tocado sembrar</h2>
+      <div id="aniosCuerpo"></div>
+    </article>
+
+    <div id="resPrioridades"></div>
+
+    <p class="fine" id="resFuente"></p>
+
+    <div class="recordatorio">Esta herramienta te acompaña con datos del pasado. <b>La decisión final es tuya.</b></div>
+
+    <article class="bloque chat-bloque" id="seccionChat" aria-labelledby="hChat" tabindex="-1">
+      <h2 id="hChat">Pregúntale a Amealquito</h2>
+      <section id="chat" aria-label="Chat sobre tu cultivo">
+        <div class="chat-cabecera">
+          <span class="chat-avatar"><img src="img/amealquito/feliz.png" alt="Amealquito" width="40" height="40"></span>
+          <div class="chat-titulos">
+            <span class="chat-estado"><span class="chat-punto" aria-hidden="true"></span>En línea · datos de tu zona</span>
+            <span class="chat-nombre">Amealquito, tu consejero de parcela</span>
+          </div>
+          <button type="button" class="chat-voz" id="chatVoz" aria-pressed="false">Leer respuestas en voz alta</button>
+        </div>
+        <div class="chat-chips" id="chatChips" aria-hidden="true"></div>
+        <p class="fine">Solo respondo con datos verificados de tu zona y cultivo. Si no tengo el dato, te lo digo.</p>
+        <button type="button" class="chat-whatsapp" id="btnWhatsApp">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm0 18.2a8.2 8.2 0 01-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1112 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 01-3.3-2.9c-.3-.4.3-.4.8-1.4a.5.5 0 000-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 00-.7.3 3 3 0 00-.9 2.2 5.2 5.2 0 001.1 2.7 11.8 11.8 0 004.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 001.8-1.3 2.2 2.2 0 00.1-1.3c0-.1-.2-.2-.4-.3z"/></svg>
+          Mandar mi plan por WhatsApp
+        </button>
+        <div id="chatMensajes" class="chat-mensajes" aria-live="polite"></div>
+        <div class="chat-sugeridas" id="chatSugeridas">
+          <button type="button" class="chat-sugerida verde" data-pregunta="¿Cuándo debo sembrar y qué tan segura es esa fecha?">¿Cuándo siembro?</button>
+          <button type="button" class="chat-sugerida azul" data-pregunta="¿Cuánta agua necesita mi cultivo en todo el ciclo?">¿Cuánta agua necesita?</button>
+          <button type="button" class="chat-sugerida ambar" data-pregunta="¿Qué tan húmeda está la tierra abajo?">¿Cómo está mi tierra?</button>
+          <button type="button" class="chat-sugerida verde" data-pregunta="¿Qué rotación me conviene para cuidar el suelo y ahorrar agua?">¿Qué me conviene sembrar?</button>
+          <button type="button" class="chat-sugerida ambar" data-pregunta="¿Qué tan seguido le ha ido mal a mi cultivo en los últimos años?">¿Le ha ido mal antes?</button>
+          <button type="button" class="chat-sugerida azul" data-pregunta="Dame todas las fechas de mi zona: siembra, fertilización y cosecha de cada cultivo.">Todas las fechas de la zona</button>
+          <button type="button" class="chat-sugerida verde" data-pregunta="¿Puedo confiar en estas fechas? ¿De dónde salen?">¿Puedo confiar en las fechas?</button>
+        </div>
+        <div class="chat-caja">
+          <button type="button" class="chat-mic" id="chatMic" aria-label="Dictar pregunta por voz">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 1.5a3 3 0 00-3 3v7a3 3 0 006 0v-7a3 3 0 00-3-3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19 10.5a7 7 0 01-14 0M12 17.5v3.5"/></svg>
+          </button>
+          <input type="text" id="chatPregunta" placeholder="Ej. ¿Cuándo debo sembrar?"> <!-- ok-sin-datos: placeholder del campo de texto, no un dato del sitio -->
+          <button type="button" class="opcion principal" id="chatEnviar">Enviar</button>
+        </div>
+        <p class="aviso" id="chatAviso" hidden></p>
+      </section>
+    </article>
+
+    <div class="acciones">
+      <button type="button" class="opcion" id="btnReiniciar">Cambiar mis respuestas</button>
+    </div>
+    <a class="fab-chat" id="fabChat" href="#seccionChat" data-ir="seccionChat"><img src="img/amealquito/feliz.png" alt="" width="32" height="32"> Pregúntale a Amealquito</a>
+  </section>
+</main>
+
+<footer class="pie">Datos: NASA POWER, MODIS, HLS (NASA), SIAP, CONAGUA, FAO-56 · NASA Space Apps Challenge 2026 · CDMX</footer>
+
+<script src="asistente.js"></script>
+<script src="chat.js"></script>
+</body>
+</html>
