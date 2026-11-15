@@ -31,11 +31,25 @@ a{color:var(--green-d)}
 .marca{display:flex;align-items:center;gap:8px;font-weight:700;font-size:18px}
 .progreso{font-size:14px;color:var(--ink2);font-weight:600}
 
+/* barra de avance */
+.barra-avance{max-width:640px;width:calc(100% - 32px);margin:0 auto 10px;height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.barra-avance span{display:block;height:100%;width:0;background:var(--green);border-radius:5px;transition:width .35s ease}
+@media (prefers-reduced-motion:reduce){.barra-avance span{transition:none}}
+
+/* Amealquito */
+.amealquito{display:flex;align-items:flex-end;gap:10px;margin:0 0 12px}
+.amealquito img{width:72px;height:72px;object-fit:contain;flex:none}
+.globo{position:relative;flex:1;background:var(--panel);border:2px solid var(--borde);border-radius:16px 16px 16px 4px;padding:9px 13px;font-size:16px;line-height:1.4}
+.globo b{display:block;font-size:12.5px;color:var(--green-d);text-transform:uppercase;letter-spacing:.05em}
+.amealquito.cambia img{animation:salta .35s ease-out}
+@keyframes salta{0%{transform:translateY(0)}40%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){.amealquito.cambia img{animation:none}}
+
 main{flex:1;width:100%;max-width:640px;margin:0 auto;padding:4px 16px 32px}
 
 /* pantallas tipo boceto: una tarjeta grande, la pregunta en un recuadro al centro */
 .pantalla{display:flex;flex-direction:column;gap:14px}
-.tarjeta{background:var(--panel);border:2px solid var(--borde);border-radius:var(--r);padding:28px 20px;min-height:min(72vh,560px);display:flex;flex-direction:column;justify-content:center;gap:18px}
+.tarjeta{background:var(--panel);border:2px solid var(--borde);border-radius:var(--r);padding:28px 20px;min-height:min(62vh,520px);display:flex;flex-direction:column;justify-content:center;gap:18px}
 .pregunta{align-self:center;text-align:center;font-size:clamp(24px,6.5vw,32px);font-weight:700;border:2px solid var(--borde);border-radius:16px;padding:18px 22px;max-width:100%}
 .pregunta:focus{outline:none}
 .opciones{display:flex;flex-direction:column;gap:10px}
@@ -202,7 +216,7 @@ main{flex:1;width:100%;max-width:640px;margin:0 auto;padding:4px 16px 32px}
 /* respaldo si jsPDF no carga: Imprimir → Guardar como PDF muestra solo el plan */
 @media print{
   body{background:#fff;font-size:12pt}
-  .barra,.pie,.acciones,.mas,.atras,.pantalla:not(.resultado){display:none!important}
+  .barra,.pie,.acciones,.mas,.atras,.pantalla:not(.resultado),.barra-avance,.amealquito{display:none!important}
   .resultado{display:flex!important}
   .bloque{border:1px solid #999;break-inside:avoid}
 }

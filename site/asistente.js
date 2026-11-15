@@ -63,6 +63,26 @@
   const nombreLugar = () => (estado.lugar ? [estado.lugar.nombre, estado.lugar.detalle].filter(Boolean).join(', ') : '');
 
   // ---------- navegación ----------
+  // ---------- Amealquito: el asistente cambia de cara según lo que pasa ----------
+  const EMOCION = { feliz: 'Feliz', neutral: 'Neutral', nervioso: 'Nervioso', triste: 'Triste' };
+  function amealquito(emocion, texto) {
+    const img = $('#amqImg'), caja = $('#amealquito');
+    if (!EMOCION[emocion]) emocion = 'neutral';
+    if (!img.src.endsWith(`/${emocion}.png`)) {
+      img.src = `img/amealquito/${emocion}.png`;
+      caja.classList.remove('cambia'); void caja.offsetWidth; caja.classList.add('cambia');
+    }
+    img.alt = `Amealquito ${EMOCION[emocion].toLowerCase()}`;
+    img.title = EMOCION[emocion];
+    $('#amqMsg').textContent = texto;
+  }
+  const SALUDO = {
+    1: ['feliz', '¡Hola! Soy Amealquito. Te acompaño a planear tu siembra con datos de satélite de la NASA. Empecemos: ¿qué cultivas?'],
+    2: ['neutral', '¿Dónde está tu parcela? Escribe tu municipio o usa tu ubicación.'],
+    4: ['neutral', '¿Cuántos años llevas sembrando? Así te cuento qué años difíciles te tocaron.'],
+    5: ['neutral', '¿En qué te ayudo más? Puedes elegir varias.'],
+  };
+
   const TOTAL = 5;
   let paso = 1;
   function ir(n, enfocar = true) {
@@ -70,6 +90,12 @@
     $$('.pantalla').forEach(p => { p.hidden = +p.dataset.paso !== n; });
     $('#progreso').textContent = n <= TOTAL ? `Pregunta ${n} de ${TOTAL}` : '';
     $('#progreso').hidden = n > TOTAL;
+    // Barra verde: avanza con cada pregunta y se llena en "Tu plan".
+    const avance = Math.round((Math.min(n, TOTAL + 1) - 1) / TOTAL * 100);
+    $('#barraRelleno').style.width = `${Math.max(avance, 4)}%`;
+    $('#barraAvance').setAttribute('aria-valuenow', avance);
+    $('#barraAvance').setAttribute('aria-valuetext', n <= TOTAL ? `Pregunta ${n} de ${TOTAL}` : 'Plan listo');
+    if (SALUDO[n]) amealquito(...SALUDO[n]);
     if (n === 3) pintarLugar();
     if (n === 6) pintarPlan();
     window.scrollTo(0, 0);
@@ -92,6 +118,7 @@
       const m = $('#msgCultivo');
       m.hidden = false;
       m.innerHTML = `No tengo datos de ese cultivo. Por ahora solo tengo ${esc(nombres)} de Amealco.`;
+      amealquito('nervioso', `Ay… todavía no tengo datos de ese cultivo. Por ahora solo conozco ${nombres.toLowerCase()}.`);
       return;
     }
     estado.cultivo = b.dataset.cultivo; guardar(); ir(2);
@@ -126,6 +153,9 @@
     const lista = buscar(lugarTxt.value);
     sug.innerHTML = lista.map(m => `<li><button type="button" class="sug" role="option" data-cve="${esc(m.cvegeo)}"><b>${esc(m.municipio)}</b>, ${esc(m.estado)}</button></li>`).join('')
       + (lugarTxt.value.trim().length >= 3 && !lista.length ? '<li class="fine">No encontré ese municipio. Revisa cómo se escribe o usa tu ubicación.</li>' : '');
+    if (lugarTxt.value.trim().length >= 3 && !lista.length) amealquito('nervioso', 'Uy… no encuentro ese municipio. ¿Lo escribimos de otra forma?');
+    else if (lista.length) amealquito('neutral', 'Toca tu municipio en la lista.');
+    else amealquito(...SALUDO[2]);
   });
   lugarTxt.addEventListener('keydown', ev => {
     if (ev.key === 'Enter') { const b = sug.querySelector('button'); if (b) { ev.preventDefault(); b.click(); } }
@@ -139,8 +169,9 @@
   });
   $('#btnUbicacion').addEventListener('click', () => {
     const msg = $('#msgZona');
-    if (!navigator.geolocation) { msg.hidden = false; msg.textContent = 'Tu teléfono no permite usar la ubicación. Escribe tu municipio.'; return; }
+    if (!navigator.geolocation) { msg.hidden = false; msg.textContent = 'Tu teléfono no permite usar la ubicación. Escribe tu municipio.'; amealquito('nervioso', 'Tu teléfono no me deja ver la ubicación. Mejor escribe tu municipio.'); return; }
     msg.hidden = false; msg.textContent = 'Buscando tu ubicación…';
+    amealquito('neutral', 'Déjame ver dónde estás…');
     navigator.geolocation.getCurrentPosition(pos => {
       const lat = pos.coords.latitude, lon = pos.coords.longitude;
       // Nombre de referencia: la cabecera municipal más cercana (solo para mostrar)
@@ -152,7 +183,7 @@
       };
       estado.verReferencia = false; guardar();
       msg.hidden = true; ir(3);
-    }, () => { msg.textContent = 'No se pudo usar tu ubicación. Escribe tu municipio.'; }, { timeout: 15000, maximumAge: 600000 });
+    }, () => { msg.textContent = 'No se pudo usar tu ubicación. Escribe tu municipio.'; amealquito('nervioso', 'No pude ver tu ubicación… ¿Me escribes tu municipio?'); }, { timeout: 15000, maximumAge: 600000 });
   });
 
   // ---------- 3. ¿Es este lugar? ----------
@@ -199,6 +230,9 @@
     $('#lugarCobertura').textContent = !cob ? 'Sin dato de cobertura.'
       : cob.cubre ? `Tenemos datos de tu zona: ${cob.z.nombre}, a ${cob.kmTxt} km.`
         : `Todavía no tenemos datos de tu zona. La más cercana con datos es ${cob.z.nombre}, a ${cob.kmTxt} km.`;
+    if (!cob) amealquito('nervioso', 'Mmm… no pude revisar si tengo datos de este lugar.');
+    else if (cob.cubre) amealquito('feliz', `¡Conozco esta zona! Tengo datos de ${cob.z.nombre}, a ${cob.kmTxt} km. ¿Es aquí?`);
+    else amealquito('nervioso', `Mmm… aquí todavía no tengo datos. Lo más cercano que conozco está a ${cob.kmTxt} km. ¿Es aquí tu parcela?`);
     $('#lugarNota').textContent = 'Los datos de lluvia y clima describen toda la zona, no tu parcela exacta.'
       + (L.origen === 'municipio' ? ' El punto es la cabecera municipal.' : '');
 
@@ -412,6 +446,10 @@
       ${b.aviso ? `<p class="aviso">${esc(b.aviso)}</p>` : ''}
       <p class="fine">${esc(b.nota)}</p></article>`).join('');
     $('#resFuente').textContent = plan.fuente || '';
+    if (plan.soloAviso) amealquito('triste', `Lo siento, todavía no tengo datos de tu zona. Si quieres, te enseño ${plan.cobertura.z.nombre} solo como referencia.`);
+    else if (plan.referencia) amealquito('neutral', 'Esto es de otra zona. Úsalo solo como referencia y compáralo con lo que tú ves en tu parcela.');
+    else if (!plan.fechas) amealquito('nervioso', `No encontré fechas de ${corto(plan.cultivo).toLowerCase()} en tu zona, pero te muestro lo que sí sé del cultivo.`);
+    else amealquito('feliz', '¡Listo! Este es tu plan. Recuerda: yo te acompaño, pero la decisión final es tuya.');
   }
 
   $('#btnReferencia').addEventListener('click', () => { estado.verReferencia = true; guardar(); pintarPlan(); $('#resReferencia').focus && window.scrollTo(0, 0); });
@@ -581,9 +619,10 @@
     doc.setProperties({ title: plan.titulo, subject: 'Plan de siembra con datos de satélite', creator: 'Milpa Clara' });
     doc.save(plan.archivo);
     msg.textContent = 'Listo. Tu PDF se descargó.';
+    amealquito('feliz', '¡Tu plan ya está en PDF! Guárdalo o compártelo con quien te ayuda en el campo.');
   }
   $('#btnPdf').addEventListener('click', () => {
-    descargarPDF().catch(() => { const m = $('#msgPdf'); m.hidden = false; m.textContent = 'No se pudo crear el PDF. Usa Imprimir y elige "Guardar como PDF".'; window.print(); });
+    descargarPDF().catch(() => { const m = $('#msgPdf'); m.hidden = false; m.textContent = 'No se pudo crear el PDF. Usa Imprimir y elige "Guardar como PDF".'; amealquito('nervioso', 'Uy, no pude armar el PDF. Probemos con Imprimir → Guardar como PDF.'); window.print(); });
   });
   $('#btnReiniciar').addEventListener('click', () => ir(1));
 
@@ -596,6 +635,7 @@
     D.municipios = mu.status === 'fulfilled' ? mu.value : null;
     if (!D.cultivos || !D.zonas) {
       $('#opCultivo').innerHTML = '<p class="aviso">No se pudieron leer los datos. Abre el sitio con un servidor: <code>python3 -m http.server 8000 -d site</code>.</p>';
+      amealquito('triste', 'No pude cargar mis datos… Intenta abrir la página de nuevo.');
       return;
     }
     pintarCultivos(); prepararMunicipios(); pintarPrioridades();

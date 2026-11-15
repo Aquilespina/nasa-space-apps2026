@@ -49,6 +49,12 @@ La página principal (`site/index.html`) es un asistente de 5 preguntas, una por
 
 Al final muestra **Tu plan**: fechas del cultivo en su zona (`calendario.json`) y una tarjeta por cada prioridad (`cultivos.json`). Debajo, sin cambios, están el recorrido por zonas (`recorrido.js`) y "¿Puedes confiar en estas fechas?" (`calculo.js` y `evidencia.js`). Las respuestas se recuerdan solo en ese teléfono.
 
+**Barra de avance y Amealquito:** una barra verde avanza con cada pregunta y se llena en "Tu plan". Amealquito, el asistente, acompaña cada pantalla con una frase y cambia de cara según lo que pasa (imágenes en `site/img/amealquito/`):
+- **feliz:** al presentarse, cuando hay datos de tu zona, con el plan listo y al descargar el PDF;
+- **neutral:** al hacer las preguntas y cuando muestra un plan de otra zona como referencia;
+- **nervioso:** cuando no encuentra información (cultivo sin datos, municipio no encontrado, sin GPS, lugar sin datos, cultivo sin fechas en tu zona, error del PDF);
+- **triste:** cuando no hay datos de tu zona en "Tu plan" o no cargan los datos.
+
 **Descargar mi plan en PDF:** el botón al final de "Tu plan" genera un PDF de 1–2 páginas con las respuestas, la imagen de la zona, las fechas, los años malos y una sección por prioridad. Sale del mismo resumen que la pantalla, así que dice lo mismo, incluido "sin dato". Usa jsPDF 2.5.1 (licencia MIT) guardado en `site/vendor/`, así funciona sin internet. Si no carga, abre Imprimir para guardar como PDF.
 
 La página anterior completa sigue en `site/estudio.html` (enlace "Ver el estudio completo").
